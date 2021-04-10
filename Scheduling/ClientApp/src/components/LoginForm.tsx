@@ -9,7 +9,7 @@ type LoginProps = {
 }
 
 async function loginUser(credentials:FormData) {
-    return fetch('/User/Login', {
+    return fetch('/graphql', {
       method: 'POST',
       body: credentials
     })
