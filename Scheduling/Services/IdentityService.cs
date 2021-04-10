@@ -36,9 +36,7 @@ namespace Scheduling.Services
             if (user != null && user.Password == Hashing.GetHashString(password + user.Salt))
                 return GenerateAccessToken(email, user.Id.ToString(), user.Permissons) ;
 
-            Login login = new Login();
-            login.Permission = new List<string>() { "XYZ" };
-            return login;
+            return new Login();
 
         }
         private Login GenerateAccessToken(string email, string userId, List<string> permissons)
@@ -65,8 +63,6 @@ namespace Scheduling.Services
             );
 
             login.Token = new JwtSecurityTokenHandler().WriteToken(token);
-            login.Permission = permissons;
-            login.IsValidInfo = true;
 
             return login;
         }

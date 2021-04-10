@@ -12,12 +12,10 @@ namespace Scheduling.GraphQl.Types
         public LoginType()
         {
 
-            Name = "Login";
-            Description = "Login info for client";
+            Name = "Token";
+            Description = "JWT";
 
-            Field(l => l.IsValidInfo).Description("Valid login info.");
-            Field(l => l.Token).Description("JWT. Returned if 'isValidInfo' = true.");
-            Field(l => l.Permission).Description("User permission. returned if 'isValidInfo' = true.");
+            Field(l => l.Token).Description("JWT. Returned if valid login and valid password .");
 
         }
     }
