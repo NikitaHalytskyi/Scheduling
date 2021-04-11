@@ -16,7 +16,7 @@ namespace Scheduling.GraphQl
             Name = "Mutation";
 
             Field<LoginType>(
-                "login",
+                "authentication",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email." },
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "User password."}
