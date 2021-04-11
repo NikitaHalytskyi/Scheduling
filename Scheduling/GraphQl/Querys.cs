@@ -5,6 +5,7 @@ using Scheduling.Domain;
 using Scheduling.GraphQl.Types;
 using Scheduling.Models;
 using Scheduling.Services;
+using Scheduling.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
