@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Scheduling.Domain;
 using Scheduling.GraphQl;
-using Scheduling.GraphQl.Schemas;
 using Scheduling.GraphQl.Types;
 using Scheduling.Services;
 using System.Text;
@@ -82,7 +81,7 @@ namespace Scheduling
             services.AddScoped<LoginType>();
             services.AddScoped<UserType>();
 
-            services.AddScoped<ISchema, LoginSchema>();
+            services.AddScoped<ISchema, GraphSchema>();
 
             services.AddSpaStaticFiles(configuration =>
             {

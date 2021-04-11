@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Scheduling.GraphQl.Schemas
+namespace Scheduling.GraphQl
 {
-    public class LoginSchema : Schema
+    public class GraphSchema : Schema
     {
-        public LoginSchema(IServiceProvider provider) : base(provider)
+        public GraphSchema(IServiceProvider provider) : base(provider)
         {
             Query = provider.GetRequiredService<Querys>();
             Mutation = provider.GetRequiredService<Mutations>();

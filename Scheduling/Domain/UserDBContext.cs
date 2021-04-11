@@ -24,7 +24,7 @@ namespace Scheduling.Domain
             {
                 Id = 1321313,
                 Email = "admin@gmail.com",
-                Password = "5dj3bhWCfxuHmONkBdvFrA==",
+                Password = "yZFts5ive5Fl+fWw5FoH7A==",
                 Name = "User",
                 Surname = "UserS",
                 Position = "lol",
@@ -36,7 +36,7 @@ namespace Scheduling.Domain
             {
                 Id = 13213133,
                 Email = "user@gmail.com",
-                Password = "u9DAYiHl+liIqRMvuuciBA==",
+                Password = "gdR8Hyv4h8sV5WBeqgbZ3A==",
                 Name = "User",
                 Surname = "UserS",
                 Position = "lol",
