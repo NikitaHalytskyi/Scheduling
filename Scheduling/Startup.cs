@@ -69,7 +69,7 @@ namespace Scheduling
                .AddGraphQLAuthorization(options =>
                {
                    options.AddPolicy("canManageUsers", p => p.RequireClaim("permission", "canManageUsers"));
-                   options.AddPolicy("Authenticated", p => p.RequireClaim("email"));
+                   options.AddPolicy("Authenticated", p => p.RequireAuthenticatedUser());
                });
 
             services.AddScoped<IdentityService>();
@@ -78,7 +78,6 @@ namespace Scheduling
 
             services.AddScoped<Querys>();
             services.AddScoped<Mutations>();
-            services.AddScoped<LoginType>();
             services.AddScoped<UserType>();
 
             services.AddScoped<ISchema, GraphSchema>();
