@@ -6,42 +6,72 @@ type LoginProps = {
   toggleLoading: Function,
   setError: Function
   showError: boolean
+  token: string | null,
+  getData: Function
 }
 
-async function loginUser(credentials:FormData) {
-    return fetch('/graphql', {
+const loginUserFetch = async (login: string, passsword: string) => {
+    const query = JSON.stringify({
+      query: `mutation {
+        authentication (email: "${login}" password: "${passsword}") {
+          token
+        }
+      }`
+    });
+  
+   return fetch('/graphql', {
       method: 'POST',
-      body: credentials
+      headers: {'content-type': 'application/json'},
+      body: query
     })
-      .then(data => data.json())
-   }
+    .then(data => data.json());
+  };
 
-export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, setError, showError }) => {
+  const getUserData = async (token: string) => {
+    const query = JSON.stringify({
+      query: `{
+        getUser{
+          name
+          surname
+          email
+          position
+          department
+          permissions
+        }
+      }`
+    });
+  
+   return fetch('/graphql', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: query
+    })
+    .then(data => data.json());
+  };
+
+export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, setError, showError, token, getData }) => {
 
     function getFormData() {
-        let formData = new FormData();
         let login = (document.getElementById('input-login') as HTMLFormElement).value;
         let password = (document.getElementById('input-password') as HTMLFormElement).value;
-        if(login && password) {
-            let crypto = require('crypto');
-            let hashPassword = crypto.createHash('sha256')
-                .update(password)
-                .digest('base64');
-            console.log(hashPassword);
-            formData.append('login', login);
-            formData.append('password', hashPassword);
-        }
-        return formData;
+        return {login, password};
     }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         toggleLoading();
-        let formData = getFormData();
-        const userData = await loginUser(formData);
-        console.log(userData);
-        userData ? setError(false) : setError(true);
-        logIn(userData);
+        const loginData = getFormData();
+        const data = await loginUserFetch(loginData.login, loginData.password);
+        console.log(data.data.authentication.token);
+        logIn(data);
+        let userData = null;
+        if(data){
+          userData = await getUserData(data.data.authentication.token);
+          getData(userData.data.getUser);
+        }
         toggleLoading();
       }
 

@@ -18,7 +18,7 @@ namespace Scheduling.Models
         public string Salt { get; set; }
 
         [NotMapped]
-        public List<string> Permissons { get; set; }
+        public List<string> Permissions { get; set; }
 
         public User()
         {
@@ -27,9 +27,9 @@ namespace Scheduling.Models
 
         public void AddPermission(List<Permission> permissions)
         {
-            Permissons = new List<string>();
+            Permissions = new List<string>();
             foreach (Permission permission in permissions)
-                Permissons.Add(permission.Name);
+                Permissions.Add(permission.Name);
         }
 
     }

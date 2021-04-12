@@ -34,7 +34,7 @@ namespace Scheduling.Services
             user.AddPermission(userRepository.GetPermission(email));
 
             if (user != null && user.Password == Hashing.GetHashString(password + user.Salt))
-                return GenerateAccessToken(email, user.Id.ToString(), user.Permissons) ;
+                return GenerateAccessToken(email, user.Id.ToString(), user.Permissions) ;
 
             return new Login();
 

@@ -6,12 +6,12 @@ import * as UserStore from '../store/User';
 import './NavMenu.css';
 
 
-type UserProps =
-    UserStore.UserState &
-    typeof UserStore.actionCreators &
-    RouteComponentProps<{}>;
+// type UserProps =
+//     UserStore.UserState &
+//     typeof UserStore.actionCreators &
+//     RouteComponentProps<{}>;
 
-export default class NavMenu extends React.PureComponent<UserProps, { isOpen: boolean }> {
+export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }> {
     public state = {
         isOpen: false
     };

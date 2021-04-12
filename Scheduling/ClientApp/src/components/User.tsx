@@ -23,10 +23,12 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
         if(!this.props.logged){
             if(!this.state.isLoading){
                     return (
-                        <LoginForm logIn = {(loginData: UserStore.UserData) => this.props.logIn(loginData)}
+                        <LoginForm logIn = {(token: string) => this.props.logIn(token)}
                             toggleLoading = {this.toggleLoading}
                             setError = {(error: boolean) => this.setError(error)}
-                            showError = {this.state.showError}/>
+                            showError = {this.state.showError}
+                            token = {this.props.token}
+                            getData = {(userData: UserStore.UserData) => this.props.getData(userData)}/>
                     );
                 }
             else{
