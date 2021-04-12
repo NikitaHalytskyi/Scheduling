@@ -2,7 +2,7 @@ import * as React from 'react';
 import '../style/LoadingAnimation.css';
 
 
-export const LoadingAnimation: React.FunctionComponent<{}> = ( {}) => {
+export const LoadingAnimation: React.FunctionComponent = () => {
     return (
         <React.Fragment>
             <div className="loading-container">

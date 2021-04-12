@@ -17,7 +17,7 @@ namespace Scheduling.Services
 {
     public interface IIdentityService
     {
-        Login Authenticate(string email, string password);
+        string Authenticate(string email, string password);
     }
     public class IdentityService : IIdentityService
     {
@@ -28,20 +28,18 @@ namespace Scheduling.Services
             this.userRepository = userRepository;
             Configuration = configuration;
         }
-        public Login Authenticate(string email, string password)
+        public string Authenticate(string email, string password)
         {
             User user = userRepository.Get(email);
+
+            if (user == null || user.Password != Hashing.GetHashString(password + user.Salt)) { return ""; }
+
             user.AddPermission(userRepository.GetPermission(email));
-
-            if (user != null && user.Password == Hashing.GetHashString(password + user.Salt))
-                return GenerateAccessToken(email, user.Id.ToString(), user.Permissions) ;
-
-            return new Login();
+            return GenerateAccessToken(email, user.Id.ToString(), user.Permissions);
 
         }
-        private Login GenerateAccessToken(string email, string userId, List<string> permissons)
+        private string GenerateAccessToken(string email, string userId, List<string> permissons)
         {
-            Login login = new Login();
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("SecretKey").Value));
             SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -62,9 +60,7 @@ namespace Scheduling.Services
                 signingCredentials: signingCredentials
             );
 
-            login.Token = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return login;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
+//import { RouteComponentProps } from 'react-router';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import * as UserStore from '../store/User';
+//import * as UserStore from '../store/User';
 import './NavMenu.css';
 
 
@@ -27,9 +27,6 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
                             <ul className="navbar-nav flex-grow">
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                                </NavItem>
-                                <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to='/user'>Profile</NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>

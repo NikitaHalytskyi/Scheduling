@@ -1,5 +1,5 @@
-import { stat } from 'fs';
-import { type } from 'os';
+//import { stat } from 'fs';
+//import { type } from 'os';
 import { Action, Reducer } from 'redux';
 
 export interface UserState {

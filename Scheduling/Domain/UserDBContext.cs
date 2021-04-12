@@ -24,9 +24,9 @@ namespace Scheduling.Domain
             {
                 Id = 1321313,
                 Email = "admin@gmail.com",
-                Password = "yZFts5ive5Fl+fWw5FoH7A==",
-                Name = "User",
-                Surname = "UserS",
+                Password = "5dj3bhWCfxuHmONkBdvFrA==",
+                Name = "Admin",
+                Surname = "Adminov",
                 Position = "lol",
                 Department = "Memes",
                 Salt = "91ed90df-3289-4fdf-a927-024b24bea8b7",
@@ -36,12 +36,12 @@ namespace Scheduling.Domain
             {
                 Id = 13213133,
                 Email = "user@gmail.com",
-                Password = "gdR8Hyv4h8sV5WBeqgbZ3A==",
+                Password = "u9DAYiHl+liIqRMvuuciBA==",
                 Name = "User",
-                Surname = "UserS",
+                Surname = "Userov",
                 Position = "lol",
                 Department = "Memes",
-                Salt = "f0e30e73-fac3-4182-8641-ecba862fed",
+                Salt = "f0e30e73-fac3-4182-8641-ecba862fed69",
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission { 

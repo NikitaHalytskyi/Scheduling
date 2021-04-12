@@ -2,6 +2,7 @@
 using GraphQL.Types;
 using Scheduling.GraphQl.Types;
 using Scheduling.Services;
+using Scheduling.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Scheduling.GraphQl
         {
             Name = "Mutation";
 
-            Field<LoginType>(
+            Field<StringGraphType>(
                 "authentication",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email." },
@@ -27,7 +28,9 @@ namespace Scheduling.GraphQl
                     string password = context.GetArgument<string>("Password");
 
                     return identityService.Authenticate(email, password);   
-                });
+                },
+                description: "Returns JWT."
+            );
         }
     }
 }

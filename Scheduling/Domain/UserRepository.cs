@@ -30,12 +30,15 @@ namespace Scheduling.Domain
 
         public User Get(string email)
         {
-            return Context.Users.Single(user => user.Email == email);
+            return Context.Users.FirstOrDefault(user => user.Email == email);
         }
 
         public List<Permission> GetPermission(string email)
         {
-            User user = Context.Users.Single(user => user.Email == email);
+            User user = Context.Users.FirstOrDefault(user => user.Email == email);
+            if (user == null)
+                return new List<Permission>();
+
             List<UserPermission> userPermissions = Context.UserPermissions.Where(permission => permission.UserId == user.Id).ToList<UserPermission>();
             List<Permission> permissions = new List<Permission>();
 

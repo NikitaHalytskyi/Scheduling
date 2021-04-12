@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scheduling.Domain;
 
 namespace Scheduling.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    partial class UserDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210412180739_UpdatePasswords")]
+    partial class UpdatePasswords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,11 +85,11 @@ namespace Scheduling.Migrations
                             Id = 1321313,
                             Department = "Memes",
                             Email = "admin@gmail.com",
-                            Name = "Admin",
+                            Name = "User",
                             Password = "5dj3bhWCfxuHmONkBdvFrA==",
                             Position = "lol",
                             Salt = "91ed90df-3289-4fdf-a927-024b24bea8b7",
-                            Surname = "Adminov"
+                            Surname = "UserS"
                         },
                         new
                         {
@@ -97,8 +99,8 @@ namespace Scheduling.Migrations
                             Name = "User",
                             Password = "u9DAYiHl+liIqRMvuuciBA==",
                             Position = "lol",
-                            Salt = "f0e30e73-fac3-4182-8641-ecba862fed69",
-                            Surname = "Userov"
+                            Salt = "f0e30e73-fac3-4182-8641-ecba862fed",
+                            Surname = "UserS"
                         });
                 });
 

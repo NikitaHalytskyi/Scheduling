@@ -9,7 +9,6 @@ type ProfileProps = {
 }
 
 export const ProfileForm: React.FunctionComponent<ProfileProps> = ({ user, logOut }) => {
-    console.log(user);
     if(user)
     return (
         <React.Fragment>
@@ -50,7 +49,6 @@ export const ProfileForm: React.FunctionComponent<ProfileProps> = ({ user, logOu
             </main>
         </React.Fragment>
     );
-    else
     return (
         <React.Fragment>
             

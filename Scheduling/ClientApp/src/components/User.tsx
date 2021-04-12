@@ -22,22 +22,20 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
     public render(){
         if(!this.props.logged){
             if(!this.state.isLoading){
-                    return (
-                        <LoginForm logIn = {(token: string) => this.props.logIn(token)}
-                            toggleLoading = {this.toggleLoading}
-                            setError = {(error: boolean) => this.setError(error)}
-                            showError = {this.state.showError}
-                            token = {this.props.token}
-                            getData = {(userData: UserStore.UserData) => this.props.getData(userData)}/>
-                    );
-                }
-            else{
-                return (<LoadingAnimation/>);
+                return (
+                    <LoginForm 
+                        logIn = {(token: string) => this.props.logIn(token)}
+                        toggleLoading = {this.toggleLoading}
+                        setError = {(error: boolean) => this.setError(error)}
+                        showError = {this.state.showError}
+                        token = {this.props.token}
+                        getData = {(userData: UserStore.UserData) => this.props.getData(userData)}/>
+                );
             }
+            return (<LoadingAnimation/>);
         }
-        else{
-            return (<ProfileForm logOut = {() => this.props.logOut()} user = {this.props.user}/>);
-        }
+        return (<ProfileForm logOut = {() => this.props.logOut()} user = {this.props.user}/>);
+        
     }
 
     private toggleLoading = () => {
@@ -45,6 +43,7 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
             isLoading: !this.state.isLoading
         });
     }
+
     private setError(error: boolean) {
         this.setState({
             showError: error
