@@ -56,8 +56,11 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
             
             if(data.data){
                 this.props.getData(data.data.getUser); 
+                return;
             }
         }
+        this.props.logOut();
+
       }
 
     public render(){
