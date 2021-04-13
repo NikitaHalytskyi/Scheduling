@@ -35,7 +35,7 @@ export const reducer: Reducer<UserState> = (state: UserState | undefined, incomi
     switch (action.type) {
         case 'LOGIN_USER':
             if (action.token !== null) {
-                Cookies.set('token', action.token.authentication);
+                Cookies.set('token', action.token);
                 return { logged: true, token: action.token, user: null };
             }
             return { logged: false, token: null, user: null  };
