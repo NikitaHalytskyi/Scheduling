@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../style/Profile.css';
 import profileImage from '../pictures/profileImage.png'
-import { UserData } from '../store/User';
+import { UserData } from '../store/User/types';
 
 type ProfileProps = {
     user: UserData,

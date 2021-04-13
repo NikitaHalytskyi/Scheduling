@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { useState } from 'react';
 import '../style/Login.css';
+import { authenticate } from '../webAPI/login';
+import { getUserData } from '../webAPI/user';
 
 type LoginProps = {
   logIn: Function,
@@ -8,50 +10,11 @@ type LoginProps = {
   setError: Function
   showError: boolean
   token: string | null,
-  getData: Function
+  setUserData: Function
 }
 
-const loginUserFetch = async (login: string, passsword: string) => {
-    const query = JSON.stringify({
-      query: `mutation {
-        authentication (email: "${login}" password: "${passsword}")
-      }`
-    });
-  
-   return fetch('/graphql', {
-      method: 'POST',
-      headers: {'content-type': 'application/json'},
-      body: query
-    })
-    .then(data => data.json());
-  };
 
-  const getUserData = async (token: string) => {
-    const query = JSON.stringify({
-      query: `{
-        getUser{
-          name
-          surname
-          email
-          position
-          department
-          permissions
-        }
-      }`
-    });
-  
-   return fetch('/graphql', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: query
-    })
-    .then(data => data.json());
-  };
-
-export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, setError, showError, token, getData }) => {
+export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, setError, showError, token, setUserData }) => {
     
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -63,7 +26,7 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
         return setError(true);
       }
 
-      const { data } = await loginUserFetch(login, password);
+      const { data } = await authenticate(login, password);
       let userData = null;
 
       if(!data || !data.authentication){
@@ -73,7 +36,7 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
       userData = await getUserData(data.authentication);
       logIn(data.authentication);
       
-      getData(userData.data.getUser); 
+      setUserData(userData.data.getUser); 
       
       setError(false);
     }

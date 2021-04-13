@@ -1,44 +1,20 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { ApplicationState } from '../store';
-import * as UserStore from '../store/User';
+import { ApplicationState } from '../store/configureStore';
+import{ UserData, UserState } from '../store/User/types';
 import { LoginForm } from './LoginForm';
 import { ProfileForm } from './Profile';
 import '../style/LoadingAnimation.css';
 import { LoadingAnimation } from './Loading';
 import Cookies from 'js-cookie';
+import { actionCreators } from '../store/User/actions';
+import { getUserData } from '../webAPI/user';
 
 type UserProps =
-    UserStore.UserState &
-    typeof UserStore.actionCreators &
+    UserState &
+    typeof actionCreators &
     RouteComponentProps<{}>;
-
-const getUserData = async (token: string) => {
-    const query = JSON.stringify({
-        query: `{
-        getUser{
-            name
-            surname
-            email
-            position
-            department
-            permissions
-        }
-        }`
-    });
-    
-    return fetch('/graphql', {
-        method: 'POST',
-        headers: {
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${token}`
-        },
-        body: query
-    })
-    .then(data => data.json());
-    };
-    
 
 class User extends React.PureComponent<UserProps, { isLoading: boolean, showError: boolean }>{
     public state = {
@@ -55,7 +31,7 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
             const data = await getUserData(token);    
             
             if(data.data){
-                this.props.getData(data.data.getUser); 
+                this.props.setUserData(data.data.getUser); 
                 return;
             }
         }
@@ -74,7 +50,7 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
                         setError = {(error: boolean) => this.setError(error)}
                         showError = {this.state.showError}
                         token = {this.props.token}
-                        getData = {(userData: UserStore.UserData) => this.props.getData(userData)}/>
+                        setUserData = {(userData: UserData) => this.props.setUserData(userData)}/>
                 );
             }
             return (<LoadingAnimation/>);
@@ -98,5 +74,5 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
 
 export default connect(
     (state: ApplicationState) => state.loggedUser,
-    UserStore.actionCreators
+    actionCreators
 )(User);
