@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import '../style/Login.css';
 
 type LoginProps = {
@@ -52,33 +53,30 @@ const loginUserFetch = async (login: string, passsword: string) => {
 
 export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, setError, showError, token, getData }) => {
     
-    const handleSubmit = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
 
-        let login = document.getElementById("input-login").value;
-        let password = document.getElementById("input-password").value;
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+      e.preventDefault();
 
-
-        console.log(login, password);
-
-        if(!login || !password){
-          return setError(true);
-        }
-
-        const { data } = await loginUserFetch(login, password);
-        let userData = null;
-
-        if(!data || !data.authentication){
-          return setError(true);
-        }
-        
-        userData = await getUserData(data.authentication);
-        logIn(data);
-        
-        getData(userData.data.getUser); 
-        
-        setError(false);
+      if(!login || !password){
+        return setError(true);
       }
+
+      const { data } = await loginUserFetch(login, password);
+      let userData = null;
+
+      if(!data || !data.authentication){
+        return setError(true);
+      }
+      
+      userData = await getUserData(data.authentication);
+      logIn(data.authentication);
+      
+      getData(userData.data.getUser); 
+      
+      setError(false);
+    }
 
     return (
         <React.Fragment>
@@ -89,9 +87,9 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
                     </div>
                     <hr/>
                     <label className='login-form-label' htmlFor='input-login'>Login:</label>
-                    <input id='input-login' className='login-form-input' type='text' name='login' placeholder='Login' ></input>
+                    <input onInput={event => setLogin(event.currentTarget.value)} id='input-login' className='login-form-input' type='text' name='login' placeholder='Login' ></input>
                     <label className='login-form-label' htmlFor='input-password'>Password:</label>
-                    <input id='input-password' className='login-form-input' type='password' name='password' placeholder='Password'></input>
+                    <input onInput={event => setPassword(event.currentTarget.value)} id='input-password' className='login-form-input' type='password' name='password' placeholder='Password'></input>
                     <div className='error-message-container'>
                         <p className={'error-message' + (showError ? '' : ' hidden')}>Error! Incorrect login or passsword.</p>
                     </div>

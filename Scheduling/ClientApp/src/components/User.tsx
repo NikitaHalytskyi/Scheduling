@@ -51,10 +51,10 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
         
         if(token){
             
-            this.props.logIn({authentication: token});
+            this.props.logIn(token);
             const data = await getUserData(token);    
             
-            if(data){
+            if(data.data){
                 this.props.getData(data.data.getUser); 
             }
         }
