@@ -1,5 +1,6 @@
 //import { stat } from 'fs';
 //import { type } from 'os';
+import Cookies from 'js-cookie';
 import { Action, Reducer } from 'redux';
 
 export interface UserState {
@@ -23,18 +24,10 @@ export const actionCreators = {
     logOut: () => ({ type: 'LOGOUT_USER' } as LogOutUserAction)
 };
 
+
 export const reducer: Reducer<UserState> = (state: UserState | undefined, incomingAction: Action): UserState => {
     if (state === undefined) {
-        //console.log(localStorage.getItem('logged'), localStorage.getItem('token'));
-        //localStorage.clear();
-        // let log = localStorage.getItem('logged');
-        // let logged = false;
-        // let token = null;
-        // if(log){
-        //     logged = log.toLocaleLowerCase() === 'true' ? true : false;
-        //     token = localStorage.getItem('token');
-        //     console.log(logged, token);
-        // }
+       
         return { logged: false, token: null, user: null };
     }
 
@@ -42,18 +35,15 @@ export const reducer: Reducer<UserState> = (state: UserState | undefined, incomi
     switch (action.type) {
         case 'LOGIN_USER':
             if (action.token !== null) {
-                // localStorage.setItem('logged', 'true');
-                // localStorage.setItem('token', action.token);
-                //localStorage.setItem('user', JSON.stringify(action.logData));
+                Cookies.set('token', action.token.authentication);
                 return { logged: true, token: action.token, user: null };
             }
-            else {
-                return { logged: false, token: null, user: null  };
-            }
+            return { logged: false, token: null, user: null  };
+            
         case 'GET_USER':
             return { logged: state.logged, token: state.token, user: action.userData };
         case 'LOGOUT_USER':
-            localStorage.clear();
+            Cookies.remove('token');
             return { logged: false, token: null, user: null };
         default:
             return state;
