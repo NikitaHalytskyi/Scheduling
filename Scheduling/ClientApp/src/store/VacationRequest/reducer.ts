@@ -15,8 +15,8 @@ const reducer: Reducer<VacationRequestState> = (state: VacationRequestState | un
 	const action = incomingAction as KnownAction;
 	switch (action.type) {
 			case 'SET_HISTORY':
-				console.log('set');
 				if(action.requests.length > 0){
+					console.log('set');
 					return { logged: state.logged, token: state.token, requestHistory: action.requests };
 				}
 				return { logged: state.logged, token: state.token, requestHistory: [] };

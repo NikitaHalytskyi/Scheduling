@@ -7,7 +7,8 @@ type TableProps = {
 }
 
 export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests }) => {
-    console.log(requests);
+    if(requests.length>0)
+        console.log('table' + requests[0].comment);
     return (
         <React.Fragment>
             <div id='vacation-history'>
@@ -18,13 +19,13 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests })
                             <th>Date</th>
                             <th>Status</th>
                             <th>Comment</th>
-                            <th>Editable</th>
+                            <th></th>
                         </tr>
                         {requests.map((r) => <tr key={requests.indexOf(r)}>
                             <td>{(r.startDate).toDateString()}-{r.finishDate.toDateString()}</td>
                             <td>{r.status}</td>
                             <td>{r.comment}</td>
-                            <td><button disabled={r.editable}>Delete</button></td>
+                            <td><button disabled={!r.editable}>Delete</button></td>
                         </tr>)}
                     </tbody>
                 </table>

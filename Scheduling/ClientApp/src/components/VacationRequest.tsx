@@ -13,8 +13,9 @@ type VacationRequestProps =
     RouteComponentProps<{}>;
 
    
-    const requests = [
+    var requests = [
         { 	
+            id: 1,
             startDate: new Date('2021-04-15'), 
             finishDate: new Date('2021-04-25'),
             status: 'Declined. Declined by PM. Declined by TL.',
@@ -22,6 +23,7 @@ type VacationRequestProps =
             editable: false
         },
         { 	
+            id: 2,
             startDate: new Date('2021-04-25'), 
             finishDate: new Date('2021-04-30'),
             status: 'Declined. Declined by PM. Declined by TL.',
@@ -29,6 +31,7 @@ type VacationRequestProps =
             editable: false
         },
         { 	
+            id: 3,
             startDate: new Date('2021-05-01'), 
             finishDate: new Date('2021-05-10'),
             status: 'Pending consideration...',
@@ -39,9 +42,38 @@ type VacationRequestProps =
 
 class VacationRequest extends React.PureComponent<VacationRequestProps>{
 
+    validateDate() {
+        let startDate = new Date((document.getElementById('start-date') as HTMLInputElement).value);
+        let finishDate = new Date((document.getElementById('finish-date') as HTMLInputElement).value);
+        if(startDate.getDate() && finishDate.getDate() && startDate.getDate() < finishDate.getDate())
+            return {startDate, finishDate}
+        return null
+    }
+
+    countAmount = () => {
+        var daysLag = 'Incorrect date!';
+        let date = this.validateDate();
+        if(date)
+            daysLag = (Math.ceil(Math.abs(date.finishDate.getTime() - date.startDate.getTime()) / (1000 * 3600 * 24))).toString();
+        (document.getElementById('amount') as HTMLInputElement).value = daysLag;
+    }
+
+    handleSubmit = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        let date = this.validateDate();
+        if(date) {
+            let startDate = date.startDate;
+            let finishDate = date.finishDate;
+            let comment = (document.getElementById('comment') as HTMLTextAreaElement).value;
+            requests.push({id: requests[requests.length-1].id + 1, startDate, finishDate, status: 'Pending consideration...', comment, editable: true });
+            console.log(requests);
+            this.props.setHistory(requests);
+            console.log(this.props.requestHistory);
+        }
+      }
+
     async componentDidMount(){
         this.props.checkUser();
-        console.log(requests);
         this.props.setHistory(requests);
     }
 
@@ -56,11 +88,11 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
                                 <div className='line-container'>
                                     <div className='data-container'>
                                         <label htmlFor='start-date'>From</label>
-                                        <input type='date' id='start-date'></input>
+                                        <input type='date' id='start-date' onInput={this.countAmount}></input>
                                     </div>
                                     <div className='data-container'>
                                         <label htmlFor='finish-date'>To</label>
-                                        <input type='date' id='finish-date'></input>
+                                        <input type='date' id='finish-date' onInput={this.countAmount}></input>
                                     </div>
                                 </div>
                                 <div className='data-container'>
@@ -71,7 +103,7 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
                                     <label htmlFor='comment'>Comment</label>
                                     <textarea id='comment'></textarea>
                                 </div>
-                                <button id='send-request' type='button'>Request vacation</button>
+                                <button id='send-request' type='button' onClick={this.handleSubmit}>Request vacation</button>
                             </form>
                             <div id='vacation-info'>
                                 <div className='avaible-time'>
