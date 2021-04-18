@@ -15,6 +15,8 @@ namespace Scheduling.Domain
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<UserPermission> UserPermissions { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<UserTeams> userTeams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,12 +48,32 @@ namespace Scheduling.Domain
 
             modelBuilder.Entity<Permission>().HasData(new Permission { 
                 Id = 1,
-                Name = "canManageUsers"
+                Name = "Manager"
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission { 
                 Id = 2,
-                Name = "isPartTime"
+                Name = "Accountant"
+            });
+            
+            modelBuilder.Entity<Permission>().HasData(new Permission { 
+                Id = 3,
+                Name = "Part-time"
+            });
+            
+            modelBuilder.Entity<Permission>().HasData(new Permission { 
+                Id = 4,
+                Name = "Full-time"
+            });
+            
+            modelBuilder.Entity<Permission>().HasData(new Permission { 
+                Id = 5,
+                Name = "Access to reports"
+            });
+            
+            modelBuilder.Entity<Permission>().HasData(new Permission { 
+                Id = 6,
+                Name = "Access to calendar"
             });
             
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
@@ -64,7 +86,7 @@ namespace Scheduling.Domain
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
             { 
                 Id = 4,
-                PermisionId = 2,
+                PermisionId = 3,
                 UserId = 13213133
             });
             
@@ -74,8 +96,20 @@ namespace Scheduling.Domain
                 PermisionId = 2,
                 UserId = 1321313
             });
-
             
+            modelBuilder.Entity<Team>().HasData(new Team
+            { 
+                Id = 6,
+                CreatorId = 1321313,
+                Name = "Development"
+            });
+
+            modelBuilder.Entity<UserTeams>().HasData(new UserTeams
+            {
+                Id = 1,
+                UserId = 13213133,
+                TeamId = 6
+            });
 
         }
     }

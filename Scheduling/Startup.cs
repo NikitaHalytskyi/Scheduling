@@ -14,7 +14,6 @@ using Scheduling.GraphQl.Types;
 using Scheduling.Services;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 
 namespace Scheduling
 {
@@ -68,17 +67,26 @@ namespace Scheduling
                .AddSystemTextJson()
                .AddGraphQLAuthorization(options =>
                {
-                   options.AddPolicy("canManageUsers", p => p.RequireClaim("permission", "canManageUsers"));
                    options.AddPolicy("Authenticated", p => p.RequireAuthenticatedUser());
+                   options.AddPolicy("Manager", p => p.RequireClaim("permission", "Manager"));
+                   options.AddPolicy("Part-time", p => p.RequireClaim("permission", "Part-time"));
+                   options.AddPolicy("Full-time", p => p.RequireClaim("permission", "Full-time"));
+                   options.AddPolicy("Accounter", p => p.RequireClaim("permission", "Accounter"));
+                   options.AddPolicy("Access to reports", p => p.RequireClaim("permission", "Access to reports"));
+                   options.AddPolicy("Access to calendar", p => p.RequireClaim("permission", "Access to calendar"));
                });
 
             services.AddScoped<IdentityService>();
-            services.AddScoped<UserRepository>();
+            services.AddScoped<EmailService>();
+            services.AddScoped<DataBaseRepository>();
             services.AddHttpContextAccessor();
 
             services.AddScoped<Querys>();
             services.AddScoped<Mutations>();
             services.AddScoped<UserType>();
+            services.AddScoped<PermissionType>();
+            services.AddScoped<TeamType>();
+            services.AddScoped<UserGraphQLFieldsType>();
 
             services.AddScoped<ISchema, GraphSchema>();
 
