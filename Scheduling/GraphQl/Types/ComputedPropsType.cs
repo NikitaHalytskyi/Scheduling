@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Scheduling.GraphQl.Types
 {
-    public class UserGraphQLFieldsType : ObjectGraphType<GraphQLFields>
+    public class ComputedPropsType : ObjectGraphType<ComputedProps>
     {
-        public UserGraphQLFieldsType()
+        public ComputedPropsType()
         {
-            Name = "UserGraphQLFields";
+            Name = "ComputedProps";
             Field(f => f.Permissions).Description("User permissions");
-            Field<ListGraphType<TeamType>>(nameof(GraphQLFields.Teams));
+            Field<ListGraphType<TeamType>>(nameof(ComputedProps.Teams));
         }
     }
 }

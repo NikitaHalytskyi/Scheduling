@@ -91,7 +91,7 @@ namespace Scheduling.Domain
 
             RemoveUserPermissions(user.Id);
 
-            foreach (string permmision in user.GraphQLField.Permissions)
+            foreach (string permmision in user.ComputedProps.Permissions)
             {
                 CreateUserPermission(user.Id, permmision);
             }

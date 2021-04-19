@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Scheduling.Models
 {
-    public class GraphQLFields
+    public class ComputedProps
     {
         public List<string> Permissions { get; set; }
         public List<Team> Teams { get; set; }
 
-        public GraphQLFields()
+        public ComputedProps()
         {
 
         }

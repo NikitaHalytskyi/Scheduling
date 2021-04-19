@@ -37,10 +37,10 @@ namespace Scheduling.Services
                 return ""; 
             }
 
-            user.GraphQLField = new GraphQLFields();
-            user.GraphQLField.AddPermission(dataBaseRepository.GetPermission(email));
+            user.ComputedProps = new ComputedProps();
+            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(email));
 
-            return GenerateAccessToken(email, user.Id.ToString(), user.GraphQLField.Permissions);
+            return GenerateAccessToken(email, user.Id.ToString(), user.ComputedProps.Permissions);
 
         }
         private string GenerateAccessToken(string email, string userId, List<string> permissons)

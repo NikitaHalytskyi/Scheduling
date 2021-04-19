@@ -21,9 +21,11 @@ namespace Scheduling.GraphQl
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
-                    user.GraphQLField = new GraphQLFields();
-                    user.GraphQLField.AddPermission(dataBaseRepository.GetPermission(email));
-                    user.GraphQLField.Teams = dataBaseRepository.GetUserTeams(user);
+
+                    user.ComputedProps = new ComputedProps();
+                    user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(email));
+                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user);
+                    
                     return user;
                 }
             ).AuthorizeWith("Authenticated");

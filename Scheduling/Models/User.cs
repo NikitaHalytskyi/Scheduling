@@ -19,7 +19,7 @@ namespace Scheduling.Models
         public string Salt { get; set; }
 
         [NotMapped]
-        public GraphQLFields GraphQLField { get; set; }
+        public ComputedProps ComputedProps { get; set; }
         public User()
         {
             
