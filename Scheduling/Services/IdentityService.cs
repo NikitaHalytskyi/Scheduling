@@ -21,21 +21,26 @@ namespace Scheduling.Services
     }
     public class IdentityService : IIdentityService
     {
-        readonly UserRepository userRepository;
+        readonly DataBaseRepository dataBaseRepository;
         readonly IConfiguration Configuration;
-        public IdentityService(UserRepository userRepository, IConfiguration configuration)
+        public IdentityService(DataBaseRepository dataBaseRepository, IConfiguration configuration)
         {
-            this.userRepository = userRepository;
+            this.dataBaseRepository = dataBaseRepository;
             Configuration = configuration;
         }
+
         public string Authenticate(string email, string password)
         {
-            User user = userRepository.Get(email);
+            User user = dataBaseRepository.Get(email);
 
-            if (user == null || user.Password != Hashing.GetHashString(password + user.Salt)) { return ""; }
+            if (user == null || user.Password != Hashing.GetHashString(password + user.Salt)) {
+                return ""; 
+            }
 
-            user.AddPermission(userRepository.GetPermission(email));
-            return GenerateAccessToken(email, user.Id.ToString(), user.Permissions);
+            user.ComputedProps = new ComputedProps();
+            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(email));
+
+            return GenerateAccessToken(email, user.Id.ToString(), user.ComputedProps.Permissions);
 
         }
         private string GenerateAccessToken(string email, string userId, List<string> permissons)

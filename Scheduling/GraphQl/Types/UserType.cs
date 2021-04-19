@@ -19,7 +19,7 @@ namespace Scheduling.GraphQl.Types
             Field(user => user.Email).Description("User email.");
             Field(user => user.Position).Description("User position.");
             Field(user => user.Department).Description("User department.");
-            Field(user => user.Permissions).Description("User permission.");
+            Field<ComputedPropsType>(nameof(User.ComputedProps));
        }
     }
 }

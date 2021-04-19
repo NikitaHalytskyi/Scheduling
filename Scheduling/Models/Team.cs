@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Scheduling.Models
 {
-    public class Permission
+    public class Team
     {
         public int Id { get; set; }
-        public string Name { get; set; } 
+        public int CreatorId { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Scheduling.Models;
+using Scheduling.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,47 +7,104 @@ using System.Threading.Tasks;
 
 namespace Scheduling.Domain
 {
-    interface IUserRepository
+    public partial class DataBaseRepository
     {
-        IEnumerable<User> Get();
-        User Get(string email);
+        public IEnumerable<User> Get() =>
+          Context.Users;
 
-        List<Permission> GetPermission(string email);
-    }
+        public User Get(string email) =>
+            Context.Users.FirstOrDefault(user => user.Email == email);
 
-    public class UserRepository : IUserRepository
-    {
-        readonly UserDBContext Context;
-
-        public UserRepository(UserDBContext context)
+        public User CreateUser(string name, string surname, string email, string password, List<string> permission, List<int> teams)
         {
-            Context = context;
+            string userId = Guid.NewGuid().ToString();
+            string salt = Guid.NewGuid().ToString();
+
+            User checkUser = Context.Users.FirstOrDefault(user => user.Email == email);
+
+            if (checkUser != null)
+            {
+                return new User();
+            }
+
+            User user = new User()
+            {
+                Email = email,
+                Password = Hashing.GetHashString(password + salt),
+                Name = name,
+                Surname = surname,
+                Position = "",
+                Department = "",
+                Salt = salt
+            };
+
+
+            Context.Users.Add(user);
+            Context.SaveChanges();
+
+            User newUser = Context.Users.FirstOrDefault(user => user.Email == email);
+
+            foreach (string perm in permission)
+            {
+                CreateUserPermission(newUser.Id, perm);
+            }
+
+            if (teams == null)
+                return newUser;
+
+            foreach (int teamId in teams)
+            {
+                AddUserToTeam(user.Id, teamId);
+            }
+
+            return newUser;
         }
 
-        public IEnumerable<User> Get()
-        {
-            return Context.Users;
-        }
 
-        public User Get(string email)
-        {
-            return Context.Users.FirstOrDefault(user => user.Email == email);
-        }
-
-        public List<Permission> GetPermission(string email)
+        public bool RemoveUser(string email)
         {
             User user = Context.Users.FirstOrDefault(user => user.Email == email);
+
             if (user == null)
-                return new List<Permission>();
+                return false;
 
-            List<UserPermission> userPermissions = Context.UserPermissions.Where(permission => permission.UserId == user.Id).ToList<UserPermission>();
-            List<Permission> permissions = new List<Permission>();
+            RemoveUserPermissions(user.Id);
 
-            foreach (UserPermission userPermission in userPermissions)
+            List<UserTeams> teams = Context.userTeams.Where(team => team.UserId == user.Id).ToList();
+            foreach (UserTeams team in teams)
             {
-                permissions.Add(Context.Permissions.Single(permission => permission.Id == userPermission.PermisionId));
+                RemoveUserFromTeam(team.UserId, team.TeamId);
             }
-            return permissions;
+
+            Context.Users.Remove(user);
+            Context.SaveChanges();
+            return true;
         }
+
+        public bool EditUser(User user)
+        {
+
+            if (!RemoveUser(user.Email))
+                return false;
+
+            List<Team> teams = GetUserTeams(user);
+
+            RemoveUserPermissions(user.Id);
+
+            foreach (string permmision in user.ComputedProps.Permissions)
+            {
+                CreateUserPermission(user.Id, permmision);
+            }
+
+            foreach (Team team in teams)
+            {
+                AddUserToTeam(user.Id, team.Id);
+            }
+
+            Context.Users.Add(user);
+            Context.SaveChanges();
+            return true;
+        }
+
     }
 }
