@@ -17,6 +17,7 @@ namespace Scheduling.Domain
         public DbSet<UserPermission> UserPermissions { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<UserTeams> userTeams { get; set; }
+        public DbSet<VacationRequest> VacationRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -109,6 +110,36 @@ namespace Scheduling.Domain
                 Id = 1,
                 UserId = 13213133,
                 TeamId = 6
+            });
+
+            modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
+            {
+                Id = 1,
+                UserId = 13213133,
+                StartDate = new DateTime(2021, 04, 20),
+                FinishDate = new DateTime(2021, 05, 20),
+                Status = "Declined. Declined by PM. Declined by TL.",
+                Comment = "I want to see a bober."
+            });
+
+            modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
+            {
+                Id = 2,
+                UserId = 13213133,
+                StartDate = new DateTime(2021, 04, 22),
+                FinishDate = new DateTime(2021, 04, 28),
+                Status = "Declined. Declined by PM. Declined by TL.",
+                Comment = "I really want to see a bober."
+            });
+
+            modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
+            {
+                Id = 3,
+                UserId = 13213133,
+                StartDate = new DateTime(2021, 04, 25),
+                FinishDate = new DateTime(2021, 04, 29),
+                Status = "Pending consideration...",
+                Comment = "Please, it`s my dream to see a bober."
             });
 
         }
