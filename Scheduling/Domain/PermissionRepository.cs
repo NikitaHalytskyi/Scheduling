@@ -9,9 +9,9 @@ namespace Scheduling.Domain
     public partial class DataBaseRepository
     {
 
-        public List<Permission> GetPermission(string email)
+        public List<Permission> GetPermission(int id)
         {
-            User user = Context.Users.FirstOrDefault(user => user.Email == email);
+            User user = Context.Users.FirstOrDefault(user => user.Id == id);
             if (user == null)
                 return new List<Permission>();
 

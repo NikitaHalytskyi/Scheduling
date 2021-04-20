@@ -38,7 +38,7 @@ namespace Scheduling.Services
             }
 
             user.ComputedProps = new ComputedProps();
-            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(email));
+            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
 
             return GenerateAccessToken(email, user.Id.ToString(), user.ComputedProps.Permissions);
 

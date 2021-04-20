@@ -25,18 +25,21 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
       if(!login || !password){
         return setError(true);
       }
+
       toggleLoading();
+      
       const { data } = await authenticate(login, password);
       let userData = null;
 
       if(!data || !data.authentication){
+        toggleLoading();
         return setError(true);
       }
       
       userData = await getUserData(data.authentication);
       logIn(data.authentication);
       
-      setUserData(userData.data.getUser); 
+      setUserData(userData.data.getCurrentUser); 
       
       setError(false);
       toggleLoading();
