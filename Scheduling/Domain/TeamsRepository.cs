@@ -71,12 +71,12 @@ namespace Scheduling.Domain
             Context.SaveChanges();
         }
 
-        public List<Team> GetListOfAvailableTeams(User user) =>
-            Context.Teams.Where(team => team.CreatorId == user.Id).ToList();
+        public List<Team> GetListOfAvailableTeams(int id) =>
+            Context.Teams.Where(team => team.CreatorId == id).ToList();
 
-        public List<Team> GetUserTeams(User user)
+        public List<Team> GetUserTeams(int id)
         {
-            List<UserTeams> userTeams = Context.userTeams.Where(team => team.UserId == user.Id).ToList();
+            List<UserTeams> userTeams = Context.userTeams.Where(team => team.UserId == id).ToList();
             List<Team> teams = new List<Team>();
 
             foreach (UserTeams team in userTeams)

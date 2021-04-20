@@ -15,7 +15,7 @@ namespace Scheduling.GraphQl
 
             Name = "Query";
             Field<UserType>(
-                "GetUser",
+                "GetCurrentUser",
                 arguments: null,
                 resolve: context =>
                 {
@@ -23,8 +23,8 @@ namespace Scheduling.GraphQl
                     User user = dataBaseRepository.Get(email);
 
                     user.ComputedProps = new ComputedProps();
-                    user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(email));
-                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user);
+                    user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
+                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
                     
                     return user;
                 }
@@ -38,7 +38,7 @@ namespace Scheduling.GraphQl
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
-                    return dataBaseRepository.GetListOfAvailableTeams(user);
+                    return dataBaseRepository.GetListOfAvailableTeams(user.Id);
                 },
                 description: "Get list of available teams."
             ).AuthorizeWith("Manager");
@@ -51,7 +51,7 @@ namespace Scheduling.GraphQl
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
-                    return dataBaseRepository.GetUserTeams(user);
+                    return dataBaseRepository.GetUserTeams(user.Id);
                 }
             ).AuthorizeWith("Authenticated");
 

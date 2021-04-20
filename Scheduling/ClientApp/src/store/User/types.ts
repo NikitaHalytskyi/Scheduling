@@ -5,6 +5,17 @@ export interface UserState {
 	user: UserData
 }
 
-export type UserData = { email: string, password: string, name: string,
-	surname: string, position: string, department: string, permissions: Array<string>} | null;
+export interface ComputedProps {
+	permissions: Array<string>
+}
+
+export type UserData = { 
+	email: string, 
+	password: string, 
+	name: string,
+	surname: string, 
+	position: string, 
+	department: string, 
+	computedProps: ComputedProps
+} | null;
 

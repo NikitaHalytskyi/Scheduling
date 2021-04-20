@@ -55,10 +55,8 @@ namespace Scheduling.GraphQl
 
                     User user = dataBaseRepository.CreateUser(name, surname, email, password, permissions, teamsId);
                     
-                    if(user != null && user.Email != null)
+                    if(user.Email != null)
                     {
-                       // user.GraphQLField = new GraphQLFields();
-                       // user.GraphQLField.AddPermission(dataBaseRepository.GetPermission(user.Email));
                         try
                         {
                             emailService.SendEmail(email, password);

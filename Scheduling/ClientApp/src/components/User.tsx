@@ -31,7 +31,7 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
             const data = await getUserData(token);    
             
             if(data.data){
-                this.props.setUserData(data.data.getUser); 
+                this.props.setUserData(data.data.getCurrentUser); 
                 return;
             }
         }
