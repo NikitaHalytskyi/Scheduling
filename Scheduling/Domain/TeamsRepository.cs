@@ -67,7 +67,7 @@ namespace Scheduling.Domain
                 return;
             }
 
-            Context.userTeams.Remove(Context.userTeams.FirstOrDefault(team => team.TeamId == teamId && team.UserId == userId));
+            Context.userTeams.Remove(Context.userTeams.Single(team => team.TeamId == teamId && team.UserId == userId));
             Context.SaveChanges();
         }
 
@@ -81,7 +81,7 @@ namespace Scheduling.Domain
 
             foreach (UserTeams team in userTeams)
             {
-                teams.Add(Context.Teams.FirstOrDefault(t => t.Id == team.TeamId));
+                teams.Add(Context.Teams.Single(t => t.Id == team.TeamId));
             }
 
             return teams;
@@ -94,7 +94,7 @@ namespace Scheduling.Domain
 
             foreach (UserTeams teams in userTeams)
             {
-                users.Add(Context.Users.FirstOrDefault(user => user.Id == teams.UserId));
+                users.Add(Context.Users.Single(user => user.Id == teams.UserId));
             }
 
             return users;

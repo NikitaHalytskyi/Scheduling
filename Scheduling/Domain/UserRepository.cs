@@ -42,7 +42,7 @@ namespace Scheduling.Domain
             Context.Users.Add(user);
             Context.SaveChanges();
 
-            User newUser = Context.Users.FirstOrDefault(user => user.Email == email);
+            User newUser = Context.Users.Single(user => user.Email == email);
 
             foreach (string perm in permission)
             {
@@ -87,7 +87,7 @@ namespace Scheduling.Domain
             if (!RemoveUser(user.Email))
                 return false;
 
-            List<Team> teams = GetUserTeams(user);
+            List<Team> teams = GetUserTeams(user.Id);
 
             RemoveUserPermissions(user.Id);
 
