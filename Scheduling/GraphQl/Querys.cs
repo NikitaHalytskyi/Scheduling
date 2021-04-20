@@ -77,6 +77,18 @@ namespace Scheduling.GraphQl
                 }
             ).AuthorizeWith("Manager");
 
+            Field<ListGraphType<VacationRequestType>>(
+                "GetCurrentUserRequests",
+                arguments: null,
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+                    int id = user.Id;
+                    return dataBaseRepository.GetUserRequests(user.Id);
+                }
+            ).AuthorizeWith("Authenticated");
+
         }
     }
 }

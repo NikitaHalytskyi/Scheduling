@@ -56,6 +56,11 @@ p{
     height: 260px;
 }
 
+#comment {
+    height: 100px;
+    resize: none;
+}
+
 #send-request{
     background-color: #0275d8;
     border: 1px solid lightgray;
