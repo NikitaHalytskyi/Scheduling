@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { VacationRequest } from '../store/VacationRequest/types';
-import '../style/RequestsTable.css';
+import '../style/RequestsTableAndUsersTable.css';
 
 type TableProps = {
     requests: Array<VacationRequest>
