@@ -26,7 +26,8 @@ const reducer: Reducer<VacationRequestState> = (state: VacationRequestState | un
 				if(token)
 					return { logged: true, token: token, requestHistory: [] };
 				else
-					return { logged: false, token: null, requestHistory: [] };
+				return { logged: false, token: null, requestHistory: [] };
+
 			default:
 				return state;
 	}

@@ -1,0 +1,71 @@
+#vacation-history,
+#usersTableBorder {
+    border: 1px solid lightgray;
+    padding: 50px;
+    border-radius: 15px;
+}
+
+#history, #users {
+    padding: 15px;
+    width: 100%;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+
+#users {
+    margin: 35px 0px 15px;
+}
+
+#history td, #history th, 
+#users td, #users th {
+    padding: 5px;
+    border-left: 1px solid lightgray;
+}
+
+#history th, #users th {
+    text-align: center;
+}
+
+#history tr:nth-child(1),
+#users tr:nth-child(1) {
+    background-color: lightgray;
+}
+
+#history tr:nth-child(2n+2),
+#users tr:nth-child(2n+2) {
+    background-color: whitesmoke;
+}
+
+#history td:nth-child(4),
+#users td:nth-child(4),
+#users td:nth-child(5) {
+    text-align: center;
+}
+
+#history button {
+    background-color: #0275d8;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+}
+
+#users button {
+    background-color: #0275d8;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: white;
+    position: relative;
+}
+
+.createNewUserButton {
+    background-color: #0275d8;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 7px 70px;
+    margin: 10px 0px;
+    color: white;
+    position: absolute;
+    right: 21%;
+}
