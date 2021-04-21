@@ -15,16 +15,17 @@ type UserManagementProps =
     RouteComponentProps<{}>;
 
 type User = {
-    name: string,
-    surname: string,
+    firstName: string,
+    lastName: string,
     email: string,
+    position: string,
     permissions: string[],
 }
 
 export const UserManagement: React.FC<UserManagementProps> = (props) => {
     let users: User[] = [
-        { name: "Ivan", surname: "Ivanov", email: "ivan@ukr.net", permissions: ["part-time", "Manager(Team 1)", "reports", "calendar"] },
-        { name: "Ivan", surname: "Ivanov", email: "ivan@ukr.net", permissions: ["part-time", "Manager(Team 1)", "reports", "calendar"] },
+        { firstName: "Ivan", lastName: "Ivanov", email: "ivan@ukr.net", position: "Manager", permissions: ["part-time", "allUsersManagement"] },
+        { firstName: "Sanec", lastName: "Ivanov", email: "ivan@ukr.net", position: "Manager", permissions: ["part-time", "allUsersManagement"] },
     ];
 
     let permissions: string[] = [];
@@ -43,15 +44,19 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
                 <table id='users'>
                     <tbody>
                         <tr>
-                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email</th>
+                            <th>Position</th>
                             <th>Attributes</th>
                             <th></th>
                             <th></th>
                         </tr>
                         {users.map((u, index) => <tr key={users.indexOf(u)}>
-                            <td>{u.name} {u.surname}</td>
+                            <td>{u.firstName}</td>
+                            <td>{u.lastName}</td>
                             <td>{u.email}</td>
+                            <td>{u.position}</td>
                             <td>{permissions[index]}</td>
                             <td><button>Edit</button></td>
                             <td><button className="deleteUserButton">Delete</button></td>
