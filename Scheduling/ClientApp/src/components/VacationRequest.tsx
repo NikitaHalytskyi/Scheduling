@@ -48,10 +48,12 @@ const VacationRequest: React.FunctionComponent<VacationRequestProps> = ( props: 
     const [startDate, setStartDate] = useState(new Date());
     const [finishDate, setFinishDate] = useState(new Date());
 
-    useEffect(
-        () => {
+    useEffect(() => {
             countAmount();
     }); 
+    useEffect(() => {
+        requestListUpdate();
+    }, []); 
 
     const validateDate = () => {
         if (startDate.getDate() && finishDate.getDate() && startDate.getDate() < finishDate.getDate()) {
@@ -79,13 +81,15 @@ const VacationRequest: React.FunctionComponent<VacationRequestProps> = ( props: 
             console.log(requests);
             props.setHistory(requests);
             console.log(props.requestHistory);
+            requestListUpdate();
         }
-      }
+    }
 
-    const componentDidMount = async () =>{
+    const requestListUpdate = async () => {
         props.checkUser();
         props.setHistory(requests);
     }
+
 
         if(props.logged){
             return (
