@@ -6,10 +6,12 @@ import UserReducer from "./User/";
 import RequestReducer from "./VacationRequest/";
 import { UserState } from './User/types';
 import { VacationRequestState } from './VacationRequest/types';
+import { UserManagementState } from './UserManagement/types';
 
 export interface ApplicationState {
     loggedUser: UserState | undefined;
     vacationRequest: VacationRequestState | undefined;
+    userManagement: UserManagementState | undefined;
 };
 
 
