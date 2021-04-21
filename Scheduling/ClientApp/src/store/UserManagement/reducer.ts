@@ -12,7 +12,7 @@ const reducer: Reducer<UserManagementState> =
         const action = incomingAction as KnownAction;
 
         switch (action.type) {
-            case 'SET_USERS':
+            case 'RECEIVED_USERS':
                 return {
                     ...state,
                     users: action.payload
