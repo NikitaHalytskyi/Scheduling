@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { useState, useEffect } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
 import{ VacationRequestState } from '../store/VacationRequest/types';
 import '../style/VacationRequest.css';
 import { actionCreators } from '../store/VacationRequest/actions';
 import { RequestsTable } from './RequestsTable';
+import { strict } from 'assert';
+import { Data } from 'popper.js';
 
 type VacationRequestProps =
     VacationRequestState &
@@ -40,45 +43,51 @@ type VacationRequestProps =
         }
     ];
 
-class VacationRequest extends React.PureComponent<VacationRequestProps>{
+const VacationRequest: React.FunctionComponent<VacationRequestProps> = ( props: any ) => {
 
-    validateDate() {
-        let startDate = new Date((document.getElementById('start-date') as HTMLInputElement).value);
-        let finishDate = new Date((document.getElementById('finish-date') as HTMLInputElement).value);
-        if(startDate.getDate() && finishDate.getDate() && startDate.getDate() < finishDate.getDate())
-            return {startDate, finishDate}
+    const [startDate, setStartDate] = useState(new Date());
+    const [finishDate, setFinishDate] = useState(new Date());
+
+    useEffect(
+        () => {
+            countAmount();
+    }); 
+
+    const validateDate = () => {
+        if (startDate.getDate() && finishDate.getDate() && startDate.getDate() < finishDate.getDate()) {
+            return { startDate, finishDate }        
+        }
         return null
     }
 
-    countAmount = () => {
+    const countAmount = () => {
         var daysLag = 'Incorrect date!';
-        let date = this.validateDate();
+        let date = validateDate();
         if(date)
             daysLag = (Math.ceil(Math.abs(date.finishDate.getTime() - date.startDate.getTime()) / (1000 * 3600 * 24))).toString();
         (document.getElementById('amount') as HTMLInputElement).value = daysLag;
     }
 
-    handleSubmit = async (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        let date = this.validateDate();
+        let date = validateDate();
         if(date) {
             let startDate = date.startDate;
             let finishDate = date.finishDate;
             let comment = (document.getElementById('comment') as HTMLTextAreaElement).value;
             requests.push({id: requests[requests.length-1].id + 1, startDate, finishDate, status: 'Pending consideration...', comment, editable: true });
             console.log(requests);
-            this.props.setHistory(requests);
-            console.log(this.props.requestHistory);
+            props.setHistory(requests);
+            console.log(props.requestHistory);
         }
       }
 
-    async componentDidMount(){
-        this.props.checkUser();
-        this.props.setHistory(requests);
+    const componentDidMount = async () =>{
+        props.checkUser();
+        props.setHistory(requests);
     }
 
-    public render(){
-        if(this.props.logged){
+        if(props.logged){
             return (
                 <React.Fragment>
                     <main>
@@ -88,11 +97,11 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
                                 <div className='line-container'>
                                     <div className='data-container'>
                                         <label htmlFor='start-date'>From</label>
-                                        <input type='date' id='start-date' onInput={this.countAmount}></input>
+                                        <input type='date' id='start-date' onInput={event =>  setStartDate(new Date(event.currentTarget.value))}></input>
                                     </div>
                                     <div className='data-container'>
                                         <label htmlFor='finish-date'>To</label>
-                                        <input type='date' id='finish-date' onInput={this.countAmount}></input>
+                                        <input type='date' id='finish-date' onInput={event => setFinishDate(new Date(event.currentTarget.value))}></input>
                                     </div>
                                 </div>
                                 <div className='data-container'>
@@ -103,7 +112,7 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
                                     <label htmlFor='comment'>Comment</label>
                                     <textarea id='comment'></textarea>
                                 </div>
-                                <button id='send-request' type='button' onClick={this.handleSubmit}>Request vacation</button>
+                                <button id='send-request' type='button' onClick={handleSubmit}>Request vacation</button>
                             </form>
                             <div id='vacation-info'>
                                 <div className='avaible-time'>
@@ -115,7 +124,7 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
                                 </div>
                             </div>
                         </div>
-                        <RequestsTable requests={this.props.requestHistory} />
+                        <RequestsTable requests={props.requestHistory} />
                     </main>
                 </React.Fragment>
             );
@@ -124,7 +133,6 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
             return <Redirect to='/'  />
         }
         
-    }
 };
 
 export default connect(
