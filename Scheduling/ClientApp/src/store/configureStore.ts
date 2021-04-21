@@ -7,6 +7,8 @@ import RequestReducer from "./VacationRequest/";
 import { UserState } from './User/types';
 import { VacationRequestState } from './VacationRequest/types';
 import { UserManagementState } from './UserManagement/types';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './sagas';
 
 export interface ApplicationState {
     loggedUser: UserState | undefined;
@@ -14,10 +16,12 @@ export interface ApplicationState {
     userManagement: UserManagementState | undefined;
 };
 
+const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore(history: History, initialState?: ApplicationState) {
     const middleware = [
         thunk,
+        sagaMiddleware,
         routerMiddleware(history)
     ];
 
@@ -33,9 +37,14 @@ export default function configureStore(history: History, initialState?: Applicat
         enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__());
     }
 
-    return createStore(
+
+    const store = createStore(
         rootReducer,
         initialState,
         compose(applyMiddleware(...middleware), ...enhancers)
     );
+
+    sagaMiddleware.run(rootSaga);
+
+    return store;
 }
