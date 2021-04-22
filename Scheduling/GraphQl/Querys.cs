@@ -25,7 +25,7 @@ namespace Scheduling.GraphQl
                     user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
                     user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
-                    
+
                     return user;
                 }
             ).AuthorizeWith("Authenticated");
@@ -58,7 +58,7 @@ namespace Scheduling.GraphQl
             Field<ListGraphType<UserType>>(
                 "GetTeamUsers",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "TeamId", Description = "Team id."}    
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "TeamId", Description = "Team id." }
                 ),
                 resolve: context =>
                 {
@@ -89,6 +89,19 @@ namespace Scheduling.GraphQl
                 }
             ).AuthorizeWith("Authenticated");
 
+            Field<ListGraphType<UserType>>(
+                "GetUsers",
+                "Get users according to you permissions",
+                arguments: null,
+                resolve: context =>
+                {
+                   /* string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+                    int id = user.Id;*/
+                    return dataBaseRepository.Get();
+                }
+
+            ).AuthorizeWith("Access to global management");
         }
     }
 }
