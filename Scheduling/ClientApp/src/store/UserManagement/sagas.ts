@@ -12,10 +12,8 @@ export default function* getUserDataSaga() {
 function* sagaWorker(action: ReceivedUsersDataAction) {
     const token = Cookies.get('token');
     if (token) {
-        let response: Promise<UserData>;
-        yield response = getUsersData(token);
-        console.log(response);
-
+        const response: UserData[] = yield getUsersData(token).then(response => response.data.getUsers);
+        yield put(actionCreators.receivedUsersData(response));
     }
     else
         yield put(actionCreators.accessDenied());

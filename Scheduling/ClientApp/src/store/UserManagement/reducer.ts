@@ -16,7 +16,7 @@ const reducer: Reducer<UserManagementState> =
                 return {
                     ...state,
                     users: action.payload
-                }
+                };
 
             default:
                 return state;

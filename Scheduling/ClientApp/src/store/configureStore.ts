@@ -4,6 +4,7 @@ import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { History } from 'history';
 import UserReducer from "./User/";
 import RequestReducer from "./VacationRequest/";
+import UserManagementReducer from "./UserManagement/";
 import { UserState } from './User/types';
 import { VacationRequestState } from './VacationRequest/types';
 import { UserManagementState } from './UserManagement/types';
@@ -28,6 +29,7 @@ export default function configureStore(history: History, initialState?: Applicat
     const rootReducer = combineReducers({
         loggedUser: UserReducer,
         vacationRequest: RequestReducer,
+        userManagement: UserManagementReducer,
         router: connectRouter(history)
     });
 
