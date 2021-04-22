@@ -49,7 +49,7 @@ namespace Scheduling.Domain
 
             modelBuilder.Entity<Permission>().HasData(new Permission { 
                 Id = 1,
-                Name = "Manager"
+                Name = "Access to vacation approvals"
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission { 
@@ -69,14 +69,15 @@ namespace Scheduling.Domain
             
             modelBuilder.Entity<Permission>().HasData(new Permission { 
                 Id = 5,
-                Name = "Access to reports"
+                Name = "Access to team management"
             });
-            
-            modelBuilder.Entity<Permission>().HasData(new Permission { 
+
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
                 Id = 6,
-                Name = "Access to calendar"
+                Name = "Access to global management"
             });
-            
+
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
             { 
                 Id = 3,
@@ -94,7 +95,7 @@ namespace Scheduling.Domain
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
             { 
                 Id = 5,
-                PermisionId = 2,
+                PermisionId = 6,
                 UserId = 1321313
             });
             

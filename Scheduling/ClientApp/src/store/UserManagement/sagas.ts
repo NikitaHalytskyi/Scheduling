@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { put, takeEvery } from "redux-saga/effects";
-import { getUserData } from "../../webAPI/user";
+import { getUsersData } from "../../webAPI/users";
 import { UserData } from "../User/types";
 import { actionCreators } from "./actions";
 import { ReceivedUsersDataAction } from "./actions"
@@ -13,7 +13,7 @@ function* sagaWorker(action: ReceivedUsersDataAction) {
     const token = Cookies.get('token');
     if (token) {
         let response: Promise<UserData>;
-        yield response = getUserData(token).then(data => data.json);
+        yield response = getUsersData(token);
         console.log(response);
 
     }

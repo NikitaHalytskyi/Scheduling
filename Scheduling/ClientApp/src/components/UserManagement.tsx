@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
 import { UserManagementState } from '../store/UserManagement/types';
