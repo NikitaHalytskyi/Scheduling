@@ -1,5 +1,5 @@
 import { UserData } from "../User/types";
 
 export interface UserManagementState {
-    users: Array<UserData>
+	users: Array<UserData>
 }
