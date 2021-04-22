@@ -10,5 +10,4 @@ export type VacationRequest = {
 	finishDate: Date,
 	status: string,
 	comment: string,
-	editable: boolean
 }

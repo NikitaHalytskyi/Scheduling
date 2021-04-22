@@ -4,9 +4,10 @@ import '../style/RequestsTable.css';
 
 type TableProps = {
     requests: Array<VacationRequest>
+    removeRequest: Function
 }
 
-export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests }) => {
+export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests, removeRequest }) => {
     if(requests.length>0)
         console.log('table' + requests[0].comment);
     return (
@@ -22,10 +23,10 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests })
                             <th></th>
                         </tr>
                         {requests.map((r) => <tr key={requests.indexOf(r)}>
-                            <td>{(r.startDate).toDateString()}-{r.finishDate.toDateString()}</td>
+                            <td>{r.startDate}-{r.finishDate}</td>
                             <td>{r.status}</td>
                             <td>{r.comment}</td>
-                            <td><button disabled={!r.editable}>Delete</button></td>
+                            <td><button onClick={() => removeRequest(r.id)}>Delete</button></td>
                         </tr>)}
                     </tbody>
                 </table>
