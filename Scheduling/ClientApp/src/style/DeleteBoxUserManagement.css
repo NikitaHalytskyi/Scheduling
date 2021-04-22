@@ -1,0 +1,40 @@
+﻿.shadowBox {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.71);
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+.deleteBox p {
+    font-size: 20px;
+}
+
+.deleteBox {
+    border: 1px solid lightgray;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: white;
+    position: absolute;
+    display: flex;
+    left: 30%;
+    top: 30%;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 40%;
+    height: 20%;
+    align-items: center;
+}
+
+.deleteBox button {
+    background-color: #0275d8;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 5px 20px;
+    margin: 0px 15px;
+    color: white;
+    position: relative;
+    display: inline;
+}

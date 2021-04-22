@@ -22,7 +22,7 @@
     border-left: 1px solid lightgray;
 }
 
-#history th, #users th {
+#history th, #users th, #users td {
     text-align: center;
 }
 
@@ -36,9 +36,7 @@
     background-color: whitesmoke;
 }
 
-#history td:nth-child(4),
-#users td:nth-child(4),
-#users td:nth-child(5) {
+#history td:nth-child(4) {
     text-align: center;
 }
 
