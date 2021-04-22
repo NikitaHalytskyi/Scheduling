@@ -1,17 +1,18 @@
 import * as React from 'react';
+import { connect, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
-import{ UserManagementState } from '../store/UserManagement/types';
-import '../style/VacationRequest.css';
-import { actionCreators } from '../store/VacationRequest/actions';
+import { UserManagementState } from '../store/UserManagement/types';
+import { actionCreators } from '../store/UserManagement/actions';
+import { useEffect } from 'react';
 
 import '../style/RequestsTableAndUsersTable.css';
 import '../style/DeleteBoxUserManagement.css';
 
 
-type UserManagementProps = 
+type UserManagementProps =
     UserManagementState &
     typeof actionCreators &
     RouteComponentProps<{}>;
@@ -41,6 +42,13 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
             permissions[i] += users[i].permissions[j] + "; ";
         }
     }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch({ type: 'REQUESTED_USERS' });
+
+    });
 
     return (
         <React.Fragment>
@@ -116,3 +124,7 @@ export const DeleteBox: React.FC<DeleteBoxProps> = ({ id, isOpen, setIsOpen }) =
 };
 
 
+export default connect(
+    (state: ApplicationState) => state.userManagement, // Selects which state properties are merged into the component's props
+    actionCreators // Selects which action creators are merged into the component's props
+)(UserManagement as any);
