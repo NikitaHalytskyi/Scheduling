@@ -8,6 +8,15 @@ type TableProps = {
 }
 
 export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests, removeRequest }) => {
+
+    const convertDate = (date: Date) => {
+        let dateObj = new Date(date);
+        let month = dateObj.getUTCMonth() + 1;
+        let day = dateObj.getUTCDate();
+        let year = dateObj.getUTCFullYear();
+        return (year + "." + month + "." + day);
+    }
+
     if(requests.length>0)
         console.log('table' + requests[0].comment);
     return (
@@ -23,7 +32,7 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests, r
                             <th></th>
                         </tr>
                         {requests.map((r) => <tr key={requests.indexOf(r)}>
-                            <td>{r.startDate}-{r.finishDate}</td>
+                            <td>{convertDate(r.startDate)}-{convertDate(r.finishDate)}</td>
                             <td>{r.status}</td>
                             <td>{r.comment}</td>
                             <td><button onClick={() => removeRequest(r.id)}>Delete</button></td>

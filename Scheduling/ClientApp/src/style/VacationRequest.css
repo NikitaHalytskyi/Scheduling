@@ -16,7 +16,7 @@ p{
     border-radius: 15px;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
@@ -71,3 +71,14 @@ p{
     font-weight: bolder;
 }
 
+@media (max-width: 991px){
+    #vacation-container{
+        justify-content: center;
+    }
+    #vacation-container > div, #vacation-container > form{
+        width: 100%;
+    }
+    #vacation-info > div{
+        margin-top: 20px;
+    }
+}

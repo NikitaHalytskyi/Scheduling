@@ -16,7 +16,7 @@ const reducer: Reducer<VacationRequestState> = (state: VacationRequestState | un
 	const action = incomingAction as KnownAction;
 	switch (action.type) {
 			case 'SET_HISTORY':
-				console.log('rec' + action.requests);
+				console.log('set history' + action.requests);
 				if(action.requests.length > 0){
 					
 					return { logged: state.logged, token: state.token, requestHistory: action.requests };
@@ -25,8 +25,11 @@ const reducer: Reducer<VacationRequestState> = (state: VacationRequestState | un
 				
 			case 'CHECK_USER':
 				const token = Cookies.get('token');
-				if(token)
+				console.log('usercheck ' + token);
+				if(token != undefined){
+					console.log('new');
 					return { logged: true, token: token, requestHistory: [] };
+				}
 				else
 					return { logged: false, token: null, requestHistory: [] };
 			default:
