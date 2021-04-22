@@ -40,7 +40,7 @@ type VacationRequestProps =
         }
     ];
 
-class VacationRequest extends React.PureComponent<VacationRequestProps>{
+class VacationRequest extends React.PureComponent<VacationRequestProps> {
 
     validateDate() {
         let startDate = new Date((document.getElementById('start-date') as HTMLInputElement).value);

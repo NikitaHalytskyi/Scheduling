@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Cookies from 'js-cookie';
 import { connect, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
@@ -6,7 +7,6 @@ import { ApplicationState } from '../store/configureStore';
 import { UserManagementState } from '../store/UserManagement/types';
 import { actionCreators } from '../store/UserManagement/actions';
 import { useEffect } from 'react';
-
 import '../style/RequestsTableAndUsersTable.css';
 import '../style/DeleteBoxUserManagement.css';
 
@@ -16,37 +16,14 @@ type UserManagementProps =
     typeof actionCreators &
     RouteComponentProps<{}>;
 
-type User = {
-    id: number,
-    firstName: string,
-    lastName: string,
-    email: string,
-    position: string,
-    permissions: string[],
-}
-
 export const UserManagement: React.FC<UserManagementProps> = (props) => {
     const [isDeleteBoxOpen, setIsDeleteBoxOpen] = useState(false);
     const [userId, setUserId] = useState(0);
-
-    let users: User[] = [
-        { id: 1, firstName: "Ivan", lastName: "Ivanov", email: "ivan@ukr.net", position: "Manager", permissions: ["part-time", "allUsersManagement"] },
-        { id: 2, firstName: "Stas", lastName: "Alekseenko", email: "stas@ukr.net", position: "Manager", permissions: ["part-time", "allUsersManagement"] },
-    ];
-
-    let permissions: string[] = [];
-    for (let i = 0; i < users.length; i++) {
-        permissions[i] = "";
-        for (let j = 0; j < users[i].permissions.length; j++) {
-            permissions[i] += users[i].permissions[j] + "; ";
-        }
-    }
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch({ type: 'REQUESTED_USERS' });
-
     });
 
     return (
@@ -66,23 +43,29 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
                             <th></th>
                             <th></th>
                         </tr>
-                        {users.map((u, index) => <tr key={users.indexOf(u)}>
-                            <td>{u.firstName}</td>
-                            <td>{u.lastName}</td>
-                            <td>{u.email}</td>
-                            <td>{u.position}</td>
-                            <td>{permissions[index]}</td>
-                            <td>
-                                <button>Edit</button>
-                            </td>
-                            <td>
-                                <button
-                                    className="deleteUserButton"
-                                    onClick={() => { setIsDeleteBoxOpen(true); setUserId(u.id); }}>
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>)}
+                        {props.users.map((u, index) => {
+                            if (u != null) {
+                                    
+                                    return(<tr key={props.users.indexOf(u)}>
+                                        <td>{u.name}</td>
+                                        <td>{u.surname}</td>
+                                        <td>{u.email}</td>
+                                        <td>{u.position}</td>
+                                        <td>{}</td>
+                                        <td>
+                                            <button>Edit</button>
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="deleteUserButton"
+                                                onClick={() => { setIsDeleteBoxOpen(true); setUserId(index); }}>
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>);
+                                }
+                            })
+                        }
                     </tbody>
                 </table>
             </div>
@@ -98,7 +81,7 @@ type DeleteBoxProps = {
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
 };
 
-export const DeleteBox: React.FC<DeleteBoxProps> = ({ id, isOpen, setIsOpen }) => {
+const DeleteBox: React.FC<DeleteBoxProps> = ({ id, isOpen, setIsOpen }) => {
     let content = isOpen ?
         <div className="shadowBox">
             <div className="deleteBox">
@@ -112,10 +95,10 @@ export const DeleteBox: React.FC<DeleteBoxProps> = ({ id, isOpen, setIsOpen }) =
         : null;
 
     function handleDeleteUser() {
-        
+
     }
-    
-    return (
+
+    return(
         <React.Fragment>
             {content}
         </React.Fragment>
@@ -124,6 +107,6 @@ export const DeleteBox: React.FC<DeleteBoxProps> = ({ id, isOpen, setIsOpen }) =
 
 
 export default connect(
-    (state: ApplicationState) => state.userManagement, // Selects which state properties are merged into the component's props
-    actionCreators // Selects which action creators are merged into the component's props
-)(UserManagement as any);
+    (state: ApplicationState) => state.userManagement,
+    actionCreators
+)(UserManagement);
