@@ -7,7 +7,8 @@ namespace Scheduling.Models
 {
     public class ComputedProps
     {
-        public List<string> Permissions { get; set; }
+        public int Id { get; set; }
+        public List<Permission> Permissions { get; set; }
         public List<Team> Teams { get; set; }
 
         public ComputedProps()
@@ -16,9 +17,9 @@ namespace Scheduling.Models
         }
         public void AddPermission(List<Permission> permissions)
         {
-            Permissions = new List<string>();
-            foreach (Permission permission in permissions)
-                Permissions.Add(permission.Name);
+            Permissions = permissions;
+            /*foreach (Permission permission in permissions)
+                Permissions.Add(permission.Name);*/
         }
     }
 }

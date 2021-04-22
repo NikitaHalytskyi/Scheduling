@@ -18,7 +18,6 @@ namespace Scheduling.Models
         public string Department { get; set; }
         public string Salt { get; set; }
 
-        [NotMapped]
         public ComputedProps ComputedProps { get; set; }
         public User()
         {

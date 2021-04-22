@@ -12,7 +12,8 @@ namespace Scheduling.GraphQl.Types
         public ComputedPropsType()
         {
             Name = "ComputedProps";
-            Field(f => f.Permissions).Description("User permissions");
+            Field(props => props.Id).Description("Computed props id.");
+            Field<ListGraphType<PermissionType>>(nameof(ComputedProps.Permissions));
             Field<ListGraphType<TeamType>>(nameof(ComputedProps.Teams));
         }
     }

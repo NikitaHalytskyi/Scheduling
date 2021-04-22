@@ -91,9 +91,9 @@ namespace Scheduling.Domain
 
             RemoveUserPermissions(user.Id);
 
-            foreach (string permmision in user.ComputedProps.Permissions)
+            foreach (Permission permmision in user.ComputedProps.Permissions)
             {
-                CreateUserPermission(user.Id, permmision);
+                CreateUserPermission(user.Id, permmision.Name);
             }
 
             foreach (Team team in teams)
