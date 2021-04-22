@@ -72,8 +72,9 @@ namespace Scheduling
                    options.AddPolicy("Part-time", p => p.RequireClaim("permission", "Part-time"));
                    options.AddPolicy("Full-time", p => p.RequireClaim("permission", "Full-time"));
                    options.AddPolicy("Accounter", p => p.RequireClaim("permission", "Accounter"));
-                   options.AddPolicy("Access to reports", p => p.RequireClaim("permission", "Access to reports"));
+                   options.AddPolicy("Access to team management", p => p.RequireClaim("permission", "Access to team management"));
                    options.AddPolicy("Access to calendar", p => p.RequireClaim("permission", "Access to calendar"));
+                   options.AddPolicy("Access to global management", p => p.RequireClaim("permission", "Access to global management"));
                });
 
             services.AddScoped<IdentityService>();

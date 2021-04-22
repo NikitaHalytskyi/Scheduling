@@ -8,7 +8,7 @@ export const getUserPermissions = async (token: string) => {
 			}
 		}`
 	});
-  
+
 	return fetch('/graphql', {
 		method: 'POST',
 		headers: {
@@ -17,5 +17,5 @@ export const getUserPermissions = async (token: string) => {
 		},
 		body: query
 	})
-	.then(data => data.json());
+		.then(data => data.json());
 };
