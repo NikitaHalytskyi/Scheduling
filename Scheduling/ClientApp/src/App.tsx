@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route } from 'react-router';
 import Layout from './components/Layout';
 import User from './components/User';
-import { UserManagement } from './components/UserManagement';
+import UserManagement from './components/UserManagement';
 import VacationRequest from './components/VacationRequest';
 
 import './custom.css'

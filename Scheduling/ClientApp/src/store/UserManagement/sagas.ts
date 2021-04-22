@@ -17,6 +17,4 @@ function* sagaWorker(action: ReceivedUsersDataAction) {
     }
     else
         yield put(actionCreators.accessDenied());
-
-
 }
