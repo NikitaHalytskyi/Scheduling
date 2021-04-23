@@ -8,7 +8,9 @@ export const getUsersData = async (token: string) => {
                 position
                 department
                 computedProps {
-                  permissions
+                  permissions {
+                      name
+                  }
                   teams {
                     name
                   }

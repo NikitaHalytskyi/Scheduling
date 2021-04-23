@@ -5,8 +5,11 @@ export interface UserState {
 	user: UserData
 }
 
+export interface Permission {
+	name: string
+}
 export interface ComputedProps {
-	permissions: Array<string>
+	permissions: Array<Permission>
 }
 
 export type UserData = { 

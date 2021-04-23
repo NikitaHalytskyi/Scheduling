@@ -25,7 +25,7 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
     useEffect(() => {
         dispatch({ type: 'REQUESTED_USERS' });
     });
-
+    console.log(props.users);
     return (
         <React.Fragment>
             <DeleteBox id={userId} isOpen={isDeleteBoxOpen} setIsOpen={setIsDeleteBoxOpen} />
