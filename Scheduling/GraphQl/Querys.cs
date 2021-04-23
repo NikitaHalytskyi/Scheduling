@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Scheduling.Domain;
 using Scheduling.GraphQl.Types;
 using Scheduling.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Scheduling.GraphQl
@@ -25,7 +26,8 @@ namespace Scheduling.GraphQl
                     user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
                     user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
-                    
+                    user.AddTimerHistory(dataBaseRepository.GetTimerHistory(email));
+
                     return user;
                 }
             ).AuthorizeWith("Authenticated");
@@ -89,6 +91,12 @@ namespace Scheduling.GraphQl
                 }
             ).AuthorizeWith("Authenticated");
 
+            FieldAsync<ListGraphType<TimerHistoryType>, IReadOnlyCollection<TimerHistory>>(
+                "timeHistory",
+                resolve: ctx =>
+                {
+                    return dataBaseRepository.GetTimerHistory();
+                }).AuthorizeWith("Authenticated");
         }
     }
 }

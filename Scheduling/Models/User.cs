@@ -20,11 +20,20 @@ namespace Scheduling.Models
 
         [NotMapped]
         public ComputedProps ComputedProps { get; set; }
+        [NotMapped]
+        public List<TimerHistory> TimerHistories { get; set; }
         public User()
         {
             
         }
-
+        public void AddTimerHistory(List<TimerHistory> timerHistory)
+        {
+            TimerHistories = new List<TimerHistory>();
+            foreach (TimerHistory timerHistoryValue in timerHistory)
+            {
+                TimerHistories.Add(timerHistoryValue);
+            }
+        }
 
     }
 }
