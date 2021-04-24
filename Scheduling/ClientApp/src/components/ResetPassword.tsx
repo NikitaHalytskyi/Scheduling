@@ -2,18 +2,20 @@ import * as React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import '../style/ResetPassword.css';
 import { checkAccesToResetPassword, resetPassword } from '../webAPI/resetPassword';
+import { Error403 } from './Error403';
 
 interface IResetPasswordState {
 	newPassword: string,
 	confirmPassword: string,
 	error: string,
 	token: string,
-	redirect: boolean
+	showMessage: boolean,
+	showError403: boolean
 }
 
-export class ResetPassword extends React.Component<never, IResetPasswordState> {
+export class ResetPassword extends React.Component<{}, IResetPasswordState> {
     
-  constructor(props: Readonly<never>){
+  constructor(props: Readonly<{}>){
 		super(props);
 
 		this.state = {
@@ -21,7 +23,8 @@ export class ResetPassword extends React.Component<never, IResetPasswordState> {
 			confirmPassword: '',
 			error: '',
 			token: window.location.href.replace(`${window.location.origin}/resetPassword/`, ''),
-			redirect: false
+			showMessage: false,
+			showError403: false
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,7 +33,7 @@ export class ResetPassword extends React.Component<never, IResetPasswordState> {
 	async componentDidMount(){
 		const res = await checkAccesToResetPassword(this.state.token);
 		if(!res.data)
-			this.setState({redirect: true})
+			this.setState({ showError403: true })
 	}
 
 	setError(error: string){
@@ -49,7 +52,7 @@ export class ResetPassword extends React.Component<never, IResetPasswordState> {
 		if(this.state.newPassword != this.state.confirmPassword)
 			return this.setError('Password mismatch.');
       
-			this.setError('');
+		this.setError('');
 
 		const res = await resetPassword(this.state.newPassword, this.state.token);
 
@@ -58,13 +61,14 @@ export class ResetPassword extends React.Component<never, IResetPasswordState> {
 		}
 
 		this.setState({
-			redirect: true
+			showMessage: true
 		});
 	}
 
 	render(){
 
-		const err = this.state.error ?  <p className='error-message'>{this.state.error}</p> : null;
+		const error = this.state.error ?  <p className='error-message'>{this.state.error}</p> : null;
+		const message = <p>Password changed successfully.<br/><Link to="/">Return home.</Link></p>
 
 		const form = (
 			<React.Fragment>
@@ -79,7 +83,7 @@ export class ResetPassword extends React.Component<never, IResetPasswordState> {
 								<input onInput={event => this.setState({confirmPassword: event.currentTarget.value})} id='input-confirm-password' className='reset-password-form-input' type='text' name='confirm-password' placeholder='Confirm password'></input>
 								
 								<div className='error-message-container'>
-									{err}
+									{error}
 								</div>
 								
 								<button id='reset-password-form-button' type='submit'>Reset password</button>
@@ -89,10 +93,9 @@ export class ResetPassword extends React.Component<never, IResetPasswordState> {
 			</React.Fragment>
 		);
 
-		const redirect = <Redirect to="/"></Redirect>
-
 		return (
-			this.state.redirect ? redirect : form
+			this.state.showError403 ? <Error403 /> 
+			: (this.state.showMessage ? message : form)
 		);
 	}
 }
