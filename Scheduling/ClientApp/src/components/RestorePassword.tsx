@@ -24,10 +24,10 @@ export const RestorePassword: React.FunctionComponent = () => {
 
 			const res = await restorePassword(email);
 			
-			
-			if(res.data)
-				setEmailSended(res.data.sendResetPasswordLink);
+			if(res.data && res.data.sendResetPasswordLink)
+				return setEmailSended(res.data.sendResetPasswordLink);
 
+			setError(true);
     }
 
 		const error = showError ? <p className='error-message'>Error! Incorrect email.</p> : null; 

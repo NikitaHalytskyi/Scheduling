@@ -26,7 +26,12 @@ export const ResetPassword: React.FunctionComponent = () => {
 		setError('');
 
 		const token = window.location.href.replace(`${window.location.origin}/resetPassword/`, '');
-		await resetPassword(newPassword, token);
+		const res = await resetPassword(newPassword, token);
+
+		if(res.data && res.data.resetPassword == "The new password cannot match the current password."){
+			return setError("The new password cannot match the current password.");
+		}
+
 		setPasswordChanged(true);
 	}
 

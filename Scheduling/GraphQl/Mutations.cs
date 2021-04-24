@@ -141,7 +141,7 @@ namespace Scheduling.GraphQl
                 }
             );
 
-            Field<BooleanGraphType>(
+            Field<StringGraphType>(
                 "resetPassword",    
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "New password to acccount."}    
@@ -152,20 +152,23 @@ namespace Scheduling.GraphQl
                     string token = httpContext.HttpContext.Request.Headers.First(header => header.Key == "Authorization").Value.ToString().Replace("Bearer ", "");
                     Token jwt = dataBaseRepository.GetJWT(token);
 
-                    if (jwt == null)
-                        return false;
-
-                    dataBaseRepository.RemoveJWT(token);
-
                     string password = context.GetArgument<string>("Password");
                     string salt = Guid.NewGuid().ToString();
                     
                     User user = dataBaseRepository.Get(email);
 
-                    user.Password = Hashing.GetHashString(password + salt);
-                    user.Salt = salt;
+                    if (user.Password == Hashing.GetHashString(password + user.Salt))
+                        return "The new password cannot match the current password.";
 
-                    return dataBaseRepository.EditUser(user);
+                    if (jwt == null)
+                        return "";
+
+                    dataBaseRepository.RemoveJWT(token);
+
+                    user.Password = Hashing.GetHashString(password + user.Salt);
+
+                    dataBaseRepository.EditUser(user);
+                    return "Success";
                 }
             ).AuthorizeWith("canResetPassword");
             
