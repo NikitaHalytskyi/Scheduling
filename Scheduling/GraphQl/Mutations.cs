@@ -176,6 +176,12 @@ namespace Scheduling.GraphQl
                 "checkAccessToResetPasswordPage",
                 resolve: context =>
                 {
+                    string token = httpContext.HttpContext.Request.Headers.First(header => header.Key == "Authorization").Value.ToString().Replace("Bearer ", "");
+                    Token jwt = dataBaseRepository.GetJWT(token);
+
+                    if (jwt == null)
+                        return false;
+
                     return true;
                 }
             ).AuthorizeWith("canResetPassword");

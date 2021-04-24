@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import '../style/ResetPassword.css';
-import { checkAccesToResetPassword, resetPassword } from '../webAPI/resetPassword';
+import { checkAccessToResetPassword, resetPassword } from '../webAPI/resetPassword';
 import { Error403 } from './Error403';
+import { LoadingAnimation } from './Loading';
+
 
 interface IResetPasswordState {
 	newPassword: string,
@@ -10,7 +12,8 @@ interface IResetPasswordState {
 	error: string,
 	token: string,
 	showMessage: boolean,
-	showError403: boolean
+	showError403: boolean,
+	isLoading: boolean
 }
 
 export class ResetPassword extends React.Component<{}, IResetPasswordState> {
@@ -24,16 +27,19 @@ export class ResetPassword extends React.Component<{}, IResetPasswordState> {
 			error: '',
 			token: window.location.href.replace(`${window.location.origin}/resetPassword/`, ''),
 			showMessage: false,
-			showError403: false
+			showError403: false,
+			isLoading: false
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	async componentDidMount(){
-		const res = await checkAccesToResetPassword(this.state.token);
-		if(!res.data)
-			this.setState({ showError403: true })
+		const res = await checkAccessToResetPassword(this.state.token);
+		if(res.data && res.data.checkAccessToResetPasswordPage)
+			return;
+		
+		this.setState({ showError403: true })
 	}
 
 	setError(error: string){
@@ -49,14 +55,17 @@ export class ResetPassword extends React.Component<{}, IResetPasswordState> {
 		if(this.state.newPassword.length < 8)
 			return this.setError('Password is too short.');
 
-		if(this.state.newPassword != this.state.confirmPassword)
+		if(this.state.newPassword !== this.state.confirmPassword)
 			return this.setError('Password mismatch.');
       
 		this.setError('');
+		this.toggleLoader();
 
 		const res = await resetPassword(this.state.newPassword, this.state.token);
 
-		if(res.data && res.data.resetPassword == "The new password cannot match the current password."){
+		this.toggleLoader();
+
+		if(res.data && res.data.resetPassword === "The new password cannot match the current password."){
 			return this.setError("The new password cannot match the current password.");
 		}
 
@@ -65,12 +74,15 @@ export class ResetPassword extends React.Component<{}, IResetPasswordState> {
 		});
 	}
 
+	toggleLoader(){
+		this.setState({ isLoading: !this.state.isLoading });
+	}
+
 	render(){
 
 		const error = this.state.error ?  <p className='error-message'>{this.state.error}</p> : null;
-		const message = <p>Password changed successfully.<br/><Link to="/">Return home.</Link></p>
 
-		const form = (
+		let page = (
 			<React.Fragment>
 				<main id='reset-password-page'>
 						<form id='reset-password-form' onSubmit={this.handleSubmit}>
@@ -93,9 +105,15 @@ export class ResetPassword extends React.Component<{}, IResetPasswordState> {
 			</React.Fragment>
 		);
 
-		return (
-			this.state.showError403 ? <Error403 /> 
-			: (this.state.showMessage ? message : form)
-		);
+		if(this.state.isLoading)
+			page = <LoadingAnimation />;
+
+		if(this.state.showMessage)
+			page = <p>Password changed successfully.<br/><Link to="/">Return home.</Link></p>;
+
+		if(this.state.showError403)
+			page = <Error403 />
+
+		return page;
 	}
 }

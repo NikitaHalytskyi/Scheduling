@@ -16,7 +16,7 @@ export const resetPassword = async ( password: string, token: string ) => {
 	.then(data => data.json());
 };
 
-export const checkAccesToResetPassword = async (  token: string ) => {
+export const checkAccessToResetPassword = async ( token: string ) => {
 	const query = JSON.stringify({
 		query: `mutation {
 			checkAccessToResetPasswordPage
