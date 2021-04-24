@@ -1,69 +1,98 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import '../style/ResetPassword.css';
-import { resetPassword } from '../webAPI/resetPassword';
+import { checkAccesToResetPassword, resetPassword } from '../webAPI/resetPassword';
 
-export const ResetPassword: React.FunctionComponent = () => {
+interface IResetPasswordState {
+	newPassword: string,
+	confirmPassword: string,
+	error: string,
+	token: string,
+	redirect: boolean
+}
+
+export class ResetPassword extends React.Component<never, IResetPasswordState> {
     
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-	const [error, setError] = useState('');
-	const [passwordChaged, setPasswordChanged] = useState(false);
+  constructor(props: Readonly<never>){
+		super(props);
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-		e.preventDefault();
-
-		if(!newPassword.length || !confirmPassword.length)
-			return setError('All fields must be filled.');
-
-		if(newPassword.length < 8)
-			return setError('Password is too short.');
-
-		if(newPassword != confirmPassword)
-			return setError('Password mismatch.');
-      
-		setError('');
-
-		const token = window.location.href.replace(`${window.location.origin}/resetPassword/`, '');
-		const res = await resetPassword(newPassword, token);
-
-		if(res.data && res.data.resetPassword == "The new password cannot match the current password."){
-			return setError("The new password cannot match the current password.");
+		this.state = {
+			newPassword: '',
+			confirmPassword: '',
+			error: '',
+			token: window.location.href.replace(`${window.location.origin}/resetPassword/`, ''),
+			redirect: false
 		}
 
-		setPasswordChanged(true);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	const err = error ?  <p className='error-message'>{error}</p> : null;
+	async componentDidMount(){
+		const res = await checkAccesToResetPassword(this.state.token);
+		if(!res.data)
+			this.setState({redirect: true})
+	}
 
-	const form = (
-		<React.Fragment>
-			<main id='reset-password-page'>
-					<form id='reset-password-form'>
-							<div className='center-aligner'>
-									<h1>Reset password</h1>
-							</div>
-							<hr/>
-							
-							<input onInput={event => setNewPassword(event.currentTarget.value)} id='input-new-password' className='reset-password-form-input' type='text' name='new-password' placeholder='New password' ></input>
-							
-							<input onInput={event => setConfirmPassword(event.currentTarget.value)} id='input-confirm-password' className='reset-password-form-input' type='text' name='confirm-password' placeholder='Confirm password'></input>
-							
-							<div className='error-message-container'>
-								{err}
-							</div>
-							
-							<button id='reset-password-form-button' type='button' onClick={handleSubmit}>Reset password</button>
-							<Link to='/'>return to login</Link>
-					</form>
-			</main>
-		</React.Fragment>
-	);
+	setError(error: string){
+		this.setState({error});
+	}
 
-	const redirect = <Redirect to="/"></Redirect>
+  async handleSubmit(event: { preventDefault: () => void; })  {
+		event.preventDefault();
 
-	return (
-			passwordChaged ? redirect : form
-	);
+		if(!this.state.newPassword.length || !this.state.confirmPassword.length)
+			return this.setError('All fields must be filled.');
+
+		if(this.state.newPassword.length < 8)
+			return this.setError('Password is too short.');
+
+		if(this.state.newPassword != this.state.confirmPassword)
+			return this.setError('Password mismatch.');
+      
+			this.setError('');
+
+		const res = await resetPassword(this.state.newPassword, this.state.token);
+
+		if(res.data && res.data.resetPassword == "The new password cannot match the current password."){
+			return this.setError("The new password cannot match the current password.");
+		}
+
+		this.setState({
+			redirect: true
+		});
+	}
+
+	render(){
+
+		const err = this.state.error ?  <p className='error-message'>{this.state.error}</p> : null;
+
+		const form = (
+			<React.Fragment>
+				<main id='reset-password-page'>
+						<form id='reset-password-form' onSubmit={this.handleSubmit}>
+								<div className='center-aligner'>
+										<h1>Reset password</h1>
+								</div>
+								<hr/>
+								
+								<input onInput={event => this.setState({newPassword: event.currentTarget.value})} id='input-new-password' className='reset-password-form-input' type='text' name='new-password' placeholder='New password' ></input>
+								<input onInput={event => this.setState({confirmPassword: event.currentTarget.value})} id='input-confirm-password' className='reset-password-form-input' type='text' name='confirm-password' placeholder='Confirm password'></input>
+								
+								<div className='error-message-container'>
+									{err}
+								</div>
+								
+								<button id='reset-password-form-button' type='submit'>Reset password</button>
+								<Link to='/'>return to login</Link>
+						</form>
+				</main>
+			</React.Fragment>
+		);
+
+		const redirect = <Redirect to="/"></Redirect>
+
+		return (
+			this.state.redirect ? redirect : form
+		);
+	}
 }

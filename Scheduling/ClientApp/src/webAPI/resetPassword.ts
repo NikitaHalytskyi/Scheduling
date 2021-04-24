@@ -15,3 +15,21 @@ export const resetPassword = async ( password: string, token: string ) => {
 	})
 	.then(data => data.json());
 };
+
+export const checkAccesToResetPassword = async (  token: string ) => {
+	const query = JSON.stringify({
+		query: `mutation {
+			checkAccessToResetPasswordPage
+		}`
+	});
+
+ return fetch('/graphql', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: query
+	})
+	.then(data => data.json());
+};

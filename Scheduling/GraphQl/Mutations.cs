@@ -171,7 +171,15 @@ namespace Scheduling.GraphQl
                     return "Success";
                 }
             ).AuthorizeWith("canResetPassword");
-            
+
+            Field<BooleanGraphType>(
+                "checkAccessToResetPasswordPage",
+                resolve: context =>
+                {
+                    return true;
+                }
+            ).AuthorizeWith("canResetPassword");
+
         }
     }
 }

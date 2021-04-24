@@ -33,7 +33,7 @@ export const RestorePassword: React.FunctionComponent = () => {
 		const error = showError ? <p className='error-message'>Error! Incorrect email.</p> : null; 
 
 		const form = (
-			<form id='restore-password-form'>
+			<form id='restore-password-form' onSubmit={handleSubmit}>
 				<div className='center-aligner'>
 						<h1>Restore password</h1>
 				</div>
@@ -47,7 +47,7 @@ export const RestorePassword: React.FunctionComponent = () => {
 					{error}
 				</div>
 				
-				<button id='restore-password-form-button' type='button' onClick={handleSubmit}>Send restore email</button>
+				<button id='restore-password-form-button' type='submit' >Send restore email</button>
 				<Link to="/">return to login</Link>
 			</form>
 		);
