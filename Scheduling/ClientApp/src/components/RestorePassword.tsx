@@ -1,0 +1,64 @@
+import * as React from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../style/RestorePassword.css';
+import { restorePassword } from '../webAPI/restorePassword';
+
+function validateEmail(email: string):boolean {
+  const emailRegularEx = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return emailRegularEx.test(email);
+}
+
+export const RestorePassword: React.FunctionComponent = () => {
+    
+  const [email, setEmail] = useState("");
+	const [showError, setError] = useState(false);
+	const [emailSended, setEmailSended] = useState(false);
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+      e.preventDefault();
+
+      if(!validateEmail(email)){
+        return setError(true);
+      }
+
+			const res = await restorePassword(email);
+			
+			
+			if(res.data)
+				setEmailSended(res.data.sendResetPasswordLink);
+
+    }
+
+		const error = showError ? <p className='error-message'>Error! Incorrect email.</p> : null; 
+
+		const form = (
+			<form id='restore-password-form'>
+				<div className='center-aligner'>
+						<h1>Restore password</h1>
+				</div>
+
+				<hr />
+				
+				<label className='restore-password-form-label' htmlFor='input-email'>Email:</label>
+				<input onInput={event => setEmail(event.currentTarget.value)} id='input-email' className='restore-password-form-input' type='email' name='email' placeholder='example@mail.com' ></input>
+				
+				<div className='error-message-container'>
+					{error}
+				</div>
+				
+				<button id='restore-password-form-button' type='button' onClick={handleSubmit}>Send restore email</button>
+				<Link to="/">return to login</Link>
+			</form>
+		);
+
+		const message = <p>An email has been sent to your email address with instructions on how to reset your password. If you don't receive it within minutes, please make sure you provide the email address for your account and try again or contact us for assistance. <br/><Link to='/'>return to login</Link></p>;
+
+    return (
+        <React.Fragment>
+            <main id='restore-password-page'>
+							{ emailSended ? message : form }
+            </main>
+        </React.Fragment>
+    );
+}

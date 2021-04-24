@@ -10,8 +10,8 @@ using Scheduling.Domain;
 namespace Scheduling.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20210415013439_AddPermissions")]
-    partial class AddPermissions
+    [Migration("20210424140614_addJWT")]
+    partial class addJWT
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,11 +36,6 @@ namespace Scheduling.Migrations
                     b.ToTable("Permissions");
 
                     b.HasData(
-                        new
-                        {
-                            Id = 7,
-                            Name = "canManageUsers"
-                        },
                         new
                         {
                             Id = 1,
@@ -99,6 +94,21 @@ namespace Scheduling.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Scheduling.Models.Token", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Jwt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("Scheduling.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -127,9 +137,6 @@ namespace Scheduling.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -155,8 +162,7 @@ namespace Scheduling.Migrations
                             Password = "u9DAYiHl+liIqRMvuuciBA==",
                             Position = "lol",
                             Salt = "f0e30e73-fac3-4182-8641-ecba862fed69",
-                            Surname = "Userov",
-                            TeamId = 6
+                            Surname = "Userov"
                         });
                 });
 
@@ -181,13 +187,13 @@ namespace Scheduling.Migrations
                         new
                         {
                             Id = 3,
-                            PermisionId = 7,
+                            PermisionId = 1,
                             UserId = 1321313
                         },
                         new
                         {
                             Id = 4,
-                            PermisionId = 2,
+                            PermisionId = 3,
                             UserId = 13213133
                         },
                         new
@@ -195,6 +201,88 @@ namespace Scheduling.Migrations
                             Id = 5,
                             PermisionId = 2,
                             UserId = 1321313
+                        });
+                });
+
+            modelBuilder.Entity("Scheduling.Models.UserTeams", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("userTeams");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TeamId = 6,
+                            UserId = 13213133
+                        });
+                });
+
+            modelBuilder.Entity("Scheduling.Models.VacationRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FinishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VacationRequests");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comment = "I want to see a bober.",
+                            FinishDate = new DateTime(2021, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2021, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Declined. Declined by PM. Declined by TL.",
+                            UserId = 13213133
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comment = "I really want to see a bober.",
+                            FinishDate = new DateTime(2021, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2021, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Declined. Declined by PM. Declined by TL.",
+                            UserId = 13213133
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comment = "Please, it`s my dream to see a bober.",
+                            FinishDate = new DateTime(2021, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2021, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Pending consideration...",
+                            UserId = 13213133
                         });
                 });
 #pragma warning restore 612, 618

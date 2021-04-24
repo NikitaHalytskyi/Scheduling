@@ -1,5 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Http;
 using Scheduling.Domain;
 using Scheduling.GraphQl.Types;
 using Scheduling.Models;
@@ -14,7 +15,7 @@ namespace Scheduling.GraphQl
 {
     public class Mutations : ObjectGraphType
     {
-        public Mutations(IdentityService identityService, DataBaseRepository dataBaseRepository, EmailService emailService)
+        public Mutations(IdentityService identityService, DataBaseRepository dataBaseRepository, EmailService emailService, IHttpContextAccessor httpContext)
         {
             Name = "Mutation";
 
@@ -114,6 +115,60 @@ namespace Scheduling.GraphQl
                 },
                 description: "Returns user requests."
             ).AuthorizeWith("Authenticated");
+
+            Field<BooleanGraphType>(
+                "sendResetPasswordLink",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email" }
+                ),
+                resolve: context =>
+                {
+                    string email = context.GetArgument<string>("Email");
+                    User user = dataBaseRepository.Get(email);
+                    if (user == null)
+                        return false;
+
+                    string token = identityService.GenerateResetPasswordAccessToken(email);
+                    try
+                    {
+                        emailService.SendRestorePasswordEmail(email, token);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+            );
+
+            Field<BooleanGraphType>(
+                "resetPassword",    
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "New password to acccount."}    
+                ),
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    string token = httpContext.HttpContext.Request.Headers.First(header => header.Key == "Authorization").Value.ToString().Replace("Bearer ", "");
+                    Token jwt = dataBaseRepository.GetJWT(token);
+
+                    if (jwt == null)
+                        return false;
+
+                    dataBaseRepository.RemoveJWT(token);
+
+                    string password = context.GetArgument<string>("Password");
+                    string salt = Guid.NewGuid().ToString();
+                    
+                    User user = dataBaseRepository.Get(email);
+
+                    user.Password = Hashing.GetHashString(password + salt);
+                    user.Salt = salt;
+
+                    return dataBaseRepository.EditUser(user);
+                }
+            ).AuthorizeWith("canResetPassword");
+            
         }
     }
 }
