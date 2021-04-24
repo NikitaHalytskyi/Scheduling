@@ -10,9 +10,9 @@ import { actionCreators } from '../store/Timer/actions';
 import { RequestsTable } from './RequestsTable';
 import { useState } from 'react';
 import { TimerHistoryTable } from './TimerHistoryTable';
-import Timer from "../containers/TimerContainer"
+import Timer from "./timer"
 import Cookies from 'js-cookie';
-import { getUserData, getUserTimerData } from '../webAPI/user';
+import { getUserTimerData } from '../webAPI/user';
 type TimerHistoryProps =
     TimerHistoryState &
     typeof actionCreators &
@@ -54,18 +54,19 @@ class TimerPage extends React.PureComponent<TimerHistoryProps>{
         e.preventDefault();
       }
 
-    async componentDidMount(){
+    async componentDidMount() {
+        console.log(this.props);
         const token = Cookies.get('token');
-
         if (token) {
             const data = await getUserTimerData(token);
-            console.log(data.data.getCurrentUser.timerHistories);
+            console.log(data.data.getCurrentUser.computedProps.timerHistories);
             if (data.data) {
-                this.props.setTimerHistory(data.data.getCurrentUser.timerHistories);
+                this.props.setTimerHistory(data.data.getCurrentUser.computedProps.timerHistories);
                 console.log(this.props.timerHistory);
                 console.log(this.props);
             }
         }
+        //this.props.addTime(new Date().toLocaleTimeString());
 
     }
 
@@ -81,7 +82,7 @@ class TimerPage extends React.PureComponent<TimerHistoryProps>{
                             <div id='vacation-info'>
                                 <div className='time-tracker'>
                                     <h5>Time tracker</h5>
-                                    <Timer />
+                                    <Timer  />
                                 </div>
                             </div>
                         </div>

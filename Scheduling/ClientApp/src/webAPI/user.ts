@@ -10,6 +10,12 @@ export const getUserData = async (token: string) => {
 				department
 				computedProps {
 					permissions
+					timerHistories
+						  {
+							id
+							startTime
+							finishTime
+						  }
 				}
 			}
 		}`
@@ -29,9 +35,11 @@ export const getUserTimerData = async (token: string) => {
 	const query = JSON.stringify({
 		query: `{
 			getCurrentUser{
-				timerHistories{
-					startTime
-					finishTime
+				computedProps{
+					timerHistories{
+						startTime
+						finishTime
+					}
 				}
 			}
 		}`

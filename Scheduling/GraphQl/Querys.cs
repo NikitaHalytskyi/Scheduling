@@ -26,7 +26,7 @@ namespace Scheduling.GraphQl
                     user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
                     user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
-                    user.AddTimerHistory(dataBaseRepository.GetTimerHistory(email));
+                    user.ComputedProps.AddTimerHistory(dataBaseRepository.GetTimerHistory(user.Id));
 
                     return user;
                 }
@@ -92,7 +92,7 @@ namespace Scheduling.GraphQl
             ).AuthorizeWith("Authenticated");
 
             FieldAsync<ListGraphType<TimerHistoryType>, IReadOnlyCollection<TimerHistory>>(
-                "timeHistory",
+                "GetTimeHistories",
                 resolve: ctx =>
                 {
                     return dataBaseRepository.GetTimerHistory();

@@ -13,11 +13,11 @@ namespace Scheduling.Domain
         {
             return await Context.TimerHistories.AsNoTracking().ToListAsync();
         }
-        public List<TimerHistory> GetTimerHistory(string email)
+        public List<TimerHistory> GetTimerHistory(int id)
         {
             //return Context.TimerHistory.ToList();
 
-            User user = Context.Users.FirstOrDefault(user => user.Email == email);
+            User user = Context.Users.FirstOrDefault(user => user.Id == id);
 
             if (user == null)
                 return new List<TimerHistory>();

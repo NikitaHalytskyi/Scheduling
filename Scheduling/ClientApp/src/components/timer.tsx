@@ -1,5 +1,8 @@
 ﻿import React, { Component } from "react";
 import * as EasyTimer from "easytimer.js";
+import { ApplicationState } from "../store/configureStore";
+import { actionCreators } from "../store/Timer/actions";
+import { connect } from 'react-redux';
 
 class Timer extends Component {
     private pauseButton: HTMLInputElement;
@@ -43,15 +46,21 @@ class Timer extends Component {
 
     startTimer() {
         this.state.timer.start();
+        console.log(this.props);
 
         this.setState({
             ...this.state,
             timer_state: "ticking"
         })
+
+        this.props.addTime({
+            startTime: new Date().toISOString(), finishTime: ""
+        });
     }
 
     resetTimer() {
-        //this.props.addTime(this.state.timer.getTimeValues());
+        this.props.addTime({
+             finishTime: new Date().toISOString() });
         this.state.timer.reset();
         this.state.timer.pause();
         this.setState({
@@ -114,4 +123,7 @@ class Timer extends Component {
     }
 }
 
-export default Timer;
+export default connect(
+    (state: ApplicationState) => state.timerHistory,
+    actionCreators
+)(Timer);
