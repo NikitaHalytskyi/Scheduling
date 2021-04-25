@@ -1,5 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+using Microsoft.AspNetCore.Http;
 using Scheduling.Domain;
 using Scheduling.GraphQl.Types;
 using Scheduling.Models;
@@ -14,7 +15,7 @@ namespace Scheduling.GraphQl
 {
     public class Mutations : ObjectGraphType
     {
-        public Mutations(IdentityService identityService, DataBaseRepository dataBaseRepository, EmailService emailService)
+        public Mutations(IdentityService identityService, DataBaseRepository dataBaseRepository, EmailService emailService, IHttpContextAccessor httpContext)
         {
             Name = "Mutation";
 
@@ -122,12 +123,16 @@ namespace Scheduling.GraphQl
                 ),
                 resolve: context =>
                 {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+
                     DateTime startTime = context.GetArgument<DateTime>("StartTime");
 
-                    return dataBaseRepository.AddTimerStartValue(startTime);   
+                    return dataBaseRepository.AddTimerStartValue(startTime, user.Id);   
                 },
                 description: "Add start time"
-            );
+
+            ).AuthorizeWith("Authenticated");
 
 
             Field<TimerHistoryType>(
@@ -135,17 +140,20 @@ namespace Scheduling.GraphQl
                 arguments: new QueryArguments(
                     new QueryArgument<DateTimeGraphType> { Name = "StartTime", Description = "Timer started" },
                     new QueryArgument<DateTimeGraphType> { Name = "FinishTime", Description = "Timer finished" },
-                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "id", Description = "Edit Timer finished" }
+                    new QueryArgument<IntGraphType> { Name = "id", Description = "Edit Timer finished" }
                 ),
                 resolve: context =>
                 {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+
                     DateTime startTime = (DateTime)context.GetArgument<DateTime>("StartTime");
                     DateTime finishTime = (DateTime)context.GetArgument<DateTime>("FinishTime");
 
 
-                    int id = context.GetArgument<int>("id");
+                    Nullable<int> id = context.GetArgument<Nullable<int>>("id", defaultValue: null);
 
-                    return dataBaseRepository.EditTimerValue(id, startTime, finishTime);
+                    return dataBaseRepository.EditTimerValue(startTime, finishTime, user.Id, id);
                 },
                 description: "Update value: added finish time"
             );

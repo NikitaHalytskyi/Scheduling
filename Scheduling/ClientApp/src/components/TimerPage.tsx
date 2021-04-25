@@ -7,12 +7,11 @@ import { ApplicationState } from '../store/configureStore';
 import { TimerHistoryState } from '../store/Timer/types';
 import '../style/VacationRequest.css';
 import { actionCreators } from '../store/Timer/actions';
-import { RequestsTable } from './RequestsTable';
 import { useState } from 'react';
 import { TimerHistoryTable } from './TimerHistoryTable';
 import Timer from "./timer"
 import Cookies from 'js-cookie';
-import { getUserTimerData } from '../webAPI/user';
+import { getUserTimerData } from '../webAPI/timer';
 type TimerHistoryProps =
     TimerHistoryState &
     typeof actionCreators &
@@ -59,7 +58,7 @@ class TimerPage extends React.PureComponent<TimerHistoryProps>{
         const token = Cookies.get('token');
         if (token) {
             const data = await getUserTimerData(token);
-            console.log(data.data.getCurrentUser.computedProps.timerHistories);
+
             if (data.data) {
                 this.props.setTimerHistory(data.data.getCurrentUser.computedProps.timerHistories);
                 console.log(this.props.timerHistory);

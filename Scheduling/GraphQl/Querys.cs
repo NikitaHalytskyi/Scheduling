@@ -92,11 +92,22 @@ namespace Scheduling.GraphQl
             ).AuthorizeWith("Authenticated");
 
             FieldAsync<ListGraphType<TimerHistoryType>, IReadOnlyCollection<TimerHistory>>(
-                "GetTimeHistories",
+                "GetTimerHistories",
                 resolve: ctx =>
                 {
                     return dataBaseRepository.GetTimerHistory();
                 }).AuthorizeWith("Authenticated");
+
+            Field<UserType>(
+                "GetCurrentUserId",
+                arguments: null,
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+                    return user;
+                }
+            ).AuthorizeWith("Authenticated");
         }
     }
 }

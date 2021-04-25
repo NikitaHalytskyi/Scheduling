@@ -27,4 +27,4 @@ export const actionCreators = {
 	checkUser
 };
 
-export type KnownAction = SetTimerHistoryAction  | CheckUserAction | DeleteTimeAction;
+export type KnownAction = SetTimerHistoryAction | AddTimeAction | CheckUserAction | DeleteTimeAction;

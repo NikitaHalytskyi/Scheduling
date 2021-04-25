@@ -32,7 +32,7 @@ namespace Scheduling.Domain
             }
             return timerHistories;
         }
-        public TimerHistory AddTimerStartValue(DateTime? startTimeArg)
+        public UserTimerHistory AddTimerStartValue(DateTime? startTimeArg, int userId)
         {
             DateTime? startTime = null;
 
@@ -49,39 +49,112 @@ namespace Scheduling.Domain
             Context.Add(TimerValues);
             Context.SaveChanges();
 
-            return TimerValues;
+            var idTimerHistory = (Context.TimerHistories.Find(TimerValues.Id));
+
+            var userTimerValue = new UserTimerHistory()
+            {
+                TimerHistoryId = idTimerHistory.Id,
+                UserId = userId
+            };
+
+            Context.UserTimerHistories.Add(userTimerValue);
+
+            Context.SaveChanges();
+
+            return userTimerValue;
         }
-        public TimerHistory EditTimerValue(int id, DateTime? startTime, DateTime? finishtTime)
+        public UserTimerHistory EditTimerValue(DateTime? startTime, DateTime? finishtTime, int userId, int? recordId)
         {
 
-            var dbRecord = Context.TimerHistories.Single(timerHistory => timerHistory.Id == id);
+            var dbRecordUser = Context.Users.Single(user => user.Id == userId);
+
+            IEnumerable<UserTimerHistory> userTimerHistoryHistories = Context.UserTimerHistories.OrderBy(userTimerHistory => userTimerHistory.UserId);
+
+            UserTimerHistory dbRecord;
+            TimerHistory dbRecordTimerHistory;
+
+            if (recordId == null)
+            {
+                dbRecord = userTimerHistoryHistories.Last();
+            }
+            else
+            {
+                dbRecord = userTimerHistoryHistories.Single(timerHistory => timerHistory.TimerHistoryId == recordId); ;
+            }
+
+            dbRecordTimerHistory = Context.TimerHistories.Single(record => record.Id == dbRecord.TimerHistoryId);
+
+            //            UserTimerHistory dbRecord1 = Context.UserTimerHistories.OrderBy(e => e.UserId.OrderByDescending(x => x.propertyToSortOn)
+            //.FirstOrDefault().DateTime);
+
+            //dbRecordTimerHistory = Context.TimerHistories.Single(record => record.Id == dbRecord.TimerHistoryId);
 
             if (finishtTime == new DateTime())
             {
-                finishtTime = dbRecord.FinishTime;
+                finishtTime = dbRecordTimerHistory.FinishTime;
             }
 
             if (startTime == new DateTime())
             {
-                startTime = dbRecord.StartTime;
+                startTime = dbRecordTimerHistory.StartTime;
             }
-            dbRecord.FinishTime = finishtTime;
 
-            dbRecord.StartTime = startTime;
+            dbRecordTimerHistory.FinishTime = finishtTime;
+
+            dbRecordTimerHistory.StartTime = startTime;
 
             var TimerValues = new TimerHistory()
             {
-                Id = id,
+                Id = dbRecordTimerHistory.Id,
                 StartTime = startTime,
                 FinishTime = finishtTime
+            };
+            Context.SaveChanges();
+
+            var userTimerValue = new UserTimerHistory()
+            {
+                Id = dbRecord.Id,
+                TimerHistoryId = dbRecordTimerHistory.Id,
+                UserId = userId
             };
             //Context.TimerHistories.Single(timerHistory => timerHistory.Id == id).FinishTime = finishtTime;
 
             //Context.Update(TimerValues);
-            Context.SaveChanges();
 
-            return TimerValues;
+            return userTimerValue;
         }
+        //public TimerHistory EditTimerValue(int id, DateTime? startTime, DateTime? finishtTime)
+        //{
+
+        //    var dbRecord = Context.TimerHistories.Single(timerHistory => timerHistory.Id == id);
+
+        //    if (finishtTime == new DateTime())
+        //    {
+        //        finishtTime = dbRecord.FinishTime;
+        //    }
+
+        //    if (startTime == new DateTime())
+        //    {
+        //        startTime = dbRecord.StartTime;
+        //    }
+        //    dbRecord.FinishTime = finishtTime;
+
+        //    dbRecord.StartTime = startTime;
+
+        //    var TimerValues = new TimerHistory()
+        //    {
+        //        Id = id,
+        //        StartTime = startTime,
+        //        FinishTime = finishtTime
+        //    };
+        //    Context.SaveChanges();
+
+        //    //Context.TimerHistories.Single(timerHistory => timerHistory.Id == id).FinishTime = finishtTime;
+
+        //    //Context.Update(TimerValues);
+
+        //    return TimerValues;
+        //}
         public TimerHistory DeteleTimerValue(int id)
         {
             var dbRecord = Context.TimerHistories.Single(timerHistory => timerHistory.Id == id);
