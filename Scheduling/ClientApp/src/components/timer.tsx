@@ -3,7 +3,7 @@ import * as EasyTimer from "easytimer.js";
 import { ApplicationState } from "../store/configureStore";
 import { actionCreators } from "../store/Timer/actions";
 import { connect, useDispatch } from 'react-redux';
-import { addTimerFinish, addTimerStart } from "../webAPI/timer";
+import { addTimerFinish, addTimerStart, getUserTimerData } from "../webAPI/timer";
 import Cookies from "js-cookie";
 
 class Timer extends Component {
@@ -32,7 +32,22 @@ class Timer extends Component {
 
         timer.addEventListener("reset", this.onTimerUpdated.bind(this));
     }
+    async componentDidMount() {
+        const token = Cookies.get('token');
+        if (token) {
+            const data = await getUserTimerData(token);
+            let startTime;
+            var lastValue = data.data.getCurrentUser.computedProps
+                .timerHistories[data.data.getCurrentUser.computedProps.timerHistories.length - 1];
+            if (lastValue.finishTime == null) {
+                startTime = new Date(lastValue.startTime);
 
+                this.state.timer.start({ startValues: { seconds: parseInt(Math.floor((new Date() - startTime) / 1000)) } });
+                this.state.timer_state = "ticking";
+            }
+        }
+
+    }
     componentWillUnmount() {
         if (this.state.timer !== null) {
             this.state.timer.stop();
@@ -47,6 +62,8 @@ class Timer extends Component {
     }
 
     async startTimer() {
+        this.state.timer.reset();
+        this.state.timer.pause();
         this.state.timer.start();
         console.log(this.props);
 
