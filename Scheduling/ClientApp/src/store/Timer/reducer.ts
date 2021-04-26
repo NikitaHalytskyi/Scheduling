@@ -27,7 +27,7 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 				if (action.time.startTime)
 					return { ...state, timerHistory: [...state.timerHistory, action.time] }
 				else {
-					state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime;
+					state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime.finishTime;
 					return { ...state, timerHistory: [...state.timerHistory] }
                 }
 			}

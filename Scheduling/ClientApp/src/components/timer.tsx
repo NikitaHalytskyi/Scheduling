@@ -60,13 +60,11 @@ class Timer extends Component {
 
             if (data.data) {
                 this.props.addTime(data.data.addTimerStartValue);
-                console.log(this.props.timerHistory);
-                console.log(this.props);
             }
         }
     }
 
-    resetTimer() {
+    async resetTimer() {
         this.state.timer.reset();
         this.state.timer.pause();
         this.setState({
@@ -75,7 +73,13 @@ class Timer extends Component {
             timer_state: "pause"
         })
         const token = Cookies.get('token');
-        addTimerFinish(token);
+        if (token) {
+            const data = await addTimerFinish(token);
+
+            if (data.data) {
+                this.props.addTime({ finishTime: data.data.editTimerFinishValue });
+            }
+        }
     }
 
     render() {
