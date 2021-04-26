@@ -118,15 +118,12 @@ namespace Scheduling.GraphQl
 
             Field<TimerHistoryType>(
                 "addTimerStartValue",
-                arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<DateTimeGraphType>> { Name = "StartTime", Description = "Timer began" }
-                ),
                 resolve: context =>
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
 
-                    DateTime startTime = context.GetArgument<DateTime>("StartTime");
+                    DateTime startTime = DateTime.Now;
 
                     return dataBaseRepository.AddTimerStartValue(startTime, user.Id);   
                 },
@@ -147,16 +144,17 @@ namespace Scheduling.GraphQl
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
 
-                    DateTime startTime = (DateTime)context.GetArgument<DateTime>("StartTime");
-                    DateTime finishTime = (DateTime)context.GetArgument<DateTime>("FinishTime");
+                    Nullable<DateTime> startTime = context.GetArgument<Nullable<DateTime>>("StartTime", defaultValue: null);
+                    Nullable<DateTime> finishTime = context.GetArgument<Nullable<DateTime>>("FinishTime", defaultValue: null);
 
 
                     Nullable<int> id = context.GetArgument<Nullable<int>>("id", defaultValue: null);
 
-                    return dataBaseRepository.EditTimerValue(startTime, finishTime, user.Id, id);
+                    return dataBaseRepository.EditTimerValue(startTime, finishTime = DateTime.Now, user.Id, id);
                 },
                 description: "Update value: added finish time"
-            );
+            ).AuthorizeWith("Authenticated");
+
             Field<TimerHistoryType>(
                 "deleteTimerFinishValue",
                 arguments: new QueryArguments(

@@ -21,7 +21,7 @@ export const TimerHistoryTable: React.FunctionComponent<TableProps> = ({ request
                                 <th></th>
                             </tr>
                             {requests.map((r) => <tr key={requests.indexOf(r)}>
-                                <td>{(new Date(r.startTime)).toLocaleTimeString()}-{(new Date(r.finishTime)).toLocaleTimeString()}</td>
+                                <td>{(new Date(r.startTime)).toLocaleTimeString()}-{(r.finishTime == null ? "still in action" : (new Date(r.finishTime)).toLocaleTimeString())}</td>
                                 <td>{r.Time}</td>
 
                             </tr>)}

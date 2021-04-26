@@ -25,11 +25,11 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 			{
 				console.log("add Time");
 				if (action.time.startTime)
-					state.timerHistory.push(action.time)
+					return { ...state, timerHistory: [...state.timerHistory, action.time] }
 				else {
 					state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime;
+					return { ...state, timerHistory: [...state.timerHistory] }
                 }
-				return { ...state, timerHistory: state.timerHistory }
 			}
 		case 'CHECK_USER':
 			const token = Cookies.get('token');

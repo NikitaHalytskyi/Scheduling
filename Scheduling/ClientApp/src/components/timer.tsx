@@ -3,6 +3,8 @@ import * as EasyTimer from "easytimer.js";
 import { ApplicationState } from "../store/configureStore";
 import { actionCreators } from "../store/Timer/actions";
 import { connect } from 'react-redux';
+import { addTimerFinish, addTimerStart } from "../webAPI/timer";
+import Cookies from "js-cookie";
 
 class Timer extends Component {
     private pauseButton: HTMLInputElement;
@@ -52,15 +54,11 @@ class Timer extends Component {
             ...this.state,
             timer_state: "ticking"
         })
-
-        this.props.addTime({
-            startTime: new Date().toISOString(), finishTime: ""
-        });
+        const token = Cookies.get('token');
+        addTimerStart(token);
     }
 
     resetTimer() {
-        this.props.addTime({
-             finishTime: new Date().toISOString() });
         this.state.timer.reset();
         this.state.timer.pause();
         this.setState({
@@ -68,6 +66,8 @@ class Timer extends Component {
             timer_text: this.state.timer.getTimeValues().toString(),
             timer_state: "pause"
         })
+        const token = Cookies.get('token');
+        addTimerFinish(token);
     }
 
     render() {

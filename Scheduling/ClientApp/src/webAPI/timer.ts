@@ -1,3 +1,7 @@
+import { useDispatch } from "react-redux";
+import { actionCreators } from "../store/Timer/actions";
+
+
 export const getUserTimerData = async (token: string) => {
 	const query = JSON.stringify({
 		query: `{
@@ -25,17 +29,44 @@ export const getUserTimerData = async (token: string) => {
 
 
 
-export const authenticate = async (login: string, passsword: string) => {
+export const addTimerStart = async (token: string) => {
 	const query = JSON.stringify({
-		query: `mutation {
-			authentication (email: "${login}" password: "${passsword}")
+		query: `mutation{
+			addTimerStartValue{
+				id
+				startTime
+				finishTime
+			}
 		}`
 	});
 
 	return fetch('/graphql', {
 		method: 'POST',
-		headers: { 'content-type': 'application/json' },
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
 		body: query
-	})
-		.then(data => data.json());
+	}).then(data => data.json())
+};
+
+export const addTimerFinish = async (token: string) => {
+	const query = JSON.stringify({
+		query: `mutation{
+		  editTimerFinishValue{
+				id
+				startTime
+				finishTime
+			}
+		}`
+	});
+
+	return fetch('/graphql', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: query
+	}).then(data => data.json());
 };

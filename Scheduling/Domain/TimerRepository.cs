@@ -32,24 +32,16 @@ namespace Scheduling.Domain
             }
             return timerHistories;
         }
-        public UserTimerHistory AddTimerStartValue(DateTime? startTimeArg, int userId)
+        public TimerHistory AddTimerStartValue(DateTime startTime, int userId)
         {
-            DateTime? startTime = null;
-
-            if (startTimeArg != null)
-            {
-                startTime = startTimeArg.Value;
-            }
-
-
-            var TimerValues = new TimerHistory()
+            var timerValues = new TimerHistory()
             {
                 StartTime = startTime
             };
-            Context.Add(TimerValues);
+            Context.Add(timerValues);
             Context.SaveChanges();
 
-            var idTimerHistory = (Context.TimerHistories.Find(TimerValues.Id));
+            var idTimerHistory = (Context.TimerHistories.Find(timerValues.Id));
 
             var userTimerValue = new UserTimerHistory()
             {
@@ -61,14 +53,14 @@ namespace Scheduling.Domain
 
             Context.SaveChanges();
 
-            return userTimerValue;
+            return timerValues;
         }
-        public UserTimerHistory EditTimerValue(DateTime? startTime, DateTime? finishtTime, int userId, int? recordId)
+        public TimerHistory EditTimerValue(DateTime? startTime, DateTime? finishtTime, int userId, int? recordId)
         {
 
             var dbRecordUser = Context.Users.Single(user => user.Id == userId);
 
-            IEnumerable<UserTimerHistory> userTimerHistoryHistories = Context.UserTimerHistories.OrderBy(userTimerHistory => userTimerHistory.UserId);
+            IEnumerable<UserTimerHistory> userTimerHistoryHistories = Context.UserTimerHistories.OrderBy(userTimerHistory => userTimerHistory.UserId == userId);
 
             UserTimerHistory dbRecord;
             TimerHistory dbRecordTimerHistory;
@@ -79,7 +71,7 @@ namespace Scheduling.Domain
             }
             else
             {
-                dbRecord = userTimerHistoryHistories.Single(timerHistory => timerHistory.TimerHistoryId == recordId); ;
+                dbRecord = userTimerHistoryHistories.Single(timerHistory => timerHistory.TimerHistoryId == recordId);
             }
 
             dbRecordTimerHistory = Context.TimerHistories.Single(record => record.Id == dbRecord.TimerHistoryId);
@@ -89,12 +81,12 @@ namespace Scheduling.Domain
 
             //dbRecordTimerHistory = Context.TimerHistories.Single(record => record.Id == dbRecord.TimerHistoryId);
 
-            if (finishtTime == new DateTime())
+            if (finishtTime == null)
             {
                 finishtTime = dbRecordTimerHistory.FinishTime;
             }
 
-            if (startTime == new DateTime())
+            if (startTime == null)
             {
                 startTime = dbRecordTimerHistory.StartTime;
             }
@@ -111,17 +103,11 @@ namespace Scheduling.Domain
             };
             Context.SaveChanges();
 
-            var userTimerValue = new UserTimerHistory()
-            {
-                Id = dbRecord.Id,
-                TimerHistoryId = dbRecordTimerHistory.Id,
-                UserId = userId
-            };
             //Context.TimerHistories.Single(timerHistory => timerHistory.Id == id).FinishTime = finishtTime;
 
             //Context.Update(TimerValues);
 
-            return userTimerValue;
+            return TimerValues;
         }
         //public TimerHistory EditTimerValue(int id, DateTime? startTime, DateTime? finishtTime)
         //{
@@ -167,6 +153,11 @@ namespace Scheduling.Domain
                 StartTime = dbRecord.StartTime,
                 FinishTime = dbRecord.FinishTime
             };
+
+            IEnumerable<UserTimerHistory> userTimerHistoryHistories = Context.UserTimerHistories.OrderBy(userTimerHistory => userTimerHistory.UserId);
+
+            var dbRecordUserTimer = userTimerHistoryHistories.Single(timerHistory => timerHistory.TimerHistoryId == id);
+            Context.Remove(dbRecordUserTimer);
             //Context.TimerHistories.Single(timerHistory => timerHistory.Id == id).FinishTime = finishtTime;
 
             //Context.Update(TimerValues);
