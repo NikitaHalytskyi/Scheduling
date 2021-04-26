@@ -2,7 +2,7 @@
 import * as EasyTimer from "easytimer.js";
 import { ApplicationState } from "../store/configureStore";
 import { actionCreators } from "../store/Timer/actions";
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { addTimerFinish, addTimerStart } from "../webAPI/timer";
 import Cookies from "js-cookie";
 
@@ -46,7 +46,7 @@ class Timer extends Component {
         });
     }
 
-    startTimer() {
+    async startTimer() {
         this.state.timer.start();
         console.log(this.props);
 
@@ -55,7 +55,15 @@ class Timer extends Component {
             timer_state: "ticking"
         })
         const token = Cookies.get('token');
-        addTimerStart(token);
+        if (token) {
+            const data = await addTimerStart(token);
+
+            if (data.data) {
+                this.props.addTime(data.data.addTimerStartValue);
+                console.log(this.props.timerHistory);
+                console.log(this.props);
+            }
+        }
     }
 
     resetTimer() {
