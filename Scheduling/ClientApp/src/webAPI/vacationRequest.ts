@@ -1,4 +1,3 @@
-import { VacationRequest } from "../store/VacationRequest/types";
 
 export const getUserRequests = async (token: string) => {
 	const query = JSON.stringify({

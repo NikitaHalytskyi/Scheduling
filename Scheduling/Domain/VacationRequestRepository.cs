@@ -9,7 +9,7 @@ namespace Scheduling.Domain
 {
     public partial class DataBaseRepository
     {
-        public List<VacationRequest> GetUserRequests(int userId)
+        public List<VacationRequest> GetUserVacationRequests(int userId)
         {
             List<VacationRequest> requests = Context.VacationRequests.Where(r => r.UserId == userId).ToList();
             return requests;
@@ -29,7 +29,7 @@ namespace Scheduling.Domain
             Context.VacationRequests.Add(vacationRequest);
             Context.SaveChanges();
 
-            return GetUserRequests(userId);
+            return GetUserVacationRequests(userId);
 
         }
         public List<VacationRequest> RemoveRequest(int id)
@@ -38,7 +38,7 @@ namespace Scheduling.Domain
             Context.VacationRequests.Remove(vacationRequest);
             Context.SaveChanges();
 
-            return GetUserRequests(vacationRequest.UserId);
+            return GetUserVacationRequests(vacationRequest.UserId);
 
         }
     }

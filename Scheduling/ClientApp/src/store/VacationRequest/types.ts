@@ -1,6 +1,4 @@
 export interface VacationRequestState {
-	logged: boolean,
-	token: string | null,
 	requestHistory: Array<VacationRequest>
 }
 

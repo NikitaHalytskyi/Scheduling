@@ -113,7 +113,7 @@ namespace Scheduling.GraphQl
 
                     return dataBaseRepository.RemoveRequest(id);
                 },
-                description: "Returns user requests."
+                description: "Remove user requests."
             ).AuthorizeWith("Authenticated");
         }
     }
