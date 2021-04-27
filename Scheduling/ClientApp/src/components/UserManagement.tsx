@@ -22,9 +22,10 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
 
     const dispatch = useDispatch();
 
+    const requestUsersCallback = () => dispatch({ type: 'REQUESTED_USERS' });
     useEffect(() => {
-        dispatch({ type: 'REQUESTED_USERS' });
-    });
+        requestUsersCallback();
+    }, []);
     console.log(props.users);
     return (
         <React.Fragment>
