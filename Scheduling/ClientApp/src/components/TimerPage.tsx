@@ -11,63 +11,36 @@ import { useState } from 'react';
 import  TimerHistoryTable  from './TimerHistoryTable';
 import Timer from "./timer"
 import Cookies from 'js-cookie';
-import { getUserTimerData } from '../webAPI/timer';
+import { getUserTimerData, getUserTimerDataDate } from '../webAPI/timer';
+import DatePanel from './DatePanel';
 type TimerHistoryProps =
     TimerHistoryState &
     typeof actionCreators &
     RouteComponentProps<{}>;
 
-   
-const DatePanel = () => {
-    const [startDate, setStartDate] = useState(new Date());
 
 
-    return (
-        <DatePicker
-            selected={startDate}
-            onChange={date => {
-                setStartDate(date);
 
-                function getConvertedDate(date) {
-                    var today = date;
-                    var dd = String(today.getDate()).padStart(2, '0');
-                    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-                    var yyyy = today.getFullYear();
-
-                    today = yyyy + '-' + mm + '-' + dd;
-                    console.log(today);
-                }
-
-                getConvertedDate(date);
-            }}
-            filterDate={(date) => {
-                return new Date() > date;
-            }}
-
-            inline
-        />
-    );
-}
 class TimerPage extends React.PureComponent<TimerHistoryProps>{
     handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
       }
 
-    async componentDidMount() {
-        console.log(this.props);
-        const token = Cookies.get('token');
-        if (token) {
-            const data = await getUserTimerData(token);
+    //async componentDidMount() {
+    //    console.log(this.props);
+    //    const token = Cookies.get('token');
+    //    if (token) {
+    //        const data = await getUserTimerData(token);
 
-            if (data.data) {
-                this.props.setTimerHistory(data.data.getCurrentUser.computedProps.timerHistories);
-                console.log(this.props.timerHistory);
-                console.log(this.props);
-            }
-        }
-        //this.props.addTime(new Date().toLocaleTimeString());
+    //        if (data.data) {
+    //            this.props.setTimerHistory(data.data.getCurrentUser.computedProps.timerHistories);
+    //            console.log(this.props.timerHistory);
+    //            console.log(this.props);
+    //        }
+    //    }
+    //    //this.props.addTime(new Date().toLocaleTimeString());
 
-    }
+    //}
 
     public render(){
         if(this.props.logged){

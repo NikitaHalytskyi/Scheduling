@@ -17,6 +17,7 @@ class Timer extends Component {
 
         this.state = {
             timer_text: timer.getTimeValues().toString(),
+            timer_text: timer.getTimeValues().toString(),
             timer: timer,
             timer_state: "stopped"
         };

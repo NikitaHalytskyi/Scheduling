@@ -17,7 +17,9 @@ namespace Scheduling.GraphQl
             Name = "Query";
             Field<UserType>(
                 "GetCurrentUser",
-                arguments: null,
+                arguments: new QueryArguments(
+                    new QueryArgument<DateGraphType> { Name = "CalendarDay", Description = "Selected day" }
+                    ),
                 resolve: context =>
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
@@ -26,7 +28,19 @@ namespace Scheduling.GraphQl
                     user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
                     user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
-                    user.ComputedProps.AddTimerHistory(dataBaseRepository.GetTimerHistory(user.Id));
+
+
+                    System.DateTime? selectedDay = context.GetArgument<System.DateTime?>("CalendarDay");
+                    if (selectedDay.HasValue)
+                    {
+                        var a = dataBaseRepository.GetTimerHistory(user.Id)
+                            .Where(r => r.StartTime.Value.ToShortDateString() == selectedDay.Value.Date.ToShortDateString());
+
+                        user.ComputedProps.AddTimerHistory(new List<TimerHistory>(a.OfType<TimerHistory>()));
+
+                    }
+                    else
+                        user.ComputedProps.AddTimerHistory(dataBaseRepository.GetTimerHistory(user.Id));
 
                     return user;
                 }
