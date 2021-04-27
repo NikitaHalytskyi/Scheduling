@@ -13,7 +13,7 @@ const addTime = (time: TimerType) => ({
 	time
 } as AddTimeAction);
 
-const deleteTime = (time_idx: number) => ({
+const deleteTime = (time: number) => ({
 	type: "DELETE_TIME",
 	time
 	

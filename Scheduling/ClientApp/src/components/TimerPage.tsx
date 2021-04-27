@@ -8,7 +8,7 @@ import { TimerHistoryState } from '../store/Timer/types';
 import '../style/VacationRequest.css';
 import { actionCreators } from '../store/Timer/actions';
 import { useState } from 'react';
-import { TimerHistoryTable } from './TimerHistoryTable';
+import  TimerHistoryTable  from './TimerHistoryTable';
 import Timer from "./timer"
 import Cookies from 'js-cookie';
 import { getUserTimerData } from '../webAPI/timer';
@@ -76,7 +76,7 @@ class TimerPage extends React.PureComponent<TimerHistoryProps>{
                     <main>
                         <h2>Timer</h2>
                         <div id='vacation-container'>
-                            <TimerHistoryTable requests={this.props.timerHistory} />
+                            <TimerHistoryTable />
                             <DatePanel />
                             <div id='vacation-info'>
                                 <div className='time-tracker'>

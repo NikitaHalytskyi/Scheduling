@@ -39,7 +39,7 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 				return { logged: false, token: null, timerHistory: [] };
 		case 'DELETE_TIME':
 			{
-				return { logged: state.logged, token: state.token, timerHistory: state.timerHistory.filter((item => item.id !== action.time_idx)) }
+				return { logged: state.logged, token: state.token, timerHistory: state.timerHistory.filter((item => item.id !== action.time)) }
 
 			}
 		default:
