@@ -74,6 +74,7 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
     async componentDidMount(){
         this.props.checkUser();
         this.props.setHistory(requests);
+        console.log(this.props)
     }
 
     public render(){

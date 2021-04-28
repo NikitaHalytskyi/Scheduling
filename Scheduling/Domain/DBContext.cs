@@ -19,6 +19,8 @@ namespace Scheduling.Domain
         public DbSet<UserTeams> userTeams { get; set; }
         public DbSet<VacationRequest> VacationRequests { get; set; }
         public DbSet<Token> Tokens { get; set; }
+        public DbSet<TimerHistory> TimerHistories { get; set; }
+        public DbSet<UserTimerHistory> UserTimerHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -142,7 +144,19 @@ namespace Scheduling.Domain
                 Status = "Pending consideration...",
                 Comment = "Please, it`s my dream to see a bober."
             });
+            modelBuilder.Entity<TimerHistory>().HasData(new TimerHistory
+            {
+                Id = 1,
+                StartTime = new DateTime(2021, 1, 1, 1, 1, 1),
+                FinishTime = new DateTime(2021, 1, 1, 1, 1, 2)
+            });
 
+            modelBuilder.Entity<UserTimerHistory>().HasData(new UserTimerHistory
+            {
+                Id = 1,
+                TimerHistoryId = 1,
+                UserId = 1321313
+            });
         }
     }
 }

@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import Layout from './components/Layout';
 import { ResetPassword } from './components/ResetPassword';
 import { RestorePassword } from './components/RestorePassword';
+import TimerPage from './components/TimerPage';
 import User from './components/User';
 import VacationRequest from './components/VacationRequest';
 import { Error403 } from './components/Error403';
@@ -19,5 +20,6 @@ export default () => (
         </Route>
         <Route exact path='/vacationrequest' component={VacationRequest} />
         <Route exact path='/' component={User} />
+        <Route exact path='/timer' component={TimerPage} />
     </Layout>
 );

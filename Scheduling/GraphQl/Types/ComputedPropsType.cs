@@ -14,6 +14,7 @@ namespace Scheduling.GraphQl.Types
             Name = "ComputedProps";
             Field(f => f.Permissions).Description("User permissions");
             Field<ListGraphType<TeamType>>(nameof(ComputedProps.Teams));
+            Field<ListGraphType<TimerHistoryType>>(nameof(ComputedProps.TimerHistories));
         }
     }
 }

@@ -10,6 +10,12 @@ export const getUserData = async (token: string) => {
 				department
 				computedProps {
 					permissions
+					timerHistories
+						  {
+							id
+							startTime
+							finishTime
+						  }
 				}
 			}
 		}`

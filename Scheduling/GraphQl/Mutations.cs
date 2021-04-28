@@ -144,17 +144,18 @@ namespace Scheduling.GraphQl
             Field<StringGraphType>(
                 "resetPassword",    
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "New password to acccount."}    
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "New password to acccount."}
                 ),
                 resolve: context =>
                 {
+
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     string token = httpContext.HttpContext.Request.Headers.First(header => header.Key == "Authorization").Value.ToString().Replace("Bearer ", "");
                     Token jwt = dataBaseRepository.GetJWT(token);
 
                     string password = context.GetArgument<string>("Password");
                     string salt = Guid.NewGuid().ToString();
-                    
+
                     User user = dataBaseRepository.Get(email);
 
                     if (user.Password == Hashing.GetHashString(password + user.Salt))
@@ -185,7 +186,63 @@ namespace Scheduling.GraphQl
                     return true;
                 }
             ).AuthorizeWith("canResetPassword");
-           
+
+
+        Field<TimerHistoryType>(
+                "addTimerStartValue",
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+
+                    DateTime startTime = DateTime.Now;
+
+                    return dataBaseRepository.AddTimerStartValue(startTime, user.Id);   
+                },
+                description: "Add start time"
+
+            ).AuthorizeWith("Authenticated");
+
+
+            Field<TimerHistoryType>(
+                "editTimerFinishValue",
+                arguments: new QueryArguments(
+                    new QueryArgument<DateTimeGraphType> { Name = "StartTime", Description = "Timer started" },
+                    new QueryArgument<DateTimeGraphType> { Name = "FinishTime", Description = "Timer finished" },
+                    new QueryArgument<IntGraphType> { Name = "id", Description = "Edit Timer finished" }
+                ),
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    
+                    User user = dataBaseRepository.Get(email);
+
+                    Nullable<DateTime> startTime = context.GetArgument<Nullable<DateTime>>("StartTime", defaultValue: null);
+                    Nullable<DateTime> finishTime = context.GetArgument<Nullable<DateTime>>("FinishTime", defaultValue: null);
+
+
+                    Nullable<int> id = context.GetArgument<Nullable<int>>("id", defaultValue: null);
+
+                    return dataBaseRepository.EditTimerValue(startTime, finishTime = DateTime.Now, user.Id, id);
+                },
+                description: "Update value: added finish time"
+            ).AuthorizeWith("Authenticated");
+
+            Field<TimerHistoryType>(
+                "deleteTimerFinishValue",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "id", Description = "Edit Timer finished" }
+                ),
+                resolve: context =>
+                {
+
+                    int id = context.GetArgument<int>("id");
+
+                    return dataBaseRepository.DeteleTimerValue(id);
+                },
+                description: "Update value: added finish time"
+            );
+
         }
     }
 }
