@@ -60,9 +60,6 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
     validateDate() {
         let startDate = this.state.startDate;
         let finishDate = this.state.finishDate;
-        console.log(startDate);
-        console.log(finishDate);
-        console.log(finishDate.getTime() - startDate.getTime());
         if (startDate && finishDate && startDate < finishDate) {
             return { startDate, finishDate }        
         }
@@ -92,10 +89,11 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
             let finishDate = date.finishDate;
             let data = {startDate: startDate, finishDate: finishDate, comment};
             console.log(data);
-            let requests = await addUserRequest(this.props.token, data);
-            this.props.setHistory(requests);
+            let newRequest = await addUserRequest(this.props.token, data);
+            this.props.addVacationRequest(newRequest.data.addVacationRequest);
             //requestListUpdate();
-            console.log(requests);
+            console.log(newRequest);
+            console.log(this.props.requestHistory);
             this.setState({loading: false});
         }
     }
@@ -117,13 +115,19 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
         {
             this.setState({loading: true});
             requests = await removeUserRequest(this.props.token, id);
-            if(requests !== undefined)
-                this.props.setHistory(requests.data.removeVacationRequest);
+            console.log('requests');
+            console.log(requests.data.removeVacationRequest);
+            if(requests !== undefined && requests.data.removeVacationRequest == true){
+                this.props.removeVacationRequest(id);
+                console.log(this.props.requestHistory);
+            }
             this.setState({loading: false});
         }
     }
 
     public render(){
+        if(this.state.loading)
+            return (<LoadingAnimation/>);
         if(this.props.logged){
             console.log(this.props);
             return (
@@ -162,7 +166,7 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
                                 </div>
                             </div>
                         </div>
-                        {this.state.loading? <LoadingAnimation/>: <RequestsTable requests={this.props.requestHistory} removeRequest={async (id: number) => await this.removeRequest(id)}/>}
+                        <RequestsTable requests={this.props.requestHistory} removeRequest={async (id: number) => await this.removeRequest(id)}/>
                     </main>
                 </React.Fragment>
             );

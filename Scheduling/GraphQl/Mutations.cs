@@ -80,7 +80,7 @@ namespace Scheduling.GraphQl
                 }
             );
 
-            Field<ListGraphType<VacationRequestType>>(
+            Field<VacationRequestType>(
                 "addVacationRequest",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<DateGraphType>> { Name = "StartDate", Description = "Vacation start date" },
@@ -102,7 +102,7 @@ namespace Scheduling.GraphQl
                 description: "Returns user requests."
             ).AuthorizeWith("Authenticated");
 
-            Field<ListGraphType<VacationRequestType>>(
+            Field<BooleanGraphType>(
                 "removeVacationRequest",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "Id", Description = "Vacation request id" }
@@ -113,7 +113,7 @@ namespace Scheduling.GraphQl
 
                     return dataBaseRepository.RemoveRequest(id);
                 },
-                description: "Remove user requests."
+                description: "Remove result of removing."
             ).AuthorizeWith("Authenticated");
         }
     }

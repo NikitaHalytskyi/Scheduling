@@ -13,9 +13,8 @@ namespace Scheduling.Domain
         {
             List<VacationRequest> requests = Context.VacationRequests.Where(r => r.UserId == userId).ToList();
             return requests;
-
         }
-        public List<VacationRequest> AddRequest(int userId, DateTime startDate, DateTime finishDate, string status, string comment)
+        public VacationRequest AddRequest(int userId, DateTime startDate, DateTime finishDate, string status, string comment)
         {
             VacationRequest vacationRequest = new VacationRequest()
             {
@@ -29,17 +28,14 @@ namespace Scheduling.Domain
             Context.VacationRequests.Add(vacationRequest);
             Context.SaveChanges();
 
-            return GetUserVacationRequests(userId);
-
+            return vacationRequest;
         }
-        public List<VacationRequest> RemoveRequest(int id)
+        public bool RemoveRequest(int id)
         {
             VacationRequest vacationRequest = Context.VacationRequests.Single(u => u.Id == id);
             Context.VacationRequests.Remove(vacationRequest);
             Context.SaveChanges();
-
-            return GetUserVacationRequests(vacationRequest.UserId);
-
+            return true;
         }
     }
 }

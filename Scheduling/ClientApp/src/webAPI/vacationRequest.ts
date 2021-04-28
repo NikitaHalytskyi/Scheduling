@@ -25,9 +25,21 @@ export const getUserRequests = async (token: string) => {
 };
 
 export const addUserRequest = async (token: string, request: {startDate: Date, finishDate: Date, comment: string}) => {
+	const validateDate = (date: number) => {
+		return date < 10? '0' + date : date;
+	}
+
+	const convertDate = (date: Date) => {
+        let dateObj = new Date(date);
+		let day = dateObj.getUTCDate();
+        let month = dateObj.getUTCMonth() + 1;
+        let year = dateObj.getUTCFullYear();
+        return (year + "-" + validateDate(month) + "-" + validateDate(day));
+    }
+
 	const query = JSON.stringify({
 		query: `mutation{
-			addVacationRequest(startDate: "2021-05-01" finishDate: "2021-05-20" comment: "${request.comment}"){
+			addVacationRequest(startDate: "${convertDate(request.startDate)}" finishDate: "${convertDate(request.finishDate)}" comment: "${request.comment}"){
                 id
                 userId
                 startDate
@@ -52,14 +64,7 @@ export const addUserRequest = async (token: string, request: {startDate: Date, f
 export const removeUserRequest = async (token: string, id: number) => {
 	const query = JSON.stringify({
 		query: `mutation{
-			removeVacationRequest(id: ${id}){
-                id
-                userId
-                startDate
-                finishDate
-                status
-                comment
-              }
+			removeVacationRequest(id: ${id})
 		}`
 	});
   
