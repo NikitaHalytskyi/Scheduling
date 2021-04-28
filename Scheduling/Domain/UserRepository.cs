@@ -15,7 +15,7 @@ namespace Scheduling.Domain
         public User Get(string email) =>
             Context.Users.FirstOrDefault(user => user.Email == email);
 
-        public User CreateUser(string name, string surname, string email, string password, List<string> permission, List<int> teams)
+        public User CreateUser(string name, string surname, string email, string password, List<PermissionName> permissions, int teamId)
         {
             string userId = Guid.NewGuid().ToString();
             string salt = Guid.NewGuid().ToString();
@@ -24,8 +24,10 @@ namespace Scheduling.Domain
 
             if (checkUser != null)
             {
-                return new User();
+                return null/* new User()*/;
             }
+
+            var team = Context.Teams.FirstOrDefault(t => t.Id == teamId);
 
             User user = new User()
             {
@@ -35,29 +37,30 @@ namespace Scheduling.Domain
                 Surname = surname,
                 Position = "",
                 Department = "",
-                Salt = salt
+                Salt = salt,
+                Team = team
             };
 
+            foreach (PermissionName perm in permissions)
+            {
+                CreateUserPermission(user.Id, perm);
+            }
 
             Context.Users.Add(user);
             Context.SaveChanges();
-
+            return user;
             User newUser = Context.Users.Single(user => user.Email == email);
 
-            foreach (string perm in permission)
-            {
-                CreateUserPermission(newUser.Id, perm);
-            }
 
-            if (teams == null)
-                return newUser;
+            /*if (teamId == null)
+                return newUser;*/
 
-            foreach (int teamId in teams)
+           /* foreach (int teamId in teams)
             {
                 AddUserToTeam(user.Id, teamId);
-            }
+            }*/
 
-            return newUser;
+            //return newUser;
         }
 
 
@@ -91,9 +94,9 @@ namespace Scheduling.Domain
 
             RemoveUserPermissions(user.Id);
 
-            foreach (Permission permmision in user.ComputedProps.Permissions)
+            foreach (UserPermission permmission in user.UserPermissions)
             {
-                CreateUserPermission(user.Id, permmision.Name);
+                CreateUserPermission(user.Id, permmission.Permission.Name);
             }
 
             foreach (Team team in teams)

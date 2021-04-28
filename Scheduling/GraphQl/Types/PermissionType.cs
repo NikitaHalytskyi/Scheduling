@@ -14,7 +14,7 @@ namespace Scheduling.GraphQl.Types
             Name = "Permission";
 
             Field(permision => permision.Id).Description("Permision id.");
-            Field(permision => permision.Name).Description("Permision name.");
+            Field(permision => permision.Name, type: typeof(PermissionNameEnum)).Description("Permision name.");
         }
 
     }

@@ -18,7 +18,10 @@ namespace Scheduling.Models
         public string Department { get; set; }
         public string Salt { get; set; }
 
-        public ComputedProps ComputedProps { get; set; }
+        public Team Team { get; set; }
+
+        public List<UserPermission> UserPermissions { get; set; }
+        //public ComputedProps ComputedProps { get; set; }
         public User()
         {
             

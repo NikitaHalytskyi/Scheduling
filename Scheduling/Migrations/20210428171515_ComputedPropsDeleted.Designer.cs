@@ -3,21 +3,38 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Scheduling.Domain;
 
 namespace Scheduling.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    partial class UserDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210428171515_ComputedPropsDeleted")]
+    partial class ComputedPropsDeleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("PermissionUser", b =>
+                {
+                    b.Property<int>("PermissionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PermissionsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("PermissionUser");
+                });
 
             modelBuilder.Entity("Scheduling.Models.Permission", b =>
                 {
@@ -152,39 +169,39 @@ namespace Scheduling.Migrations
 
             modelBuilder.Entity("Scheduling.Models.UserPermission", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "PermissionId");
-
-                    b.HasIndex("PermissionId");
+                    b.HasKey("Id");
 
                     b.ToTable("UserPermissions");
 
                     b.HasData(
                         new
                         {
-                            UserId = 1321313,
+                            Id = 3,
                             PermissionId = 1,
-                            Id = 3
+                            UserId = 1321313
                         },
                         new
                         {
-                            UserId = 13213133,
+                            Id = 4,
                             PermissionId = 3,
-                            Id = 4
+                            UserId = 13213133
                         },
                         new
                         {
-                            UserId = 1321313,
+                            Id = 5,
                             PermissionId = 5,
-                            Id = 5
+                            UserId = 1321313
                         });
                 });
 
@@ -270,6 +287,21 @@ namespace Scheduling.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PermissionUser", b =>
+                {
+                    b.HasOne("Scheduling.Models.Permission", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Scheduling.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Scheduling.Models.User", b =>
                 {
                     b.HasOne("Scheduling.Models.Team", "Team")
@@ -279,38 +311,9 @@ namespace Scheduling.Migrations
                     b.Navigation("Team");
                 });
 
-            modelBuilder.Entity("Scheduling.Models.UserPermission", b =>
-                {
-                    b.HasOne("Scheduling.Models.Permission", "Permission")
-                        .WithMany("UserPermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Scheduling.Models.User", "User")
-                        .WithMany("UserPermissions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Scheduling.Models.Permission", b =>
-                {
-                    b.Navigation("UserPermissions");
-                });
-
             modelBuilder.Entity("Scheduling.Models.Team", b =>
                 {
                     b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("Scheduling.Models.User", b =>
-                {
-                    b.Navigation("UserPermissions");
                 });
 #pragma warning restore 612, 618
         }

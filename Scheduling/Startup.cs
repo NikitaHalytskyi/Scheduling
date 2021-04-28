@@ -14,6 +14,7 @@ using Scheduling.GraphQl.Types;
 using Scheduling.Services;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Scheduling.Models;
 
 namespace Scheduling
 {
@@ -68,7 +69,7 @@ namespace Scheduling
                .AddGraphQLAuthorization(options =>
                {
                    options.AddPolicy("Authenticated", p => p.RequireAuthenticatedUser());
-                   options.AddPolicy("Access to vacation approvals", p => p.RequireClaim("permission", "Access to vacation approvals"));
+                   options.AddPolicy(PermissionName.VacationApprovals.ToString(), p => p.RequireClaim("permission", "Access to vacation approvals"));
                    options.AddPolicy("Part-time", p => p.RequireClaim("permission", "Part-time"));
                    options.AddPolicy("Full-time", p => p.RequireClaim("permission", "Full-time"));
                    options.AddPolicy("Accountant", p => p.RequireClaim("permission", "Accountant"));
@@ -88,6 +89,7 @@ namespace Scheduling
             services.AddScoped<TeamType>();
             services.AddScoped<ComputedPropsType>();
             services.AddScoped<VacationRequestType>();
+            services.AddScoped<PermissionNameEnum>();
 
             services.AddScoped<ISchema, GraphSchema>();
 

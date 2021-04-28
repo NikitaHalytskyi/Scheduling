@@ -9,53 +9,39 @@ namespace Scheduling.Domain
     public partial class DataBaseRepository
     {
 
-        public List<Permission> GetPermission(int id)
+        public List<UserPermission> GetPermission(int id)
         {
             User user = Context.Users.FirstOrDefault(user => user.Id == id);
             if (user == null)
-                return new List<Permission>();
+                return new List<UserPermission>();
 
-            List<UserPermission> userPermissions = Context.UserPermissions.Where(permission => permission.UserId == user.Id).ToList<UserPermission>();
-            List<Permission> permissions = new List<Permission>();
-
-            foreach (UserPermission userPermission in userPermissions)
-            {
-                permissions.Add(Context.Permissions.Single(permission => permission.Id == userPermission.PermisionId));
-            }
-            return permissions;
+            
+            return user.UserPermissions;
         }
 
-        public void CreateUserPermission(int userId, string permissisonName)
+        public void CreateUserPermission(int userId, PermissionName permissisonName)
         {
             Permission permission = Context.Permissions.FirstOrDefault(permission => permission.Name == permissisonName);
             if (permission == null)
                 return;
 
-            UserPermission userPermission = new UserPermission() { UserId = userId, PermisionId = permission.Id };
+            UserPermission userPermission = new UserPermission() { UserId = userId, PermissionId = permission.Id };
             Context.UserPermissions.Add(userPermission);
             Context.SaveChanges();
         }
 
-        public List<string> GetAllPermissions()
+        public List<Permission> GetAllPermissions()
         {
-            List<Permission> allPermissions = Context.Permissions.ToList();
-            List<string> permissions = new List<string>();
-
-            foreach (Permission permission in allPermissions)
-            {
-                permissions.Add(permission.Name);
-            }
-
-            return permissions;
+            return Context.Permissions.ToList();
         }
 
-        public bool RemoveUserPermission(int userId, string permissionName)
+        public bool RemoveUserPermission(int userId, PermissionName permissionName)
         {
             Permission permission = Context.Permissions.FirstOrDefault(permission => permission.Name == permissionName);
             if (permission == null)
                 return false;
 
-            UserPermission userPermission = Context.UserPermissions.FirstOrDefault(perm => perm.PermisionId == permission.Id && perm.UserId == userId);
+            UserPermission userPermission = Context.UserPermissions.FirstOrDefault(perm => perm.PermissionId == permission.Id && perm.UserId == userId);
             if (userPermission == null)
                 return false;
 
@@ -70,12 +56,7 @@ namespace Scheduling.Domain
 
             if (userPermissions.Count == 0)
                 return false;
-
-            foreach (UserPermission userPermission in userPermissions)
-            {
-                Context.UserPermissions.Remove(userPermission);
-            }
-
+            userPermissions.Clear();
             Context.SaveChanges();
             return true;
         }
