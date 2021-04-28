@@ -13,6 +13,7 @@ import './custom.css'
 export default () => (
     <Layout>
         <Route exact path="/restorePassword" component={RestorePassword} />
+        <Route exact path='/timer' component={TimerPage} />
         <Route exact path="/resetPassword/:token" component={ResetPassword} />
         <Route exact path="/resetPassword">
             <Error403></Error403>
