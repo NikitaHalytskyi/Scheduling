@@ -92,6 +92,32 @@ namespace Scheduling.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Scheduling.Models.TimerHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("FinishTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TimerHistories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FinishTime = new DateTime(2021, 1, 1, 1, 1, 2, 0, DateTimeKind.Unspecified),
+                            StartTime = new DateTime(2021, 1, 1, 1, 1, 1, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
             modelBuilder.Entity("Scheduling.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -210,6 +236,32 @@ namespace Scheduling.Migrations
                             Id = 1,
                             TeamId = 6,
                             UserId = 13213133
+                        });
+                });
+
+            modelBuilder.Entity("Scheduling.Models.UserTimerHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("TimerHistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTimerHistories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TimerHistoryId = 1,
+                            UserId = 1321313
                         });
                 });
 

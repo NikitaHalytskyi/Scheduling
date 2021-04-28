@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Scheduling.Domain;
 using Scheduling.GraphQl.Types;
 using Scheduling.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Scheduling.GraphQl
@@ -16,7 +17,9 @@ namespace Scheduling.GraphQl
             Name = "Query";
             Field<UserType>(
                 "GetCurrentUser",
-                arguments: null,
+                arguments: new QueryArguments(
+                    new QueryArgument<DateGraphType> { Name = "CalendarDay", Description = "Selected day" }
+                    ),
                 resolve: context =>
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
@@ -25,7 +28,20 @@ namespace Scheduling.GraphQl
                     user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
                     user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
-                    
+
+
+                    System.DateTime? selectedDay = context.GetArgument<System.DateTime?>("CalendarDay");
+                    if (selectedDay.HasValue)
+                    {
+                        var a = dataBaseRepository.GetTimerHistory(user.Id)
+                            .Where(r => r.StartTime.Value.ToShortDateString() == selectedDay.Value.Date.ToShortDateString());
+
+                        user.ComputedProps.AddTimerHistory(new List<TimerHistory>(a.OfType<TimerHistory>()));
+
+                    }
+                    else
+                        user.ComputedProps.AddTimerHistory(dataBaseRepository.GetTimerHistory(user.Id));
+
                     return user;
                 }
             ).AuthorizeWith("Authenticated");
@@ -89,6 +105,23 @@ namespace Scheduling.GraphQl
                 }
             ).AuthorizeWith("Authenticated");
 
+            FieldAsync<ListGraphType<TimerHistoryType>, IReadOnlyCollection<TimerHistory>>(
+                "GetTimerHistories",
+                resolve: ctx =>
+                {
+                    return dataBaseRepository.GetTimerHistory();
+                }).AuthorizeWith("Authenticated");
+
+            Field<UserType>(
+                "GetCurrentUserId",
+                arguments: null,
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+                    return user;
+                }
+            ).AuthorizeWith("Authenticated");
         }
     }
 }

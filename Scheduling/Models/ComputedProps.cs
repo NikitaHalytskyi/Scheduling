@@ -9,6 +9,7 @@ namespace Scheduling.Models
     {
         public List<string> Permissions { get; set; }
         public List<Team> Teams { get; set; }
+        public List<TimerHistory> TimerHistories { get; set; }
 
         public ComputedProps()
         {
@@ -19,6 +20,14 @@ namespace Scheduling.Models
             Permissions = new List<string>();
             foreach (Permission permission in permissions)
                 Permissions.Add(permission.Name);
+        }
+        public void AddTimerHistory(List<TimerHistory> timerHistory)
+        {
+            TimerHistories = new List<TimerHistory>();
+            foreach (TimerHistory timerHistoryValue in timerHistory)
+            {
+                TimerHistories.Add(timerHistoryValue);
+            }
         }
     }
 }
