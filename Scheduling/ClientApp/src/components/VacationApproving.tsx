@@ -8,6 +8,7 @@ import { getAllRequests } from '../webAPI/vacationApproving';
 import { VacationRequest } from '../store/VacationRequest/types';
 import { LoadingAnimation } from './Loading';
 import { AllRequestsTable } from './AllRequestsTable';
+import { VacationApprovingTable } from './VacationApprovingTable';
 
 type ApprovingRequest = {
     id: number,
@@ -81,8 +82,7 @@ class VacationApproving extends React.PureComponent<VacationApprovingProps, { re
                     <main>
                         <div id='approving-container'>
                             <h2>Vacation approving</h2>
-
-                            <h4>Vacation requests</h4>
+                            <VacationApprovingTable loading={this.state.loading} requests={this.state.requests} />
                             <AllRequestsTable loading={this.state.loading} requests={this.state.requests}/>
                         </div>
                     </main>

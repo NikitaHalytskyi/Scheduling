@@ -41,12 +41,12 @@ namespace Scheduling.Domain
             Context.SaveChanges();
             return true;
         }
-        public bool ConsiderRequest(int id, bool approved, string name, string comment)
+        public VacationRequest ConsiderRequest(int id, bool approved, string name, string comment)
         {
             VacationRequest vacationRequest = Context.VacationRequests.Single(u => u.Id == id);
             vacationRequest.Status = (approved ? "Approved by " : "Declided by ") + name + ". " + comment;
             Context.SaveChanges();
-            return true;
+            return vacationRequest;
         }
     }
 }
