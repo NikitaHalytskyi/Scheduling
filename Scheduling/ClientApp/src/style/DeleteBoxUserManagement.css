@@ -38,3 +38,7 @@
     position: relative;
     display: inline;
 }
+
+button[class="deleteUserButton"] {
+    background-color: #f11e00;
+}

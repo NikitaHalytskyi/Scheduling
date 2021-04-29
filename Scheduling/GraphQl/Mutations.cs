@@ -37,11 +37,13 @@ namespace Scheduling.GraphQl
             Field<BooleanGraphType>(
                 "createUser",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name"},
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Surname", Description = "User surname"},
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email"},
-                    new QueryArgument<NonNullGraphType<ListGraphType<StringGraphType>>> { Name = "Permissions", Description = "User permisions"},
-                    new QueryArgument<ListGraphType<IntGraphType>> { Name = "Teams", Description = "User teams id"}
+                    /* new QueryArgument<NonNullGraphType<UserType>> { Name = "User", Description = "User instance" }*/
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Surname", Description = "User surname" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "User password" },
+                    new QueryArgument<NonNullGraphType<ListGraphType<StringGraphType>>> { Name = "Permissions", Description = "User permisions" },
+                    new QueryArgument<ListGraphType<IntGraphType>> { Name = "Teams", Description = "User teams id" }
                 ),
                 resolve: context =>
                 {
@@ -55,7 +57,7 @@ namespace Scheduling.GraphQl
 
                     User user = dataBaseRepository.CreateUser(name, surname, email, password, permissions, teamsId);
                     
-                    if(user.Email != null)
+                    /*if(user.Email != null)
                     {
                         try
                         {
@@ -64,14 +66,14 @@ namespace Scheduling.GraphQl
                         {
                             return false;
                         }
-                    }
+                    }*/
 
                     return true;
                 }
-            ).AuthorizeWith("Manager");
+            )/*.AuthorizeWith("Authenticated")*/;
 
             Field<BooleanGraphType>(
-                "RemoveUser",
+                "removeUser",
                 arguments: new QueryArguments(new QueryArgument<NonNullGraphType<StringGraphType>>{ Name = "Email", Description = "User email" }),
                 resolve: context =>
                 {

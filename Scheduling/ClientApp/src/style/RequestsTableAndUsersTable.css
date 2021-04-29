@@ -48,7 +48,7 @@
     color: white;
 }
 
-#users button {
+button {
     background-color: #0275d8;
     border: 1px solid lightgray;
     border-radius: 5px;
@@ -58,7 +58,7 @@
 }
 
 .createNewUserButton {
-    background-color: #0275d8;
+    background-color: #219e02;
     border: 1px solid lightgray;
     border-radius: 5px;
     padding: 7px 70px;
@@ -67,3 +67,8 @@
     position: absolute;
     right: 21%;
 }
+
+.deleteUserButton {
+    background-color: #f11e00;
+}
+

@@ -3,12 +3,13 @@ import Cookies from 'js-cookie';
 import { connect, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
-import { ApplicationState } from '../store/configureStore';
-import { UserManagementState } from '../store/UserManagement/types';
-import { actionCreators } from '../store/UserManagement/actions';
+import { ApplicationState } from '../../store/configureStore';
+import { UserManagementState } from '../../store/UserManagement/types';
+import { actionCreators } from '../../store/UserManagement/actions';
 import { useEffect } from 'react';
-import '../style/RequestsTableAndUsersTable.css';
-import '../style/DeleteBoxUserManagement.css';
+import '../../style/RequestsTableAndUsersTable.css';
+import '../../style/DeleteBoxUserManagement.css';
+import { removeUser } from '../../webAPI/removeUser';
 
 
 type UserManagementProps =
@@ -18,7 +19,7 @@ type UserManagementProps =
 
 export const UserManagement: React.FC<UserManagementProps> = (props) => {
     const [isDeleteBoxOpen, setIsDeleteBoxOpen] = useState(false);
-    const [userId, setUserId] = useState(0);
+    const [userEmail, setUserEmail] = useState("");
 
     const dispatch = useDispatch();
 
@@ -30,7 +31,10 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
     console.log(props.users);
     return (
         <React.Fragment>
-            <DeleteBox id={userId} isOpen={isDeleteBoxOpen} setIsOpen={setIsDeleteBoxOpen} />
+            <DeleteBox
+                email={userEmail} isOpen={isDeleteBoxOpen}
+                setIsOpen={setIsDeleteBoxOpen}
+            />
             <div id='usersTableBorder'>
                 <button className="createNewUserButton">Create new user</button>
                 <h1>User managment</h1>
@@ -60,7 +64,7 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
                                         <td>
                                             <button
                                                 className="deleteUserButton"
-                                                onClick={() => { setIsDeleteBoxOpen(true); setUserId(index); }}>
+                                                onClick={() => { setIsDeleteBoxOpen(true); setUserEmail(u.email); }}>
                                                 Delete
                                             </button>
                                         </td>
@@ -78,26 +82,34 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
 
 
 type DeleteBoxProps = {
-    id: number,
+    email: string,
     isOpen: boolean,
-    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const DeleteBox: React.FC<DeleteBoxProps> = ({ id, isOpen, setIsOpen }) => {
+const DeleteBox: React.FC<DeleteBoxProps> = ({ email, isOpen, setIsOpen }) => {
     let content = isOpen ?
         <div className="shadowBox">
             <div className="deleteBox">
                 <p>Are you sure you want to delete this user ?</p>
                 <div>
-                    <button onClick={() => { handleDeleteUser(); setIsOpen(false); }}>Delete</button>
+                    <button
+                        className="deleteUserButton"
+                        onClick={() => { handleDeleteUser(); setIsOpen(false); }}
+                    >
+                        Delete
+                    </button>
                     <button onClick={() => setIsOpen(false)}>Cancel</button>
                 </div>
             </div>
         </div>
         : null;
 
-    function handleDeleteUser() {
+    const dispatch = useDispatch();
 
+    const removeUser = () => dispatch({ type: 'DELETE_USER', payload: email });
+    function handleDeleteUser() {
+        removeUser();
     }
 
     return(

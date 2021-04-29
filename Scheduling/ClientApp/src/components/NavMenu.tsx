@@ -15,8 +15,8 @@ class NavMenu extends React.PureComponent<{}, { isOpen: boolean }> {
     };
 
     public render() {
-        const token = Cookies.get('token');;
-        
+        const token = Cookies.get('token');
+
         const homeLink = (token != null) ?
             <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
