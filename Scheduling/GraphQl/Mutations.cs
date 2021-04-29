@@ -115,6 +115,26 @@ namespace Scheduling.GraphQl
                 },
                 description: "Remove result of removing."
             ).AuthorizeWith("Authenticated");
+
+            Field<BooleanGraphType>(
+                "considerVacationRequest",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<IntGraphType>> { Name = "Id", Description = "Vacation request id" },
+                    new QueryArgument<NonNullGraphType<BooleanGraphType>> { Name = "Approved", Description = "Approving or derlining request" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Comment", Description = "The reason ob approving or derlining request" }
+                ),
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+                    string name = user.Name;
+                    int id = context.GetArgument<int>("Id");
+                    bool approved = context.GetArgument<bool>("Approved");
+                    string comment = context.GetArgument<string>("Comment");
+                    return dataBaseRepository.ConsiderRequest(id, approved, name, comment);
+                },
+                description: "Remove result of removing."
+            ).AuthorizeWith("Manager");
         }
     }
 }

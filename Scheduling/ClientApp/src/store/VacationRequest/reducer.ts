@@ -3,7 +3,7 @@ import { Action, Reducer } from "redux";
 import { KnownAction } from "./actions";
 import { VacationRequestState } from "./types";
 
-const reducer: Reducer<VacationRequestState> = (state: VacationRequestState | undefined, incomingAction: Action): VacationRequestState => {
+const vacReducer: Reducer<VacationRequestState> = (state: VacationRequestState | undefined, incomingAction: Action): VacationRequestState => {
 	if (state === undefined) {
 		return { requestHistory: [] };
 	}
@@ -37,4 +37,4 @@ const reducer: Reducer<VacationRequestState> = (state: VacationRequestState | un
 	}
 };
 
-export default reducer;
+export default vacReducer;

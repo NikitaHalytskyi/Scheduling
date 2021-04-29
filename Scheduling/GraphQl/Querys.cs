@@ -30,6 +30,14 @@ namespace Scheduling.GraphQl
                 }
             ).AuthorizeWith("Authenticated");
 
+            Field<ListGraphType<UserType>>(
+                "GetAllUsers",
+                arguments: null,
+                resolve: context =>
+                {
+                    return dataBaseRepository.Get();
+                }
+            ).AuthorizeWith("Manager");
 
             Field<ListGraphType<TeamType>>(
                 "GetTeams",
@@ -88,6 +96,14 @@ namespace Scheduling.GraphQl
                     return dataBaseRepository.GetUserVacationRequests(user.Id);
                 }
             ).AuthorizeWith("Authenticated");
+            Field<ListGraphType<VacationRequestType>>(
+                "GetAllVacationRequests",
+                arguments: null,
+                resolve: context =>
+                {
+                    return dataBaseRepository.GetAllVacationRequests();
+                }
+            ).AuthorizeWith("Manager");
 
         }
     }

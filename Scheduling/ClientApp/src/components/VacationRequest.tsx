@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { useState, useEffect, useCallback } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
@@ -11,25 +11,23 @@ import { addUserRequest, getUserRequests, removeUserRequest } from '../webAPI/va
 import { LoadingAnimation } from './Loading';
 import { UserState } from '../store/User/types';
 import { render } from 'react-dom';
+import { combineReducers } from 'redux';
+import reducer from '../store/User';
+import vacReducer from '../store/User';
+import { throws } from 'assert';
 
-type Request = {
-	id: number,
-	startDate: Date, 
-	finishDate: Date,
-	status: string,
-	comment: string
-}
 
 type VacationPageProps =
-    VacationRequestState &
     UserState &
+    VacationRequestState &
     typeof actionCreators &
     RouteComponentProps<{}>;
 
-class VacationRequest extends React.PureComponent<VacationPageProps, { startDate: Date, finishDate: Date, loading: boolean}> {
+class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
     public state = {
         startDate: new Date(),
         finishDate: new Date(),
+        comment: '',
         loading: false
     };
 
@@ -68,23 +66,29 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
 
     countAmount() {
         let daysLag = 'Incorrect date!';
-        let output = document.getElementById('amount');
         let date = this.validateDate();
-        if(date && output)
+        if(date)
             daysLag = (Math.ceil(Math.abs(date.finishDate.getTime() - date.startDate.getTime()) / (1000 * 3600 * 24))).toString();
-        if(output)
-            output.textContent = daysLag;
+        return daysLag;
     }
 
-    componentDidUpdate(){
-        this.countAmount();
+    // componentDidUpdate(){
+    //     this.countAmount()
+    // }
+
+    clearForm () { 
+        console.log('clear');
+        let form = document.getElementById("vacation-request") as HTMLFormElement;
+        if(form)
+            form.reset();
     }
 
     async handleSubmit() {
         let date = this.validateDate();
         if(date && this.props.token) {
+            this.clearForm();
             this.setState({loading: true});
-            let comment = (document.getElementById('comment') as HTMLTextAreaElement).value;
+            let comment = this.state.comment;
             let startDate = date.startDate;
             let finishDate = date.finishDate;
             let data = {startDate: startDate, finishDate: finishDate, comment};
@@ -126,8 +130,6 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
     }
 
     public render(){
-        if(this.state.loading)
-            return (<LoadingAnimation/>);
         if(this.props.logged){
             console.log(this.props);
             return (
@@ -148,13 +150,13 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
                                 </div>
                                 <div className='data-container'>
                                     <label htmlFor='amount'>Amount</label>
-                                    <p id='amount'></p>
+                                    <p id='amount'>{this.countAmount()}</p>
                                 </div>
                                 <div className='data-container'>
                                     <label htmlFor='comment'>Comment</label>
-                                    <textarea id='comment'></textarea>
+                                    <textarea id='comment' onInput={(event) => this.setState({comment: event.currentTarget.value})}></textarea>
                                 </div>
-                                <button id='send-request' type='button' onClick={()=> this.handleSubmit()}>Request vacation</button>
+                                <button id='send-request' type='button' disabled={this.state.loading} onClick={()=> this.handleSubmit()}>Request vacation</button>
                             </form>
                             <div id='vacation-info'>
                                 <div className='avaible-time'>
@@ -166,7 +168,7 @@ class VacationRequest extends React.PureComponent<VacationPageProps, { startDate
                                 </div>
                             </div>
                         </div>
-                        <RequestsTable requests={this.props.requestHistory} removeRequest={async (id: number) => await this.removeRequest(id)}/>
+                        <RequestsTable loading={this.state.loading} requests={this.props.requestHistory} removeRequest={async (id: number) => await this.removeRequest(id)}/>
                     </main>
                 </React.Fragment>
             );

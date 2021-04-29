@@ -4,12 +4,18 @@ import '../style/RequestsTable.css';
 import { LoadingAnimation } from './Loading';
 
 type TableProps = {
-    requests: Array<VacationRequest>
-    removeRequest: Function
+    requests: Array<{
+        id: number,
+        startDate: Date,
+        finishDate: Date,
+        name: string,
+        status: string,
+        comment: string
+    }>
     loading: Boolean
 }
 
-export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, requests, removeRequest }) => {
+export const AllRequestsTable: React.FunctionComponent<TableProps> = ({ loading, requests }) => {
 
     const convertDate = (date: Date) => {
         let dateObj = new Date(date);
@@ -24,20 +30,20 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, re
     return (
         <React.Fragment>
             <div id='vacation-history'>
-                <h5 className={loading? 'blured': ''}>Vacation history</h5>
+                <h5 className={loading? 'blured': ''}>Response history</h5>
                 <table id='history' className={loading? 'blured': ''}>
                     <tbody>
                         <tr>
                             <th>Date</th>
+                            <th>Name</th>
                             <th>Status</th>
                             <th>Comment</th>
-                            <th></th>
                         </tr>
                         {requests.map((r) => <tr key={requests.indexOf(r)}>
                             <td>{convertDate(r.startDate)}-{convertDate(r.finishDate)}</td>
+                            <td>{r.name}</td>
                             <td>{r.status}</td>
                             <td>{r.comment}</td>
-                            <td><button onClick={() => removeRequest(r.id)}>Delete</button></td>
                         </tr>)}
                     </tbody>
                 </table>
