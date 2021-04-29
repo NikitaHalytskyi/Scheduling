@@ -19,10 +19,8 @@ namespace Scheduling.GraphQl.Types
             Field(user => user.Email).Description("User email.");
             Field(user => user.Position).Description("User position.");
             Field(user => user.Department).Description("User department.");
-            //Field<ComputedPropsType>(nameof(User.ComputedProps));
-            Field(user => user.UserPermissions, type: typeof(ListGraphType<UserPermissionType>)).Description("User permissions");
-            Field(user => user.Team, type: typeof(TeamType)).Description("User Team");
+            Field<ComputedPropsType>(nameof(User.ComputedProps));
 
-       }
+        }
     }
 }

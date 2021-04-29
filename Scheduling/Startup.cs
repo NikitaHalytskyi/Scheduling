@@ -69,7 +69,7 @@ namespace Scheduling
                .AddGraphQLAuthorization(options =>
                {
                    options.AddPolicy("Authenticated", p => p.RequireAuthenticatedUser());
-                   options.AddPolicy(PermissionName.VacationApprovals.ToString(), p => p.RequireClaim("permission", "Access to vacation approvals"));
+                   options.AddPolicy("Access to vacation approvals", p => p.RequireClaim("permission", "Access to vacation approvals"));
                    options.AddPolicy("Part-time", p => p.RequireClaim("permission", "Part-time"));
                    options.AddPolicy("Full-time", p => p.RequireClaim("permission", "Full-time"));
                    options.AddPolicy("Accountant", p => p.RequireClaim("permission", "Accountant"));
@@ -90,7 +90,7 @@ namespace Scheduling
             services.AddScoped<ComputedPropsType>();
             services.AddScoped<VacationRequestType>();
             services.AddScoped<PermissionNameEnum>();
-            services.AddScoped<UserPermissionType>();
+            //services.AddScoped<UserPermissionType>();
 
             services.AddScoped<ISchema, GraphSchema>();
 

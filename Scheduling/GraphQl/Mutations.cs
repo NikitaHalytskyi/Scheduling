@@ -37,38 +37,39 @@ namespace Scheduling.GraphQl
             Field<BooleanGraphType>(
                 "createUser",
                 arguments: new QueryArguments(
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name"},
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Surname", Description = "User surname"},
-                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email"},
-                    new QueryArgument<NonNullGraphType<ListGraphType<PermissionNameEnum>>> { Name = "Permissions", Description = "User permissions"},
-                    new QueryArgument<IntGraphType> { Name = "Team", Description = "User team id"}
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Surname", Description = "User surname" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email" },
+                    new QueryArgument<NonNullGraphType<ListGraphType<StringGraphType>>> { Name = "Permissions", Description = "User permisions" },
+                    new QueryArgument<ListGraphType<IntGraphType>> { Name = "Teams", Description = "User teams id" }
                 ),
                 resolve: context =>
                 {
                     string email = context.GetArgument<string>("Email");
                     string name = context.GetArgument<string>("Name");
                     string surname = context.GetArgument<string>("Surname");
-                    List<PermissionName> permissions = context.GetArgument<List<PermissionName>>("Permissions");
-                    int teamId = context.GetArgument<int>("Team");
+                    List<string> permissions = context.GetArgument<List<string>>("Permissions");
+                    List<int> teamsId = context.GetArgument<List<int>>("Teams");
 
-                    string password = "111"/*Guid.NewGuid().ToString()*/;
+                    string password = Guid.NewGuid().ToString();
 
-                    User user = dataBaseRepository.CreateUser(name, surname, email, password, permissions, teamId);
-                    
-                    /*if(user.Email != null)
+                    User user = dataBaseRepository.CreateUser(name, surname, email, password, permissions, teamsId);
+
+                    if (user.Email != null)
                     {
                         try
                         {
                             emailService.SendEmail(email, password);
-                        }catch 
+                        }
+                        catch
                         {
                             return false;
                         }
-                    }*/
+                    }
 
                     return true;
                 }
-            )/*.AuthorizeWith("Manager")*/;
+            ).AuthorizeWith("Manager");
 
             Field<BooleanGraphType>(
                 "RemoveUser",

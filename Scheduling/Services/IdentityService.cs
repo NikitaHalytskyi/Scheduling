@@ -37,11 +37,10 @@ namespace Scheduling.Services
                 return ""; 
             }
 
-            /*user.ComputedProps = new ComputedProps();
-            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id))*/;
-            
+            user.ComputedProps = new ComputedProps();
+            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
 
-            return GenerateAccessToken(email, user.Id.ToString(), user.UserPermissions.ConvertAll(input => input.Permission.Name.ToString()));
+            return GenerateAccessToken(email, user.Id.ToString(), user.ComputedProps.Permissions.ConvertAll(input => input.Name));
 
         }
         private string GenerateAccessToken(string email, string userId, List<string> permissons)

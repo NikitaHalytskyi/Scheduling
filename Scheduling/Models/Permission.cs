@@ -9,9 +9,8 @@ namespace Scheduling.Models
     public class Permission
     {
         public int Id { get; set; }
-        public PermissionName Name { get; set; }
+        public string Name { get; set; }
 
-        public List<UserPermission> UserPermissions { get; set; }
     }
 
     public enum PermissionName

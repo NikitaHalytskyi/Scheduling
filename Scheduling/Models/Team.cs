@@ -11,7 +11,5 @@ namespace Scheduling.Models
         public int Id { get; set; }
         public int CreatorId { get; set; }
         public string Name { get; set; }
-
-        public List<User> Users { get; set; }
     }
 }

@@ -21,43 +21,7 @@ namespace Scheduling.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<Permission>()
-                .Property(e => e.Name)
-                .HasConversion(
-                    v => v.ToString(),
-                    v => (PermissionName)Enum.Parse(typeof(PermissionName), v));
-
-
-            modelBuilder.Entity<UserPermission>()
-                .HasKey(t => new { t.UserId, t.PermissionId });
-
-            modelBuilder.Entity<UserPermission>()
-                .HasOne(pt => pt.User)
-                .WithMany(p => p.UserPermissions)
-                .HasForeignKey(pt => pt.UserId);
-
-            modelBuilder.Entity<UserPermission>()
-                .HasOne(pt => pt.Permission)
-                .WithMany(t => t.UserPermissions)
-                .HasForeignKey(pt => pt.PermissionId);
-
-
             base.OnModelCreating(modelBuilder);
-
-           /* modelBuilder.Entity<Permission>()
-                .HasMany(p => p.Users)
-                .WithMany(t => t.Permissions)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PermissionUser",
-                    r => r.HasOne<User>().WithMany().HasForeignKey("UsersId"),
-                    l => l.HasOne<Permission>().WithMany().HasForeignKey("PermissionsId"),
-                    je =>
-                    {
-                        je.HasKey("PermissionsId", "UsersId");
-                        je.HasData(
-                            new { UsersId = 1321313, PermissionsId = 5 });
-                    });*/
 
             modelBuilder.Entity<User>().HasData(new User
             {
@@ -70,7 +34,6 @@ namespace Scheduling.Domain
                 Department = "Memes",
                 Salt = "91ed90df-3289-4fdf-a927-024b24bea8b7",
             });
-
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 13213133,
@@ -86,52 +49,57 @@ namespace Scheduling.Domain
             modelBuilder.Entity<Permission>().HasData(new Permission
             {
                 Id = 1,
-                Name = PermissionName.VacationApprovals
+                Name = "Access to vacation approvals"
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission
             {
                 Id = 2,
-                Name = PermissionName.Accountant
+                Name = "Accountant"
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission
             {
                 Id = 3,
-                Name = PermissionName.PartTime
+                Name = "Part-time"
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission
             {
                 Id = 4,
-                Name = PermissionName.FullTime
+                Name = "Full-time"
             });
 
             modelBuilder.Entity<Permission>().HasData(new Permission
             {
                 Id = 5,
-                Name = PermissionName.UserManagement
+                Name = "Access to team management"
             });
 
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
+                Id = 6,
+                Name = "Access to global management"
+            });
 
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
             {
                 Id = 3,
-                PermissionId = 1,
+                PermisionId = 1,
                 UserId = 1321313
             });
 
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
             {
                 Id = 4,
-                PermissionId = 3,
+                PermisionId = 3,
                 UserId = 13213133
             });
 
             modelBuilder.Entity<UserPermission>().HasData(new UserPermission
             {
                 Id = 5,
-                PermissionId = 5,
+                PermisionId = 6,
                 UserId = 1321313
             });
 
@@ -141,14 +109,12 @@ namespace Scheduling.Domain
                 CreatorId = 1321313,
                 Name = "Development"
             });
-
             modelBuilder.Entity<UserTeams>().HasData(new UserTeams
             {
                 Id = 1,
                 UserId = 13213133,
                 TeamId = 6
             });
-
             modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
             {
                 Id = 1,
@@ -158,7 +124,6 @@ namespace Scheduling.Domain
                 Status = "Declined. Declined by PM. Declined by TL.",
                 Comment = "I want to see a bober."
             });
-
             modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
             {
                 Id = 2,
@@ -168,7 +133,6 @@ namespace Scheduling.Domain
                 Status = "Declined. Declined by PM. Declined by TL.",
                 Comment = "I really want to see a bober."
             });
-
             modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
             {
                 Id = 3,
@@ -178,7 +142,6 @@ namespace Scheduling.Domain
                 Status = "Pending consideration...",
                 Comment = "Please, it`s my dream to see a bober."
             });
-
         }
     }
 }

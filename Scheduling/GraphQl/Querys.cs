@@ -22,9 +22,9 @@ namespace Scheduling.GraphQl
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
 
-                    /*user.ComputedProps = new ComputedProps();
+                    user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
-                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);*/
+                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
 
                     return user;
                 }
