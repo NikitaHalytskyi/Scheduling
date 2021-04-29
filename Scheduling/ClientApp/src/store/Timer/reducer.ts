@@ -27,8 +27,11 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 				if (action.time.startTime)
 					return { ...state, timerHistory: [...state.timerHistory, action.time] }
 				else {
-					state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime.finishTime;
-					return { ...state, timerHistory: [...state.timerHistory] }
+					if (state.timerHistory.length != 0) {
+						state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime.finishTime;
+						return { ...state, timerHistory: [...state.timerHistory] }
+					}
+					return { ...state };
                 }
 			}
 		case 'CHECK_USER':
@@ -40,7 +43,6 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 		case 'DELETE_TIME':
 			{
 				return { logged: state.logged, token: state.token, timerHistory: state.timerHistory.filter((item => item.id !== action.time)) }
-
 			}
 		default:
 			return state;

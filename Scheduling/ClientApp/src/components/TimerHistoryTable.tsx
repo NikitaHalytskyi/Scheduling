@@ -7,50 +7,21 @@ import { actionCreators } from '../store/Timer/actions';
 import { TimerType } from '../store/Timer/types';
 import '../style/RequestsTable.css';
 import { deleteTimer, getUserTimerData } from '../webAPI/timer';
+import Popup from './Popup';
 
 type TableProps = {
     requests: Array<TimerType>
-}
-
-class Popup extends React.Component {
-    render() {
-        const popup = {
-            position: "fixed",
-            width: "100%",
-            height: "100%",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            margin: "auto",
-            zIndex: 2,
-            backgroundColor: "rgba(0, 0, 0, 0.5)"
-    };
-    const popup_inner = {
-        position: "absolute",
-        left: "25%",
-        right: "25%",
-        top: "25%",
-        bottom: "25%",
-        margin: "auto",
-        backgroundColor: "white"
-    };
-        return (
-            <div style = { popup } >
-                <div style={popup_inner}>
-                    <h1>{this.props.text}</h1>
-                    <button onClick={this.props.closePopup}>close me</button>
-                </div>
-            </div>
-        );
-    }
 }
 
 class TimerHistoryTable extends Component {
     constructor() {
         super();
         this.state = {
-            showPopup: false
+            showPopup: false,
+            editId: 0,
+            startTime: new Date(),
+            finishTime: new Date(),
+            buttonText: "",
         };
     }
     async componentDidMount() {
@@ -83,10 +54,26 @@ class TimerHistoryTable extends Component {
 
         return hours + ":" + minutes ;
     }
-    togglePopup() {
+    togglePopup(id, startTime, finishTime) {
         this.setState({
-            showPopup: !this.state.showPopup
+            showPopup: !this.state.showPopup,
+            editId: id,
+            startTime: startTime,
+            finishTime: finishTime,
         });
+    }
+    convertDateToHoursMinutes(time) {
+        var hours = new Date(time).getHours();
+        hours = (hours < 10) ? "0" + hours : hours;
+        var minutes = new Date(time).getMinutes();
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+        return (hours + ":" + minutes);
+    }
+    changePopUpButtonText(text) {
+        this.setState({
+            buttonText: text
+        })
     }
     render() {
         if (this.props.timerHistory != undefined && this.props.timerHistory.length > 0) {
@@ -109,7 +96,8 @@ class TimerHistoryTable extends Component {
                                     }</td>
                                     <td>
                                         <button onClick={() => {
-                                            this.togglePopup()
+                                            this.togglePopup(r.id, r.startTime, r.finishTime)
+                                            this.changePopUpButtonText("Edit")
                                         }}>Edit</button>
                                         <button onClick={() => {
                                         this.deleteTimerValue(r.id)
@@ -119,13 +107,16 @@ class TimerHistoryTable extends Component {
                                 </tr>)}
                                 {this.state.showPopup ?
                                     <Popup
-                                        text='Close Me'
                                         closePopup={this.togglePopup.bind(this)}
+                                        id={this.state.editId}
+                                        startTime={this.convertDateToHoursMinutes(this.state.startTime)}
+                                        finishTime={this.convertDateToHoursMinutes(this.state.finishTime)}
+                                        buttonText={this.state.buttonText}
                                     />
                                     : null
                                 }
                             </tbody>
-                            <button id='send-request'>Add new item</button>
+                            <button>Add new item</button>
 
                         </table>
                     </div>
