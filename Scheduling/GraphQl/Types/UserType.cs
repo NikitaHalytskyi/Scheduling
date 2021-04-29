@@ -20,7 +20,7 @@ namespace Scheduling.GraphQl.Types
             Field(user => user.Position).Description("User position.");
             Field(user => user.Department).Description("User department.");
             //Field<ComputedPropsType>(nameof(User.ComputedProps));
-            Field(user => user.UserPermissions.ConvertAll(u=> u.Permission), type: typeof(PermissionType)).Description("User permissions");
+            Field(user => user.UserPermissions, type: typeof(ListGraphType<UserPermissionType>)).Description("User permissions");
             Field(user => user.Team, type: typeof(TeamType)).Description("User Team");
 
        }
