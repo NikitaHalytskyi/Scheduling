@@ -94,7 +94,7 @@ class Timer extends Component {
             const data = await addTimerFinish(token);
 
             if (data.data) {
-                this.props.addTime({ finishTime: data.data.editTimerFinishValue });
+                this.props.addTime({ finishTime: data.data.editTimerFinishValue.finishTime });
             }
         }
     }

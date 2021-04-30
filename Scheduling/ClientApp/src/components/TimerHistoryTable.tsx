@@ -109,8 +109,8 @@ class TimerHistoryTable extends Component {
                                     <Popup
                                         closePopup={this.togglePopup.bind(this)}
                                         id={this.state.editId}
-                                        startTime={this.convertDateToHoursMinutes(this.state.startTime)}
-                                        finishTime={this.convertDateToHoursMinutes(this.state.finishTime)}
+                                        startTime={this.state.startTime}
+                                        finishTime={this.state.finishTime}
                                         buttonText={this.state.buttonText}
                                     />
                                     : null
