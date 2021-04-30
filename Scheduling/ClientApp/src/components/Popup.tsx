@@ -13,10 +13,19 @@ type TableProps = {
 }
 
 class Popup extends React.Component {
+    async deleteTimerValue(id: number) {
+        const token = Cookies.get('token');
+        const data = await deleteTimer(token, id);
 
+        if (data.data) {
+            this.props.deleteTime(data.data.deleteTimerFinishValue.id);
+        }
+    }
     render() {
         const closeButton = {
-
+            top: "0px",
+            right: "0px",
+            position: "absolute",
         };
         const popup = {
             position: "fixed",
@@ -30,6 +39,7 @@ class Popup extends React.Component {
             zIndex: 2,
             backgroundColor: "rgba(0, 0, 0, 0.5)"
     };
+
     const popup_inner = {
         position: "absolute",
         left: "40%",
@@ -52,6 +62,9 @@ class Popup extends React.Component {
                     <input type="time" value={this.props.finishTime} style={timeInput}/>
                     <button onClick={this.props.closePopup}>{this.props.buttonText}</button>
                     <button onClick={this.props.closePopup} style={closeButton}>Close</button>
+                    <button onClick={() => {
+                        this.deleteTimerValue(this.props.id)
+                    }}>Delete</button>
                 </div>
             </div>
         );
