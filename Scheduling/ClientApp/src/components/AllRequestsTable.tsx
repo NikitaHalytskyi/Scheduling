@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { VacationRequest } from '../store/VacationRequest/types';
 import '../style/RequestsTable.css';
 import { LoadingAnimation } from './Loading';
 

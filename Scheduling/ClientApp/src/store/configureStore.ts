@@ -8,8 +8,8 @@ import { UserState } from './User/types';
 import { VacationRequestState } from './VacationRequest/types';
 
 export interface ApplicationState {
-    loggedUser: UserState | undefined;
-    vacationRequest: VacationRequestState | undefined;
+    loggedUser: UserState;
+    vacationRequest: VacationRequestState;
 };
 
 

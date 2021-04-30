@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
 import{ VacationRequestState } from '../store/VacationRequest/types';
@@ -8,13 +7,7 @@ import '../style/VacationRequest.css';
 import { actionCreators } from '../store/VacationRequest/actions';
 import { RequestsTable } from './RequestsTable';
 import { addUserRequest, getUserRequests, removeUserRequest } from '../webAPI/vacationRequest';
-import { LoadingAnimation } from './Loading';
 import { UserState } from '../store/User/types';
-import { render } from 'react-dom';
-import { combineReducers } from 'redux';
-import reducer from '../store/User';
-import vacReducer from '../store/User';
-import { throws } from 'assert';
 
 
 type VacationPageProps =
@@ -31,10 +24,6 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
         loading: false
     };
 
-    // useEffect(() => {
-    //     countAmount();
-    // });
-
     async requestListUpdate() {
         let requests = [];
         this.setState({loading: true});
@@ -49,11 +38,6 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
     componentDidMount(){
         this.requestListUpdate();
     }
-    // const fetchBusinesses = useCallback( () => {
-    //     requestListUpdate();
-    //   }, [])
-
-    // useEffect(fetchBusinesses, [fetchBusinesses])
 
     validateDate() {
         let startDate = this.state.startDate;
@@ -71,10 +55,6 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
             daysLag = (Math.ceil(Math.abs(date.finishDate.getTime() - date.startDate.getTime()) / (1000 * 3600 * 24))).toString();
         return daysLag;
     }
-
-    // componentDidUpdate(){
-    //     this.countAmount()
-    // }
 
     clearForm () { 
         console.log('clear');
@@ -100,18 +80,7 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
             console.log(this.props.requestHistory);
             this.setState({loading: false});
         }
-    }
-
-
-
-    // const requestListUpdateCallback = useCallback(
-    //     () => {
-    //         requestListUpdate()
-    //     },
-    //     [requestListUpdate],
-    // )
-    
-
+    }  
 
     async removeRequest (id: number) {
         let requests = []
@@ -121,7 +90,7 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
             requests = await removeUserRequest(this.props.token, id);
             console.log('requests');
             console.log(requests.data.removeVacationRequest);
-            if(requests !== undefined && requests.data.removeVacationRequest == true){
+            if(requests !== undefined && requests.data.removeVacationRequest === true){
                 this.props.removeVacationRequest(id);
                 console.log(this.props.requestHistory);
             }

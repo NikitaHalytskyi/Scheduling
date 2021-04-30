@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { Action, Reducer } from "redux";
 import { KnownAction } from "./actions";
 import { VacationRequestState } from "./types";
@@ -23,7 +22,7 @@ const vacReducer: Reducer<VacationRequestState> = (state: VacationRequestState |
 			case 'REMOVE_REQUEST':
 				let oldRequests = state.requestHistory;
 				console.log(oldRequests, action.id);
-				let i = oldRequests.find(r => r.id == action.id);
+				let i = oldRequests.find(r => r.id === action.id);
 				console.log(i);
 				let j;
 				if(i !== undefined){

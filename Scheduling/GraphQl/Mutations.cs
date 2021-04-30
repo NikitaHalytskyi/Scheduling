@@ -80,7 +80,27 @@ namespace Scheduling.GraphQl
                 }
             );
 
-            
+            Field<VacationRequestType>(
+                "addVacationRequest",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<DateGraphType>> { Name = "StartDate", Description = "Vacation start date" },
+                    new QueryArgument<NonNullGraphType<DateGraphType>> { Name = "FinishDate", Description = "Vacation finish date" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Comment", Description = "Comment of the vacation" }
+                ),
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+                    int userId = user.Id;
+                    DateTime startDate = context.GetArgument<DateTime>("StartDate");
+                    DateTime finishDate = context.GetArgument<DateTime>("FinishDate");
+                    string status = "Pending consideration...";
+                    string comment = context.GetArgument<string>("Comment");
+
+                    return dataBaseRepository.AddRequest(userId, startDate, finishDate, status, comment);
+                },
+                description: "Returns user requests."
+            ).AuthorizeWith("Authenticated");
 
             Field<BooleanGraphType>(
                 "removeVacationRequest",

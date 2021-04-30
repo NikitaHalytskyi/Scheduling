@@ -11,12 +11,16 @@ type TableProps = {
 
 export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, requests, removeRequest }) => {
 
-    const convertDate = (date: Date) => {
+    const validateDate = (date: number) => {
+		return date < 10? '0' + date : date;
+	}
+
+	const convertDate = (date: Date) => {
         let dateObj = new Date(date);
+		let day = dateObj.getUTCDate();
         let month = dateObj.getUTCMonth() + 1;
-        let day = dateObj.getUTCDate();
         let year = dateObj.getUTCFullYear();
-        return (year + "." + month + "." + day);
+        return (year + "-" + validateDate(month) + "-" + validateDate(day));
     }
 
     if(requests.length > 0)
@@ -28,7 +32,7 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, re
                 <table id='history' className={loading? 'blured': ''}>
                     <tbody>
                         <tr>
-                            <th>Date</th>
+                            <th>Range</th>
                             <th>Status</th>
                             <th>Comment</th>
                             <th></th>

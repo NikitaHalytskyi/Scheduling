@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Button } from 'reactstrap';
-import { VacationRequest } from '../store/VacationRequest/types';
 import '../style/VacationApprovingTable.css';
 import { LoadingAnimation } from './Loading';
+import { ApprovingLine } from './VacationApprovingTableLine';
 
 type TableProps = {
+    token: string,
     requests: Array<{
         id: number,
         startDate: Date,
@@ -17,17 +17,7 @@ type TableProps = {
 }
 
 
-export const VacationApprovingTable: React.FunctionComponent<TableProps> = ({ loading, requests }) => {
-
-    const convertDate = (date: Date) => {
-        let dateObj = new Date(date);
-        let month = dateObj.getUTCMonth() + 1;
-        let day = dateObj.getUTCDate();
-        let year = dateObj.getUTCFullYear();
-        return (year + "." + month + "." + day);
-    }
-
-
+export const VacationApprovingTable: React.FunctionComponent<TableProps> = ({ token, loading, requests }) => {
 
     if(requests.length > 0)
         console.log('table' + requests[0].comment);
@@ -46,11 +36,7 @@ export const VacationApprovingTable: React.FunctionComponent<TableProps> = ({ lo
                         </tr>
                         {requests.filter(r => r.status === "Pending consideration...").map((r) =>
                             <tr key={requests.indexOf(r)}>
-                                    <td>{convertDate(r.startDate)}-{convertDate(r.finishDate)}</td>
-                                    <td>{r.name}</td>
-                                    <td>{r.comment}</td>
-                                    <td><textarea className={"my-comment"}/></td>
-                                <td className={"align-center"}><button type='button' className={"button-vacation-agree"}><span>&#10003;</span></button><button type='button' className={"button-vacation-disagree"}>X</button></td>
+                                <ApprovingLine token={token} request={r}/>
                             </tr>
                         )}
                     </tbody>

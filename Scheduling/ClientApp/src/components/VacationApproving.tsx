@@ -6,7 +6,6 @@ import { actionCreators } from '../store/VacationRequest/actions';
 import { UserState } from '../store/User/types';
 import { getAllRequests } from '../webAPI/vacationApproving';
 import { VacationRequest } from '../store/VacationRequest/types';
-import { LoadingAnimation } from './Loading';
 import { AllRequestsTable } from './AllRequestsTable';
 import { VacationApprovingTable } from './VacationApprovingTable';
 
@@ -16,7 +15,7 @@ type ApprovingRequest = {
     finishDate: Date,
     name: string,
     status: string,
-    comment: string
+    comment: string,
 }
 
 type VacationApprovingProps =
@@ -64,7 +63,8 @@ class VacationApproving extends React.PureComponent<VacationApprovingProps, { re
     }
 
     componentDidMount(){
-        this.requestListUpdate();
+        if(this.props.user && this.props.user.computedProps.permissions.includes('Manager'))
+            this.requestListUpdate();
     }
 
     convertDate(date: Date) {
@@ -76,13 +76,13 @@ class VacationApproving extends React.PureComponent<VacationApprovingProps, { re
     }
 
     public render(){
-        if(this.props.logged)
+        if(this.props.logged && this.props.token && this.props.user && this.props.user.computedProps.permissions.includes('Manager'))
             return (
                 <React.Fragment>
                     <main>
                         <div id='approving-container'>
                             <h2>Vacation approving</h2>
-                            <VacationApprovingTable loading={this.state.loading} requests={this.state.requests} />
+                            <VacationApprovingTable token={this.props.token} loading={this.state.loading} requests={this.state.requests} />
                             <AllRequestsTable loading={this.state.loading} requests={this.state.requests}/>
                         </div>
                     </main>
