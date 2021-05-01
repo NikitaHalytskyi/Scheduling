@@ -30,6 +30,9 @@ Obj/
 /wwwroot/dist/
 /.vs/
 
+# JetBrains products cache/options directory
+.idea/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
