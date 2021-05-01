@@ -54,13 +54,20 @@ class TimerHistoryTable extends Component {
 
         return hours + ":" + minutes ;
     }
-    togglePopup(id, startTime, finishTime) {
-        this.setState({
-            showPopup: !this.state.showPopup,
-            editId: id,
-            startTime: startTime,
-            finishTime: finishTime,
-        });
+    togglePopup(id = "", startTime = new Date(), finishTime = new Date()) {
+        if (id == "")
+            this.setState({
+                showPopup: !this.state.showPopup,
+                editId: id,
+                startTime: startTime,
+                finishTime: finishTime,
+            });
+        else
+            this.setState({
+                showPopup: !this.state.showPopup,
+                startTime: startTime,
+                finishTime: finishTime,
+            });
     }
     convertDateToHoursMinutes(time) {
         var hours = new Date(time).getHours();
@@ -71,6 +78,7 @@ class TimerHistoryTable extends Component {
         return (hours + ":" + minutes);
     }
     changePopUpButtonText(text) {
+        
         this.setState({
             buttonText: text
         })
@@ -116,7 +124,10 @@ class TimerHistoryTable extends Component {
                                     : null
                                 }
                             </tbody>
-                            <button>Add new item</button>
+                            <button onClick={() => {
+                                this.togglePopup()
+                                this.changePopUpButtonText("Add")
+                            }}>Add new item</button>
 
                         </table>
                     </div>

@@ -23,8 +23,10 @@ class Popup extends React.Component {
 
     }
     componentDidMount() {
-        this.setStartTime(new Date(this.props.startTime));
-        this.setFinishTime(new Date(this.props.finishTime));
+        if (this.props.startTime != "") {
+            this.setStartTime(new Date(this.props.startTime));
+            this.setFinishTime(new Date(this.props.finishTime));
+        }
     }
     async deleteTimerValue(id: number) {
         const token = Cookies.get('token');
