@@ -1,5 +1,4 @@
 import * as React from 'react';
-import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
