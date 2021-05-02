@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Scheduling.Domain
 {
-    public class UserDBContext : DbContext
+    public class DBContext : DbContext
     {
-        public UserDBContext(DbContextOptions<UserDBContext> options) : base(options)
+        public DBContext(DbContextOptions<DBContext> options) : base(options)
         { }
 
         public DbSet<User> Users { get; set; }
@@ -18,6 +18,7 @@ namespace Scheduling.Domain
         public DbSet<Team> Teams { get; set; }
         public DbSet<UserTeams> userTeams { get; set; }
         public DbSet<VacationRequest> VacationRequests { get; set; }
+        public DbSet<Token> Tokens { get; set; }
         public DbSet<TimerHistory> TimerHistories { get; set; }
         public DbSet<UserTimerHistory> UserTimerHistories { get; set; }
 

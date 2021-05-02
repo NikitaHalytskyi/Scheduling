@@ -116,7 +116,79 @@ namespace Scheduling.GraphQl
                 description: "Returns user requests."
             ).AuthorizeWith("Authenticated");
 
-            Field<TimerHistoryType>(
+            Field<BooleanGraphType>(
+                "sendResetPasswordLink",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email" }
+                ),
+                resolve: context =>
+                {
+                    string email = context.GetArgument<string>("Email");
+                    User user = dataBaseRepository.Get(email);
+                    if (user == null)
+                        return false;
+
+                    string token = identityService.GenerateResetPasswordAccessToken(email);
+                    try
+                    {
+                        emailService.SendRestorePasswordEmail(email, token);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+            );
+
+            Field<StringGraphType>(
+                "resetPassword",    
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "New password to acccount."}
+                ),
+                resolve: context =>
+                {
+
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    string token = httpContext.HttpContext.Request.Headers.First(header => header.Key == "Authorization").Value.ToString().Replace("Bearer ", "");
+                    Token jwt = dataBaseRepository.GetJWT(token);
+
+                    string password = context.GetArgument<string>("Password");
+                    string salt = Guid.NewGuid().ToString();
+
+                    User user = dataBaseRepository.Get(email);
+
+                    if (user.Password == Hashing.GetHashString(password + user.Salt))
+                        return "The new password cannot match the current password.";
+
+                    if (jwt == null)
+                        return "";
+
+                    dataBaseRepository.RemoveJWT(token);
+
+                    user.Password = Hashing.GetHashString(password + user.Salt);
+
+                    dataBaseRepository.EditUser(user);
+                    return "Success";
+                }
+            ).AuthorizeWith("canResetPassword");
+
+            Field<BooleanGraphType>(
+                "checkAccessToResetPasswordPage",
+                resolve: context =>
+                {
+                    string token = httpContext.HttpContext.Request.Headers.First(header => header.Key == "Authorization").Value.ToString().Replace("Bearer ", "");
+                    Token jwt = dataBaseRepository.GetJWT(token);
+
+                    if (jwt == null)
+                        return false;
+
+                    return true;
+                }
+            ).AuthorizeWith("canResetPassword");
+
+
+        Field<TimerHistoryType>(
                 "addTimerStartValue",
                 resolve: context =>
                 {
@@ -142,6 +214,7 @@ namespace Scheduling.GraphQl
                 resolve: context =>
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    
                     User user = dataBaseRepository.Get(email);
 
                     Nullable<DateTime> startTime = context.GetArgument<Nullable<DateTime>>("StartTime", defaultValue: null);
@@ -169,6 +242,7 @@ namespace Scheduling.GraphQl
                 },
                 description: "Update value: added finish time"
             );
+
         }
     }
 }

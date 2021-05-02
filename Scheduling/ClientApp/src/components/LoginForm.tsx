@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../style/Login.css';
 import { authenticate } from '../webAPI/login';
 import { getUserData } from '../webAPI/user';
@@ -61,6 +62,7 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
                         <p className={'error-message' + (showError ? '' : ' hidden')}>Error! Incorrect login or passsword.</p>
                     </div>
                     <button id='login-form-button' type='button' onClick={handleSubmit}>LOGIN</button>
+                    <p>Foggot password? <Link to='/restorePassword'>Restore password</Link> </p>
                 </form>
             </main>
         </React.Fragment>

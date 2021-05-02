@@ -7,8 +7,7 @@ type TableProps = {
 }
 
 export const RequestsTable: React.FunctionComponent<TableProps> = ({ requests }) => {
-    if(requests.length>0)
-        console.log('table' + requests[0].comment);
+    
     return (
         <React.Fragment>
             <div id='vacation-history'>

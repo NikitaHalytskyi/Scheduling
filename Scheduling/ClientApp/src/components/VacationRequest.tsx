@@ -66,9 +66,8 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
             let finishDate = date.finishDate;
             let comment = (document.getElementById('comment') as HTMLTextAreaElement).value;
             requests.push({id: requests[requests.length-1].id + 1, startDate, finishDate, status: 'Pending consideration...', comment, editable: true });
-            console.log(requests);
+            
             this.props.setHistory(requests);
-            console.log(this.props.requestHistory);
         }
       }
 

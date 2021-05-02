@@ -1,8 +1,7 @@
-
-export const authenticate = async (login: string, password: string) => {
+export const restorePassword = async (login: string) => {
 	const query = JSON.stringify({
 		query: `mutation {
-			authentication (email: "${login}" password: "${password}")
+			sendResetPasswordLink (email: "${login}")
 		}`
 	});
 
