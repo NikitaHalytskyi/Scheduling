@@ -14,10 +14,10 @@ const WhoIsOut: React.FunctionComponent<WhoIsOutProps> = () => {
             <h2>Who is out</h2>
 
             <p>Today</p>
-            <UserList users={["1", "2", "3", "4"]}/>
+            <UserList users={["User", "User2", "User3", "User4"]}/>
 
             <p>Tomorrow</p>
-            <UserList users={["2", "3", "5", "7", "8"]}/>
+            <UserList users={["User2", "User3", "User5", "User7", "User8"]}/>
 
             <Link to="/MainPage">
                 <button className="view-team-calendar-button">View team calendar</button>
