@@ -1,30 +1,58 @@
 import * as React from 'react';
 import {Link} from "react-router-dom";
 
-import './style.css';
 import UserList from "../UserList";
 
+import {getUsersOnVacationWithinTeamByDate} from "../../webAPI/user";
+
+import './style.css';
+
 type WhoIsOutProps = {
+    token: string
 }
 
-const WhoIsOut: React.FunctionComponent<WhoIsOutProps> = () => {
+class WhoIsOut extends React.PureComponent<WhoIsOutProps, {usersOnVacationToday: string[], usersOnVacationTomorrow: string[]}> {
+    constructor(props: WhoIsOutProps) {
+        super(props);
+        this.state = {usersOnVacationToday: new Array<string>(), usersOnVacationTomorrow: new Array<string>()}
+    }
 
-    return (
-        <div className="who-is-out">
-            <h2>Who is out</h2>
+    async componentDidMount() {
+        await getUsersOnVacationWithinTeamByDate(this.props.token, new Date()).then(({data}) => {
+            this.setState({usersOnVacationToday: data.getUsersOnVacation.map((user: { name: string; }) => user.name)});
+        })
+        await getUsersOnVacationWithinTeamByDate(this.props.token, new Date(new Date().setDate(new Date().getDate() + 1))).then(({data}) => {
+            this.setState({usersOnVacationTomorrow: data.getUsersOnVacation.map((user: { name: string; }) => user.name)});
+        })
+    }
 
-            <p>Today</p>
-            <UserList users={["User", "User2", "User3", "User4"]}/>
+    /*
+        getUsersOnVacationWithinTeamByDate(props.token, new Date()).then(({data}) => {
+            usersOnVacationToday = data.getUsersOnVacation.map((user: { name: string; }) => user.name);
+        })
+        getUsersOnVacationWithinTeamByDate(props.token, new Date(new Date().setDate(new Date().getDate() + 1))).then(({data}) => {
+            usersOnVacationTomorrow = data.getUsersOnVacation.map((user: { name: string; }) => user.name)
 
-            <p>Tomorrow</p>
-            <UserList users={["User2", "User3", "User5", "User7", "User8"]}/>
+        })
+    */
+    render() {
+        return (
+                <div className="who-is-out">
+                    <h2>Who is out</h2>
 
-            <Link to="/MainPage">
-                <button className="view-team-calendar-button">View team calendar</button>
-            </Link>
+                    <p>Today</p>
+                    <UserList users={this.state.usersOnVacationToday}/>
 
-        </div>
-    );
+                    <p>Tomorrow</p>
+                    <UserList users={this.state.usersOnVacationTomorrow}/>
+
+                    <Link to="/MainPage">
+                        <button className="view-team-calendar-button">View team calendar</button>
+                    </Link>
+
+                </div>
+            );
+    }
 }
 
 export default WhoIsOut;

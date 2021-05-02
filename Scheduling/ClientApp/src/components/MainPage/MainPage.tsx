@@ -19,6 +19,7 @@ type MainPageProps =
     typeof actionCreators
 
 class MainPage extends React.PureComponent<MainPageProps> {
+
     async componentDidMount(){
         const token = Cookies.get('token');
 
@@ -52,7 +53,7 @@ class MainPage extends React.PureComponent<MainPageProps> {
                             </div>
                         </div>
                         <div className="bottom-side">
-                            <WhoIsOut/>
+                            <WhoIsOut token={Cookies.get('token') || ""}/>
                         </div>
                     </div>
                 </section>

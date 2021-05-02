@@ -7,12 +7,13 @@ type UserListProps = {
     users: string[]
 }
 
-const UserList: React.FunctionComponent<UserListProps> = ({users}: UserListProps) => {
+const UserList: React.FunctionComponent<UserListProps> = (props: UserListProps) => {
+    console.log(props);
 
     return (
         <div className="user-list">
-            {users.map((u) => {
-                return <div>{u}</div>
+            {props.users.map((u) => {
+                return <div className="user-list-element">{u}</div>
             })}
         </div>
     );
