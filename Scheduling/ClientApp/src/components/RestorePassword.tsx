@@ -6,7 +6,7 @@ import { validateEmail } from '../Utils/utils';
 import { restorePassword } from '../webAPI/restorePassword';
 import { LoadingAnimation } from './Loading';
 
-export const RestorePassword: React.FunctionComponent = () => {
+const RestorePassword: React.FunctionComponent = () => {
     
   const [email, setEmail] = useState("");
 	const [showError, setError] = useState(false);
@@ -63,3 +63,6 @@ export const RestorePassword: React.FunctionComponent = () => {
 			</React.Fragment>
 	);
 }
+
+
+export default RestorePassword;

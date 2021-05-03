@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
 import{ VacationRequestState } from '../store/VacationRequest/types';
 import '../style/VacationRequest.css';
@@ -78,52 +78,47 @@ class VacationRequest extends React.PureComponent<VacationRequestProps>{
     }
 
     public render(){
-        if(this.props.logged){
-            return (
-                <React.Fragment>
-                    <main>
-                        <div id='vacation-container'>
-                            <form id='vacation-request'>
-                                <h2>Vacation</h2>
-                                <div className='line-container'>
-                                    <div className='data-container'>
-                                        <label htmlFor='start-date'>From</label>
-                                        <input type='date' id='start-date' onInput={this.countAmount}></input>
-                                    </div>
-                                    <div className='data-container'>
-                                        <label htmlFor='finish-date'>To</label>
-                                        <input type='date' id='finish-date' onInput={this.countAmount}></input>
-                                    </div>
+        return (
+            <React.Fragment>
+                <main>
+                    <div id='vacation-container'>
+                        <form id='vacation-request'>
+                            <h2>Vacation</h2>
+                            <div className='line-container'>
+                                <div className='data-container'>
+                                    <label htmlFor='start-date'>From</label>
+                                    <input type='date' id='start-date' onInput={this.countAmount}></input>
                                 </div>
                                 <div className='data-container'>
-                                    <label htmlFor='amount'>Amount</label>
-                                    <input id='amount' readOnly></input>
-                                </div>
-                                <div className='data-container'>
-                                    <label htmlFor='comment'>Comment</label>
-                                    <textarea id='comment'></textarea>
-                                </div>
-                                <button id='send-request' type='button' onClick={this.handleSubmit}>Request vacation</button>
-                            </form>
-                            <div id='vacation-info'>
-                                <div className='avaible-time'>
-                                    <h5>Avaible vacation time</h5>
-                                    <p id='avaible-time'>0.00 days</p>
-                                </div>
-                                <div className='time-tracker'>
-                                    <h5>Time tracker</h5>
+                                    <label htmlFor='finish-date'>To</label>
+                                    <input type='date' id='finish-date' onInput={this.countAmount}></input>
                                 </div>
                             </div>
+                            <div className='data-container'>
+                                <label htmlFor='amount'>Amount</label>
+                                <input id='amount' readOnly></input>
+                            </div>
+                            <div className='data-container'>
+                                <label htmlFor='comment'>Comment</label>
+                                <textarea id='comment'></textarea>
+                            </div>
+                            <button id='send-request' type='button' onClick={this.handleSubmit}>Request vacation</button>
+                        </form>
+                        <div id='vacation-info'>
+                            <div className='avaible-time'>
+                                <h5>Avaible vacation time</h5>
+                                <p id='avaible-time'>0.00 days</p>
+                            </div>
+                            <div className='time-tracker'>
+                                <h5>Time tracker</h5>
+                            </div>
                         </div>
-                        <RequestsTable requests={this.props.requestHistory} />
-                    </main>
-                </React.Fragment>
-            );
-        }
-        else{
-            return <Redirect to='/'  />
-        }
-        
+                    </div>
+                    <RequestsTable requests={this.props.requestHistory} />
+                </main>
+            </React.Fragment>
+        );
+    
     }
 };
 

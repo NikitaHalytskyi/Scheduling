@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
+import PrivateRoute from './components/PrivateRoute';
 import Layout from './components/Layout';
-import { ResetPassword } from './components/ResetPassword';
-import { RestorePassword } from './components/RestorePassword';
+
+import ResetPassword from './components/ResetPassword';
+import RestorePassword from './components/RestorePassword';
 import TimerPage from './components/TimerPage';
-import User from './components/User';
 import VacationRequest from './components/VacationRequest';
-import { Error403 } from './components/Error403';
-import { Error404 } from './components/Error404';
+import MainPage from './components/MainPage';
+import Login from './components/Login';
 
-import MainPage from "./components/MainPage";
-
+import Error from './components/ErrorPage';
 
 import './custom.css'
 
@@ -18,18 +18,19 @@ import './custom.css'
 export default () => (
     <Layout>
         <Switch>
-            <Route exact path="/restorePassword" component={RestorePassword} />
-            <Route exact path="/resetPassword/:token" component={ResetPassword} />
-            <Route exact path="/resetPassword">
-                <Error403></Error403>
+            <Route exact path='/restorePassword' component={RestorePassword} />
+            <Route exact path='/resetPassword/:token' component={ResetPassword} />
+            <Route exact path='/resetPassword'>
+                <Error message='Error 403. Forbidden.' />
             </Route>
-            <Route exact path='/MainPage' component={MainPage} />
-            <Route exact path='/VacationRequest' component={VacationRequest} />
-            <Route exact path='/Timer' component={TimerPage} />
+            <Route exact path='/login' component={Login} />
+
+            <PrivateRoute exact path='/VacationRequest' component={VacationRequest} />
+            <PrivateRoute exact path='/Timer' component={TimerPage} />
+            <PrivateRoute exact path='/' component={MainPage} />
             
-            <Route exact path='/' component={User} />
             <Route>
-                <Error404 />
+                <Error message='Error 404. Page not found.' />
             </Route>
         </Switch>
     </Layout>

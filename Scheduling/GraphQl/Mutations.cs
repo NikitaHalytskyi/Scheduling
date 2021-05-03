@@ -129,9 +129,14 @@ namespace Scheduling.GraphQl
                         return false;
 
                     string token = identityService.GenerateResetPasswordAccessToken(email);
-                    
-                    emailService.SendRestorePasswordEmail(email, token);
-                   
+                    try
+                    {
+                        emailService.SendRestorePasswordEmail(email, token);
+                    }
+                    catch
+                    {
+                        return false;
+                    }
                     return true;
                 }
             );

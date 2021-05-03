@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import '../style/ResetPassword.css';
 import { checkAccessToResetPassword, resetPassword } from '../webAPI/resetPassword';
-import { Error403 } from './Error403';
+import Error from './ErrorPage';
 import { LoadingAnimation } from './Loading';
 
 
@@ -16,7 +16,7 @@ interface IResetPasswordState {
 	isLoading: boolean
 }
 
-export class ResetPassword extends React.Component<{}, IResetPasswordState> {
+export default class ResetPassword extends React.Component<{}, IResetPasswordState> {
     
   constructor(props: Readonly<{}>){
 		super(props);
@@ -112,7 +112,7 @@ export class ResetPassword extends React.Component<{}, IResetPasswordState> {
 			page = <p>Password changed successfully.<br/><Link to="/">Return home.</Link></p>;
 
 		if(this.state.showError403)
-			page = <Error403 />
+			page = <Error message="Error 403. Forbidden." />
 
 		return page;
 	}
