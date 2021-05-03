@@ -9,6 +9,9 @@ import VacationRequest from './components/VacationRequest';
 import { Error403 } from './components/Error403';
 import { Error404 } from './components/Error404';
 
+import MainPage from "./components/MainPage";
+
+
 import './custom.css'
 
 
@@ -20,9 +23,11 @@ export default () => (
             <Route exact path="/resetPassword">
                 <Error403></Error403>
             </Route>
-            <Route exact path='/vacationrequest' component={VacationRequest} />
+            <Route exact path='/MainPage' component={MainPage} />
+            <Route exact path='/VacationRequest' component={VacationRequest} />
+            <Route exact path='/Timer' component={TimerPage} />
+            
             <Route exact path='/' component={User} />
-            <Route exact path='/timer' component={TimerPage} />
             <Route>
                 <Error404 />
             </Route>

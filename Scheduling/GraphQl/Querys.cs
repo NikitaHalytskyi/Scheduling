@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Scheduling.Domain;
 using Scheduling.GraphQl.Types;
 using Scheduling.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace Scheduling.GraphQl
 
                     user.ComputedProps = new ComputedProps();
                     user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
-                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
+                    user.ComputedProps.AddTeams(dataBaseRepository.GetUserTeams(user.Id));
 
 
                     System.DateTime? selectedDay = context.GetArgument<System.DateTime?>("CalendarDay");
@@ -120,6 +121,40 @@ namespace Scheduling.GraphQl
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
                     return user;
+                }
+            ).AuthorizeWith("Authenticated");
+
+            Field<ListGraphType<UserType>>(
+                "GetUsersOnVacation",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<DateTimeGraphType>> { Name="Date" }
+                ),
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+
+                    user.ComputedProps = new ComputedProps();
+                    user.ComputedProps.AddTeams(dataBaseRepository.GetUserTeams(user.Id));
+
+                    DateTime DateToCheck = context.GetArgument<DateTime>("Date");
+
+                    List<User> teammatesOnVacation = new List<User>();
+
+                    user.ComputedProps.Teams.ForEach((team) => {
+                        dataBaseRepository.GetTeamUsers(team.Id).ForEach((user) => {
+                            dataBaseRepository.GetUserRequests(user.Id).ForEach((request) => {
+                                if(request.FinishDate >= DateToCheck && request.StartDate <= DateToCheck)
+                                {
+                                    if (teammatesOnVacation.Contains(user))
+                                        return;
+                                    teammatesOnVacation.Add(user);
+                                }
+                            });
+                        });
+                    });
+
+                    return teammatesOnVacation;
                 }
             ).AuthorizeWith("Authenticated");
         }
