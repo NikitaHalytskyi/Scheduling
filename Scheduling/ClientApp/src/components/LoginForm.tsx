@@ -2,39 +2,40 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../style/Login.css';
+import { validateEmail } from '../Utils/utils';
 import { authenticate } from '../webAPI/login';
 import { getUserData } from '../webAPI/user';
 
 type LoginProps = {
   logIn: Function,
   toggleLoading: Function,
-  setError: Function
-  showError: boolean
   token: string | null,
   setUserData: Function
 }
 
 
-export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, setError, showError, token, setUserData }) => {
+export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLoading, token, setUserData }) => {
     
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
       e.preventDefault();
 
-      if(!login || !password){
-        return setError(true);
+      if(!validateEmail(login)){
+			  return setErrorMessage('Error! Incorrect email.');
       }
 
-      toggleLoading();
+      if(!login || !password){
+        return setErrorMessage('Error! Incorrect login or passsword.');
+      }
       
       const { data } = await authenticate(login, password);
       let userData = null;
 
       if(!data || !data.authentication){
-        toggleLoading();
-        return setError(true);
+        return setErrorMessage('Error! Incorrect login or passsword.');
       }
       
       userData = await getUserData(data.authentication);
@@ -42,8 +43,7 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
       
       setUserData(userData.data.getCurrentUser); 
       
-      setError(false);
-      toggleLoading();
+      setErrorMessage('');
     }
 
     return (
@@ -59,7 +59,7 @@ export const LoginForm: React.FunctionComponent<LoginProps> = ({ logIn, toggleLo
                     <label className='login-form-label' htmlFor='input-password'>Password:</label>
                     <input onInput={event => setPassword(event.currentTarget.value)} id='input-password' className='login-form-input' type='password' name='password' placeholder='Password'></input>
                     <div className='error-message-container'>
-                        <p className={'error-message' + (showError ? '' : ' hidden')}>Error! Incorrect login or passsword.</p>
+                        {!!errorMessage ? <p className='error-message'>{errorMessage}</p>: null}
                     </div>
                     <button id='login-form-button' type='button' onClick={handleSubmit}>LOGIN</button>
                     <p>Foggot password? <Link to='/restorePassword'>Restore password</Link> </p>

@@ -91,8 +91,8 @@ export class ResetPassword extends React.Component<{}, IResetPasswordState> {
 								</div>
 								<hr/>
 								
-								<input onInput={event => this.setState({newPassword: event.currentTarget.value})} id='input-new-password' className='reset-password-form-input' type='text' name='new-password' placeholder='New password' ></input>
-								<input onInput={event => this.setState({confirmPassword: event.currentTarget.value})} id='input-confirm-password' className='reset-password-form-input' type='text' name='confirm-password' placeholder='Confirm password'></input>
+								<input onInput={event => this.setState({newPassword: event.currentTarget.value})} id='input-new-password' className='reset-password-form-input' type='password' name='new-password' placeholder='New password' ></input>
+								<input onInput={event => this.setState({confirmPassword: event.currentTarget.value})} id='input-confirm-password' className='reset-password-form-input' type='password' name='confirm-password' placeholder='Confirm password'></input>
 								
 								<div className='error-message-container'>
 									{error}

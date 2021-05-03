@@ -16,10 +16,9 @@ type UserProps =
     typeof actionCreators &
     RouteComponentProps<{}>;
 
-class User extends React.PureComponent<UserProps, { isLoading: boolean, showError: boolean }>{
+class User extends React.PureComponent<UserProps, { isLoading: boolean }>{
     public state = {
-        isLoading: false,
-        showError: false
+        isLoading: false
     };
     
     async componentDidMount(){
@@ -47,8 +46,6 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
                     <LoginForm 
                         logIn = {(token: string) => this.props.logIn(token)}
                         toggleLoading = {this.toggleLoading}
-                        setError = {(error: boolean) => this.setError(error)}
-                        showError = {this.state.showError}
                         token = {this.props.token}
                         setUserData = {(userData: UserData) => this.props.setUserData(userData)}/>
                 );
@@ -62,12 +59,6 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
     private toggleLoading = () => {
         this.setState({
             isLoading: !this.state.isLoading
-        });
-    }
-
-    private setError(error: boolean) {
-        this.setState({
-            showError: error
         });
     }
 };
