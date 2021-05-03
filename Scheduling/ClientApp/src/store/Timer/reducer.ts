@@ -9,10 +9,10 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 		console.log(token);
 		if(token)
 			return {
-				logged: true, token: token, timerHistory: [], editValue: { editId: 0, startTime: new Date(), finishTime: new Date() }
+				logged: true, token: token, timerHistory: []
 			};
 		else
-			return { logged: false, token: null, timerHistory: [], editValue: { editId: 0, startTime: new Date(), finishTime: new Date() } };
+			return { logged: false, token: null, timerHistory: []};
 	}
 
 	const action = incomingAction as KnownAction;
@@ -23,14 +23,6 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 					return { ...state, logged: state.logged, token: state.token, timerHistory: action.requests };
 				}
 			return { ...state, logged: state.logged, token: state.token, timerHistory: [] };
-		case 'SET_EDITVALUE':
-			if (action.time != null){
-					console.log('set');
-				return {
-					...state, editValue: { editId: action.time.id, startTime: action.time.startTime, finishTime: action.time.finishTime }
-					};
-				}
-			return { ...state, logged: state.logged, token: state.token, timerHistory: [] };
 		case 'ADD_TIME':
 			{
 				console.log("add Time");
@@ -38,6 +30,7 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 					return { ...state, timerHistory: [...state.timerHistory, action.time] }
 				else {
 					if (state.timerHistory.length != 0) {
+						if (state.timerHistory[state.timerHistory.length - 1].id == action.time.id)
 						state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime;
 						return { ...state, timerHistory: [...state.timerHistory] }
 					}

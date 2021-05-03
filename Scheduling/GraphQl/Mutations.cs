@@ -239,10 +239,11 @@ namespace Scheduling.GraphQl
                     Nullable<DateTime> startTime = context.GetArgument<Nullable<DateTime>>("StartTime", defaultValue: null);
                     Nullable<DateTime> finishTime = context.GetArgument<Nullable<DateTime>>("FinishTime", defaultValue: null);
 
+                    finishTime = (finishTime == null) ? DateTime.UtcNow : finishTime;
 
                     Nullable<int> id = context.GetArgument<Nullable<int>>("id", defaultValue: null);
 
-                    return dataBaseRepository.EditTimerValue(startTime, finishTime = DateTime.UtcNow, user.Id, id);
+                    return dataBaseRepository.EditTimerValue(startTime, finishTime, user.Id, id);
                 },
                 description: "Update value: added finish time"
             ).AuthorizeWith("Authenticated");

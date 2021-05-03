@@ -40,7 +40,7 @@ class Timer extends Component {
             var lastValue = data.data.getCurrentUser.computedProps
                 .timerHistories[data.data.getCurrentUser.computedProps.timerHistories.length - 1];
             if (lastValue.finishTime == null) {
-                startTime = new Date(lastValue.startTime);
+                startTime = ((new Date((new Date(lastValue.startTime)).toString() + " UTC")));
 
                 this.state.timer.start({ startValues: { seconds: parseInt(Math.floor((new Date() - startTime) / 1000)) } });
                 this.state.timer_state = "ticking";
@@ -96,7 +96,7 @@ class Timer extends Component {
             data.data.editTimerFinishValue.finishTime = new Date(data.data.editTimerFinishValue.finishTime).toISOString();
 
             if (data.data) {
-                this.props.addTime({ finishTime: data.data.editTimerFinishValue.finishTime.split("Z")[0] });
+                this.props.addTime({ finishTime: data.data.editTimerFinishValue.finishTime.split("Z")[0], id: data.data.editTimerFinishValue.id});
             }
         }
     }

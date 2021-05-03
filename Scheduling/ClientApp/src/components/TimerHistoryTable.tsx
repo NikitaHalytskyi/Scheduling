@@ -54,20 +54,30 @@ class TimerHistoryTable extends Component {
 
         return hours + ":" + minutes ;
     }
-    togglePopup(id = "", startTime = new Date(), finishTime = new Date()) {
-        if (id == "")
+    togglePopup(idArg = "", startTime = new Date(), finishTime = new Date()) {
+        if (idArg == "")
             this.setState({
                 showPopup: !this.state.showPopup,
-                editId: id,
+                editId: idArg,
                 startTime: new Date(new Date(startTime) + " UTC"),
                 finishTime: new Date(new Date(finishTime) + " UTC"),
             });
-        else
-            this.setState({
-                showPopup: !this.state.showPopup,
-                startTime: new Date(new Date(startTime) + " UTC"),
-                finishTime: new Date(new Date(finishTime) + " UTC"),
-            });
+        else {
+            if (typeof(idArg) == "number") {
+                var date = this.props.timerHistory.find(({ id }) => id == idArg);
+                this.setState({
+                    showPopup: !this.state.showPopup,
+                    startTime: new Date(new Date(date.startTime) + " UTC"),
+                    editId: idArg,
+                    finishTime: new Date(new Date(date.finishTime) + " UTC"),
+                });
+            }
+            else {
+                this.setState({
+                    showPopup: !this.state.showPopup,
+                })
+            }
+        }
     }
     convertDateToHoursMinutes(time) {
         var hours = new Date(time).getHours();
@@ -85,6 +95,7 @@ class TimerHistoryTable extends Component {
     }
     render() {
         if (this.props.timerHistory != undefined && this.props.timerHistory.length > 0) {
+            this.props.timerHistory.sort((a: { startTime: Date; }, b: { startTime: Date; }) => new Date(a.startTime) - new Date(b.startTime));
             console.log('table' + this.props.timerHistory[0].id);
             return (
                 <React.Fragment>
@@ -116,7 +127,7 @@ class TimerHistoryTable extends Component {
                                 {this.state.showPopup ?
                                     <Popup
                                         closePopup={this.togglePopup.bind(this)}
-                                        id={this.state.editId}
+                                        editId={this.state.editId}
                                         startTime={this.state.startTime}
                                         finishTime={this.state.finishTime}
                                         buttonText={this.state.buttonText}

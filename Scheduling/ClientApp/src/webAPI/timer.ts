@@ -117,6 +117,26 @@ export const addTimerValue = async (token: string, startTime: Date, finishTime: 
 		body: query
 	}).then(data => data.json());
 };
+export const editTimerValue = async (token: string, startTime: Date, finishTime: Date, id: number) => {
+	const query = JSON.stringify({
+		query: `mutation{
+		  editTimerFinishValue(startTime: "${startTime}", finishTime: "${finishTime}", id: ${id}){
+				id
+				startTime
+				finishTime
+			}
+		}`
+	});
+
+	return fetch('/graphql', {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		},
+		body: query
+	}).then(data => data.json());
+};
 export const deleteTimer = async (token: string, id: number) => {
 	const query = JSON.stringify({
 		query: `mutation{

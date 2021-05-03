@@ -6,7 +6,7 @@ import { ApplicationState } from '../store/configureStore';
 import { actionCreators } from '../store/Timer/actions';
 import { TimerType } from '../store/Timer/types';
 import '../style/RequestsTable.css';
-import { deleteTimer, addTimerValue, getUserTimerData, getUserTimerDataDate } from '../webAPI/timer';
+import { deleteTimer, addTimerValue, getUserTimerData, getUserTimerDataDate, editTimerValue } from '../webAPI/timer';
 
 type TableProps = {
     requests: Array<TimerType>
@@ -16,16 +16,17 @@ class Popup extends React.Component {
     constructor() {
         super();
         this.state = {
-            startTime: new Date(),
-            finishTime: new Date(),
+            startTime: new Date(new Date().setHours(0, 0, 0, 0)),
+            finishTime: new Date(new Date().setHours(0, 0, 0, 0)),
+            showWarning: false,
         };
         this.convertDateToHoursMinutesStart = this.convertDateToHoursMinutesStart.bind(this);
 
     }
     componentDidMount() {
         if (this.props.buttonText == "Edit") {
-            this.setStartTime(new Date(this.props.startTime));
             this.setFinishTime(new Date(this.props.finishTime));
+            this.setStartTime(new Date(this.props.startTime));
         }
     }
     async deleteTimerValue(id: number) {
@@ -40,29 +41,43 @@ class Popup extends React.Component {
         var a = new Date(this.state.startTime);
         a.setHours(e.target.value.split(":")[0])
         a.setMinutes(e.target.value.split(":")[1]);
+        a.setSeconds(0);
         this.setStartTime(a);
     };
     handleChangeFinishTime = (e) => {
         var a = new Date(this.state.finishTime);
         a.setHours(e.target.value.split(":")[0])
         a.setMinutes(e.target.value.split(":")[1]);
+        a.setSeconds(0);
         this.setFinishTime(a);
     };
     setStartTime(time) {
         if (time < this.state.finishTime)
-        this.setState({
-            startTime: time,
-        });
-        else
+            this.setState({
+                startTime: time,
+                showWarning: false,
+            });
+        else {
+            this.setState({
+                showWarning: true,
+                startTime: time,
+            });
             console.log("loh")
+        }
     }
     setFinishTime(time) {
         if(time > this.state.startTime)
         this.setState({
             finishTime: time,
+            showWarning: false,
         });
-        else
+        else {
+            this.setState({
+                showWarning: true,
+                finishTime: time,
+            });
             console.log("loh")
+        }
     }
     convertDateToHoursMinutesStart(time) {
         var hours = new Date(time).getHours();
@@ -85,6 +100,27 @@ class Popup extends React.Component {
             const token = Cookies.get('token');
             if (token) {
                 const data = await addTimerValue(token, startTime.toISOString(), finishTime.toISOString());
+            }
+
+            this.changeDate(startTime);
+        }
+        else {
+            console.log("loh")
+        }
+    }
+    async editValue(startTimeArg: Date, finishTimeArg: Date, id: number) {
+        if (finishTimeArg > startTimeArg) {
+            var startTime = new Date(this.props.timerHistory[0].startTime);
+            startTime.setHours(startTimeArg.getHours());
+            startTime.setMinutes(startTimeArg.getMinutes());
+            var finishTime = new Date(this.props.timerHistory[0].finishTime);
+            finishTime.setHours(finishTimeArg.getHours());
+            finishTime.setMinutes(finishTimeArg.getMinutes());
+
+
+            const token = Cookies.get('token');
+            if (token) {
+                const data = await editTimerValue(token, startTime.toISOString(), finishTime.toISOString(), id);
             }
 
             this.changeDate(startTime);
@@ -152,11 +188,15 @@ class Popup extends React.Component {
                     <input type="time" value={this.convertDateToHoursMinutesStart(this.state.startTime)} onChange={this.handleChangeStartTime} style={timeInput} />
                     -
                     <input type="time" value={this.convertDateToHoursMinutesStart(this.state.finishTime)} style={timeInput} onChange={this.handleChangeFinishTime} />
-                    <button onClick={this.props.closePopup}>{this.props.buttonText}</button>
+                    <button onClick={(e) => { this.editValue(this.state.startTime, this.state.finishTime, this.props.editId); this.props.closePopup() }}>{this.props.buttonText}</button>
                     <button onClick={this.props.closePopup}  style={closeButton}>Close</button>
                     <button onClick={() => {
                         this.deleteTimerValue(this.props.id)
                     }}>Delete</button>
+                    {this.state.showWarning ?
+                        <h6>finish time must be greater than start time</h6>
+                        : null
+                    }
                 </div>
             </div>
             );
@@ -170,6 +210,10 @@ class Popup extends React.Component {
                     <input type="time" min={this.convertDateToHoursMinutesStart(this.state.startTime)} value={this.convertDateToHoursMinutesStart(this.state.finishTime)} style={timeInput} onChange={this.handleChangeFinishTime} />
                         <button onClick={(e) => { this.addValue(this.state.startTime, this.state.finishTime); this.props.closePopup() }}>{this.props.buttonText}</button>
                         <button onClick={this.props.closePopup} style={closeButton}>Close</button>
+                        {this.state.showWarning ?
+                            <h6>finish time must be greater than start time</h6>
+                            : null
+                        }
                     </div>
                 </div>
             );
