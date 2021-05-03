@@ -1,4 +1,5 @@
 import * as React from 'react';
+import uk from 'date-fns/locale/uk';
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 import { connect } from 'react-redux';
@@ -41,7 +42,7 @@ class DatePanel extends React.Component {
         if (token) {
             const data = await getUserTimerDataDate(token, this.getConvertedDate(date));
 
-            let currentDate = data.data.getCurrentUser.computedProps.timerHistories;
+            let currentDate = data.data.getCurrentUser.computedProps.timerHistories.sort((a: { startTime: Date; }, b: { startTime: Date; }) => new Date(a.startTime) - new Date(b.startTime));
 
             this.props.setTimerHistory(currentDate);
         }
@@ -56,8 +57,9 @@ class DatePanel extends React.Component {
         return (today);
     }
     public render(){
-    return (
-        <DatePicker
+        return (
+            <DatePicker
+                locale={uk}
             selected={this.state.startDate}
             onChange={date => {
                 this.changeDate(date);

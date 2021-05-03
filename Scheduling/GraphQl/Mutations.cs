@@ -195,9 +195,28 @@ namespace Scheduling.GraphQl
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
 
-                    DateTime startTime = DateTime.Now;
+                    DateTime startTime = DateTime.UtcNow;
 
                     return dataBaseRepository.AddTimerStartValue(startTime, user.Id);   
+                },
+                description: "Add start time"
+
+            ).AuthorizeWith("Authenticated");
+            Field<TimerHistoryType>(
+                "addTimerValue",
+                arguments: new QueryArguments(
+                    new QueryArgument<DateTimeGraphType> { Name = "StartTime", Description = "Timer started" },
+                    new QueryArgument<DateTimeGraphType> { Name = "FinishTime", Description = "Timer finished" }
+                ),
+                resolve: context =>
+                {
+                    string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
+                    User user = dataBaseRepository.Get(email);
+
+                    Nullable<DateTime> startTime = context.GetArgument<Nullable<DateTime>>("StartTime", defaultValue: null);
+                    Nullable<DateTime> finishTime = context.GetArgument<Nullable<DateTime>>("FinishTime", defaultValue: null);
+
+                    return dataBaseRepository.AddTimerValue(startTime, finishTime, user.Id);   
                 },
                 description: "Add start time"
 
@@ -223,7 +242,7 @@ namespace Scheduling.GraphQl
 
                     Nullable<int> id = context.GetArgument<Nullable<int>>("id", defaultValue: null);
 
-                    return dataBaseRepository.EditTimerValue(startTime, finishTime = DateTime.Now, user.Id, id);
+                    return dataBaseRepository.EditTimerValue(startTime, finishTime = DateTime.UtcNow, user.Id, id);
                 },
                 description: "Update value: added finish time"
             ).AuthorizeWith("Authenticated");

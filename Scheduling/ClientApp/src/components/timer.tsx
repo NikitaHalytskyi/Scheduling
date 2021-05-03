@@ -74,7 +74,7 @@ class Timer extends Component {
         const token = Cookies.get('token');
         if (token) {
             const data = await addTimerStart(token);
-
+            data.data.addTimerStartValue.startTime = data.data.addTimerStartValue.startTime.split("Z")[0];
             if (data.data) {
                 this.props.addTime(data.data.addTimerStartValue);
             }
@@ -93,8 +93,10 @@ class Timer extends Component {
         if (token) {
             const data = await addTimerFinish(token);
 
+            data.data.editTimerFinishValue.finishTime = new Date(data.data.editTimerFinishValue.finishTime).toISOString();
+
             if (data.data) {
-                this.props.addTime({ finishTime: data.data.editTimerFinishValue.finishTime });
+                this.props.addTime({ finishTime: data.data.editTimerFinishValue.finishTime.split("Z")[0] });
             }
         }
     }

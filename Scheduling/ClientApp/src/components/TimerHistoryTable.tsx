@@ -59,14 +59,14 @@ class TimerHistoryTable extends Component {
             this.setState({
                 showPopup: !this.state.showPopup,
                 editId: id,
-                startTime: startTime,
-                finishTime: finishTime,
+                startTime: new Date(new Date(startTime) + " UTC"),
+                finishTime: new Date(new Date(finishTime) + " UTC"),
             });
         else
             this.setState({
                 showPopup: !this.state.showPopup,
-                startTime: startTime,
-                finishTime: finishTime,
+                startTime: new Date(new Date(startTime) + " UTC"),
+                finishTime: new Date(new Date(finishTime) + " UTC"),
             });
     }
     convertDateToHoursMinutes(time) {
@@ -89,7 +89,7 @@ class TimerHistoryTable extends Component {
             return (
                 <React.Fragment>
                     <div id='vacation-history'>
-                        <h5>Vacation history</h5>
+                        <h5>Timer history</h5>
                         <table id='history'>
                             <tbody>
                                 <tr>
@@ -98,7 +98,7 @@ class TimerHistoryTable extends Component {
                                     <th></th>
                                 </tr>
                                 {this.props.timerHistory.map((r) => <tr key={this.props.timerHistory.indexOf(r)}>
-                                    <td>{(new Date(r.startTime)).toLocaleTimeString()}-{(r.finishTime == null ? "still in action" : (new Date(r.finishTime)).toLocaleTimeString())}</td>
+                                    <td>{((new Date((new Date(r.startTime)).toString() + " UTC")).toLocaleTimeString())}-{(r.finishTime == null ? "still in action" : ((new Date((new Date(r.finishTime)).toString() + " UTC")).toLocaleTimeString()))}</td>
                                     <td>{
                                         this.convertMiliseconds(r.finishTime,r.startTime)
                                     }</td>

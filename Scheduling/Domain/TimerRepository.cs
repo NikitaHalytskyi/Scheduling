@@ -55,6 +55,30 @@ namespace Scheduling.Domain
 
             return timerValues;
         }
+        public TimerHistory AddTimerValue(DateTime? startTime, DateTime? finishTime, int userId)
+        {
+            var timerValues = new TimerHistory()
+            {
+                StartTime = startTime,
+                FinishTime = finishTime
+            };
+            Context.Add(timerValues);
+            Context.SaveChanges();
+
+            var idTimerHistory = (Context.TimerHistories.Find(timerValues.Id));
+
+            var userTimerValue = new UserTimerHistory()
+            {
+                TimerHistoryId = idTimerHistory.Id,
+                UserId = userId
+            };
+
+            Context.UserTimerHistories.Add(userTimerValue);
+
+            Context.SaveChanges();
+
+            return timerValues;
+        }
         public TimerHistory EditTimerValue(DateTime? startTime, DateTime? finishtTime, int userId, int? recordId)
         {
 
