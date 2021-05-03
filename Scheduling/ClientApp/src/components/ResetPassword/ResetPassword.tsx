@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import '../style/ResetPassword.css';
-import { checkAccessToResetPassword, resetPassword } from '../webAPI/resetPassword';
-import Error from './ErrorPage';
-import { LoadingAnimation } from './Loading';
+import { Link } from 'react-router-dom';
+
+import './ResetPassword.css';
+
+import { checkAccessToResetPassword, resetPassword } from '../../webAPI/resetPassword';
+import Error from '../ErrorPage/ErrorPage';
+import { LoadingAnimation } from '../Loading';
 
 
 interface IResetPasswordState {

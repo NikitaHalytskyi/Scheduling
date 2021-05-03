@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../style/RestorePassword.css';
-import { validateEmail } from '../Utils/utils';
-import { restorePassword } from '../webAPI/restorePassword';
-import { LoadingAnimation } from './Loading';
+
+import './RestorePassword.css';
+
+import { validateEmail } from '../../Utils/utils';
+import { restorePassword } from '../../webAPI/restorePassword';
+import { LoadingAnimation } from '../Loading';
 
 const RestorePassword: React.FunctionComponent = () => {
     

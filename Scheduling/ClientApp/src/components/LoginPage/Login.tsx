@@ -2,13 +2,15 @@ import * as React from 'react';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { ApplicationState } from '../store/configureStore';
-import { actionCreators } from '../store/User/actions';
-import '../style/Login.css';
-import { validateEmail } from '../Utils/utils';
-import { authenticate } from '../webAPI/login';
-import { getUserData } from '../webAPI/user';
-import { LoadingAnimation } from './Loading';
+import { ApplicationState } from '../../store/configureStore';
+import { actionCreators } from '../../store/User/actions';
+
+import './Login.css';
+
+import { validateEmail } from '../../Utils/utils';
+import { authenticate } from '../../webAPI/login';
+import { getUserData } from '../../webAPI/user';
+import { LoadingAnimation } from '../Loading';
 
 type LoginProps = {
   logIn: Function,
