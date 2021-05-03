@@ -21,7 +21,7 @@ const reducer: Reducer<UserState> = (state: UserState = initialState , incomingA
 					return { logged: false, token: null, user: null  };
 					
 			case 'GET_USER':
-					return { logged: state.logged, token: state.token, user: action.userData };
+					return { ...state, user: action.userData };
 			case 'LOGOUT_USER':
 					Cookies.remove('token');
 					return { logged: false, token: null, user: null };
