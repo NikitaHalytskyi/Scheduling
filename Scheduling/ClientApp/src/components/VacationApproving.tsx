@@ -30,6 +30,7 @@ class VacationApproving extends React.PureComponent<VacationApprovingProps, { re
         comment: ''
     }
 
+
     getUserName(users: Array<{id: number, name: string, surname: string}>, id: number){
         let user = users.find(u => u.id === id);
         console.log(users, id)

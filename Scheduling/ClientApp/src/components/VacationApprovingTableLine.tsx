@@ -19,12 +19,16 @@ export const ApprovingLine: React.FunctionComponent<LineProps> = ({ token, reque
     
   const [comment, setComment] = useState("");
 
+    const validateDate = (date: number) => {
+        return date < 10 ? '0' + date : date;
+    }
+
   const convertDate = (date: Date) => {
     let dateObj = new Date(date);
     let month = dateObj.getUTCMonth() + 1;
     let day = dateObj.getUTCDate();
     let year = dateObj.getUTCFullYear();
-    return (year + "." + month + "." + day);
+      return (year + "." + validateDate(month) + "." + validateDate(day));
 }
 
   const handleSubmit = async (reaction: string) => {
