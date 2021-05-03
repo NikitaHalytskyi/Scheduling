@@ -4,15 +4,15 @@ import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
-import { ApplicationState } from '../store/configureStore';
-import { TimerHistoryState } from '../store/Timer/types';
-import '../style/VacationRequest.css';
-import { actionCreators } from '../store/Timer/actions';
+import { ApplicationState } from '../../store/configureStore';
+import { TimerHistoryState } from '../../store/Timer/types';
+import '../../style/VacationRequest.css';
+import { actionCreators } from '../../store/Timer/actions';
 import { useState } from 'react';
 import  TimerHistoryTable  from './TimerHistoryTable';
 import Timer from "./timer"
 import Cookies from 'js-cookie';
-import { getUserTimerData, getUserTimerDataDate } from '../webAPI/timer';
+import { getUserTimerData, getUserTimerDataDate } from '../../webAPI/timer';
 type TimerHistoryProps =
     TimerHistoryState &
     typeof actionCreators &

@@ -1,19 +1,19 @@
 ﻿import React, { Component } from "react";
-import * as EasyTimer from "easytimer";
-import { ApplicationState } from "../store/configureStore";
-import { actionCreators } from "../store/Timer/actions";
+import * as EasyTimer from "easytimer.js";
+import { actionCreators } from "../../store/Timer/actions";
 import { connect, useDispatch } from 'react-redux';
-import { addTimerFinish, addTimerStart, getUserTimerData } from "../webAPI/timer";
+import { addTimerFinish, addTimerStart, getUserTimerData } from "../../webAPI/timer";
 import Cookies from "js-cookie";
+import { ApplicationState } from "../../store/configureStore";
 
 class Timer extends Component {
     private pauseButton: HTMLInputElement;
-    constructor(props: Readonly<{}>) {
+    constructor(props) {
         super(props);
 
         console.log(props);
 
-        const timer = new EasyTimer.Timer();
+        var timer = new EasyTimer.Timer();
 
         this.state = {
             timer_text: timer.getTimeValues().toString(),

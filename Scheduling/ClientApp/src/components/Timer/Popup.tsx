@@ -2,11 +2,11 @@ import Cookies from 'js-cookie';
 import * as React from 'react';
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { ApplicationState } from '../store/configureStore';
-import { actionCreators } from '../store/Timer/actions';
-import { TimerType } from '../store/Timer/types';
-import '../style/RequestsTable.css';
-import { deleteTimer, addTimerValue, getUserTimerData, getUserTimerDataDate, editTimerValue } from '../webAPI/timer';
+import { ApplicationState } from '../../store/configureStore';
+import { actionCreators } from '../../store/Timer/actions';
+import { TimerType } from '../../store/Timer/types';
+import '../../style/RequestsTable.css';
+import { deleteTimer, addTimerValue, getUserTimerData, getUserTimerDataDate, editTimerValue } from '../../webAPI/timer';
 
 type TableProps = {
     requests: Array<TimerType>

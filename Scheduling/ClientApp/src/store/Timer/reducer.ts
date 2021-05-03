@@ -26,16 +26,19 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 		case 'ADD_TIME':
 			{
 				console.log("add Time");
-				if (action.time.startTime)
-					return { ...state, timerHistory: [...state.timerHistory, action.time] }
+				if (action.time.startTime != undefined) {
+					if (new Date(action.time.startTime).getDate() == new Date(state.timerHistory[state.timerHistory.length - 1].startTime).getDate()
+						&& new Date(action.time.startTime).getMonth() == new Date(state.timerHistory[state.timerHistory.length - 1].startTime).getMonth())
+						return { ...state, timerHistory: [...state.timerHistory, action.time] }
+				}
 				else {
 					if (state.timerHistory.length != 0) {
 						if (state.timerHistory[state.timerHistory.length - 1].id == action.time.id)
 						state.timerHistory[state.timerHistory.length - 1].finishTime = action.time.finishTime;
 						return { ...state, timerHistory: [...state.timerHistory] }
 					}
-					return { ...state };
-                }
+					}
+				return { ...state };
 			}
 		case 'CHECK_USER':
 			const token = Cookies.get('token');
