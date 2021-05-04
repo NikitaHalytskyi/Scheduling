@@ -26,7 +26,7 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 		case 'ADD_TIME':
 			{
 				console.log("add Time");
-				if (action.time.startTime != undefined) {
+				if (action.time.startTime != "") {
 					if (new Date(action.time.startTime).getDate() == new Date(state.timerHistory[state.timerHistory.length - 1].startTime).getDate()
 						&& new Date(action.time.startTime).getMonth() == new Date(state.timerHistory[state.timerHistory.length - 1].startTime).getMonth())
 						return { ...state, timerHistory: [...state.timerHistory, action.time] }

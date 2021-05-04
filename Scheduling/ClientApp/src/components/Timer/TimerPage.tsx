@@ -48,7 +48,7 @@ class TimerPage extends React.PureComponent<TimerHistoryProps>{
                     <main>
                         <h2>Timer</h2>
                         <div id='vacation-container'>
-                            <TimerHistoryTable />
+                            <TimerHistoryTable/>
                             <DatePanel />
                             <div id='vacation-info'>
                                 <div className='time-tracker'>

@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../../store/configureStore';
-import { TimerHistoryState } from '../../store/Timer/types';
+import { TimerHistoryState, TimerType } from '../../store/Timer/types';
 import '../../style/VacationRequest.css';
 import { actionCreators } from '../../store/Timer/actions';
 import { useState } from 'react';
@@ -19,8 +19,19 @@ type TimerHistoryProps =
     RouteComponentProps<{}>;
 
 
-class DatePanel extends React.Component {
-    constructor(props){
+interface IProps {
+    setTimerHistory: (requests: Array<TimerType>) => ({
+        type: 'SET_TIMERHISTORY',
+        requests: Array<TimerType>
+    });
+}
+
+interface IState {
+    startDate: Date;
+}
+
+class DatePanel extends React.Component<IProps, IState> {
+    constructor(props: IProps){
         super(props);
         this.state = {
             startDate: new Date()
@@ -37,12 +48,21 @@ class DatePanel extends React.Component {
             this.props.setTimerHistory(currentDate);
         }
     }
-    async changeDate(date) {
+    async changeDate(date: Date) {
         const token = Cookies.get('token');
         if (token) {
-            const data = await getUserTimerDataDate(token, this.getConvertedDate(date));
+            type MyData = {
+                data: {
+                    getCurrentUser: {
+                        computedProps: {
+                            timerHistories: Array<TimerType>}
+                    }
+                }
+            };
+            const data:MyData = await getUserTimerDataDate(token, this.getConvertedDate(date));
 
-            let currentDate = data.data.getCurrentUser.computedProps.timerHistories.sort((a: { startTime: Date; }, b: { startTime: Date; }) => new Date(a.startTime) - new Date(b.startTime));
+            let currentDate = data.data.getCurrentUser.computedProps.timerHistories
+                .sort((a: { startTime: string; }, b: { startTime: string; }) => new Date(a.startTime).valueOf()- new Date(b.startTime).valueOf());
 
             this.props.setTimerHistory(currentDate);
         }
@@ -53,16 +73,17 @@ class DatePanel extends React.Component {
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
 
-        today = yyyy + '-' + mm + '-' + dd;
-        return (today);
+        let todayStr = yyyy + '-' + mm + '-' + dd;
+        return (todayStr);
     }
     public render(){
         return (
             <DatePicker
                 locale={uk}
             selected={this.state.startDate}
-            onChange={date => {
-                this.changeDate(date);
+                onChange={date => {
+                    if (date instanceof Date)
+                        date && this.changeDate(date);
             }}
             filterDate={(date) => {
                 return new Date() > date;

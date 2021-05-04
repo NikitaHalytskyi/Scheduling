@@ -5,7 +5,12 @@ export interface CheckUserAction { type: 'CHECK_USER' }
 export interface AddTimeAction { type: 'ADD_TIME', time: TimerType }
 export interface DeleteTimeAction { type: 'DELETE_TIME', time: number }
 
-const setTimerHistory = (requests: Array<TimerType>) => ({ type: 'SET_TIMERHISTORY', requests: requests } as SetTimerHistoryAction );
+const setTimerHistory = (requests: Array<TimerType>) => ({
+	type: 'SET_TIMERHISTORY',
+	requests: requests
+} as SetTimerHistoryAction);
+
+
 const checkUser =  () => ({ type: 'CHECK_USER'} as CheckUserAction);
 
 const addTime = (time: TimerType) => ({

@@ -1,14 +1,30 @@
-﻿import React, { Component } from "react";
+﻿import React, { Component, LegacyRef } from "react";
 import * as EasyTimer from "easytimer.js";
 import { actionCreators } from "../../store/Timer/actions";
 import { connect, useDispatch } from 'react-redux';
 import { addTimerFinish, addTimerStart, getUserTimerData } from "../../webAPI/timer";
 import Cookies from "js-cookie";
 import { ApplicationState } from "../../store/configureStore";
+import { Data } from "popper.js";
+import { TimerType } from "../../store/Timer/types";
 
-class Timer extends Component {
-    private pauseButton: HTMLInputElement;
-    constructor(props) {
+interface IProps {
+    addTime: (time: TimerType) =>
+        ({
+        type: "ADD_TIME",
+        time: TimerType
+    })
+}
+
+interface IState {
+    timer_text?: string;
+    timer: EasyTimer.Timer;
+    timer_state: string
+}
+
+class Timer extends React.Component<IProps, IState> {
+    private pauseButton: React.RefObject<HTMLButtonElement>;
+    constructor(props: IProps) {
         super(props);
 
         console.log(props);
@@ -36,14 +52,15 @@ class Timer extends Component {
         const token = Cookies.get('token');
         if (token) {
             const data = await getUserTimerData(token);
-            let startTime;
+            let startTime: Date;
             var lastValue = data.data.getCurrentUser.computedProps
                 .timerHistories[data.data.getCurrentUser.computedProps.timerHistories.length - 1];
             if (lastValue.finishTime == null) {
                 startTime = ((new Date((new Date(lastValue.startTime)).toString() + " UTC")));
-
-                this.state.timer.start({ startValues: { seconds: parseInt(Math.floor((new Date() - startTime) / 1000)) } });
-                this.state.timer_state = "ticking";
+                this.state.timer.start({ startValues: { seconds: (Math.floor((new Date().getTime() - startTime.getTime()) / 1000)) } });
+                this.setState({
+                    timer_state: "ticking"
+                })
             }
         }
 
@@ -54,7 +71,7 @@ class Timer extends Component {
         }
     }
 
-    onTimerUpdated(e) {
+    onTimerUpdated() {
         this.setState({
             ...this.state,
             timer_text: this.state.timer.getTimeValues().toString()
@@ -91,12 +108,18 @@ class Timer extends Component {
         })
         const token = Cookies.get('token');
         if (token) {
-            const data = await addTimerFinish(token);
+            type MyData = {
+                data: {
+                        editTimerFinishValue: { finishTime: string, id: number }
+                    }
+            };
+
+            const data:MyData = await addTimerFinish(token);
 
             data.data.editTimerFinishValue.finishTime = new Date(data.data.editTimerFinishValue.finishTime).toISOString();
 
             if (data.data) {
-                this.props.addTime({ finishTime: data.data.editTimerFinishValue.finishTime.split("Z")[0], id: data.data.editTimerFinishValue.id});
+                this.props.addTime({ finishTime: new Date(data.data.editTimerFinishValue.finishTime.split("Z")[0]), id: data.data.editTimerFinishValue.id, startTime: "" });
             }
         }
     }
@@ -139,8 +162,8 @@ class Timer extends Component {
                             var mm = String(pausedTimer.getMinutes()).padStart(2, '0');
                             var ss = String(pausedTimer.getSeconds()).padStart(2, '0');
 
-                            pausedTimer = YYYY + '-' + MM + '-' + DD + ' ' + hh + ':' + mm + ':' + ss;
-                            console.log(pausedTimer);
+                            let pausedTimerstr = YYYY + '-' + MM + '-' + DD + ' ' + hh + ':' + mm + ':' + ss;
+                            console.log(pausedTimerstr);
                             this.resetTimer();
                         }
 

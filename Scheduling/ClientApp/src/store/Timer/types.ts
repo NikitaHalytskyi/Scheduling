@@ -6,6 +6,6 @@ export interface TimerHistoryState {
 
 export type TimerType = {
 	id: number,
-	startTime: Date,
+	startTime: string,
 	finishTime: Date,
 }
