@@ -20,7 +20,7 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, re
 		let day = dateObj.getUTCDate();
         let month = dateObj.getUTCMonth() + 1;
         let year = dateObj.getUTCFullYear();
-        return (year + "-" + validateDate(month) + "-" + validateDate(day));
+        return (validateDate(day) + "/" + validateDate(month) + "/" + year);
     }
 
     if(requests.length > 0)

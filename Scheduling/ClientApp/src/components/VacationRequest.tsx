@@ -1,4 +1,8 @@
 import * as React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import {DateRangePicker, SingleDatePicker, DayPickerRangeController} from 'react-dates'
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
@@ -18,8 +22,9 @@ type VacationPageProps =
 
 class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
     public state = {
-        startDate: new Date(),
-        finishDate: new Date(),
+        startDate: null,
+        finishDate: null,
+        focusedInput: null,
         comment: '',
         loading: false
     };
@@ -48,13 +53,13 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
         return null
     }
 
-    countAmount() {
-        let daysLag = 'Incorrect date!';
-        let date = this.validateDate();
-        if(date)
-            daysLag = (Math.ceil(Math.abs(date.finishDate.getTime() - date.startDate.getTime()) / (1000 * 3600 * 24))).toString();
-        return daysLag;
-    }
+    // countAmount() {
+    //     let daysLag = 'Incorrect date!';
+    //     let date = this.validateDate();
+    //     if(date)
+    //         daysLag = (Math.ceil(Math.abs(date.finishDate.getTime() - date.startDate.getTime()) / (1000 * 3600 * 24))).toString();
+    //     return daysLag;
+    // }
 
     clearForm () { 
         console.log('clear');
@@ -107,20 +112,15 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
                         <div id='vacation-container'>
                             <form id='vacation-request'>
                                 <h2>Vacation</h2>
-                                <div className='line-container'>
-                                    <div className='data-container'>
-                                        <label htmlFor='start-date'>From</label>
-                                        <input type='date' id='start-date' onInput={(event) => this.setState({startDate: new Date(event.currentTarget.value)})}></input>
-                                    </div>
-                                    <div className='data-container'>
-                                        <label htmlFor='finish-date'>To</label>
-                                        <input type='date' id='finish-date'onInput={(event) => this.setState({finishDate: new Date(event.currentTarget.value)})}></input>
-                                    </div>
-                                </div>
-                                <div className='data-container'>
-                                    <label htmlFor='amount'>Amount</label>
-                                    <p id='amount'>{this.countAmount()}</p>
-                                </div>
+                                    <DateRangePicker
+                                    startDate={this.state.startDate}
+                                    startDateId='start-date'
+                                    endDate={this.state.finishDate}
+                                    endDateId='finish-date'
+                                    onDatesChange={({startDate, endDate}) => this.setState({startDate: startDate, finishDate: endDate})}
+                                    focusedInput={this.state.focusedInput}
+                                    onFocusChange={focusedInput => this.setState({ focusedInput: focusedInput })}
+                                />                            
                                 <div className='data-container'>
                                     <label htmlFor='comment'>Comment</label>
                                     <textarea id='comment' onInput={(event) => this.setState({comment: event.currentTarget.value})}></textarea>

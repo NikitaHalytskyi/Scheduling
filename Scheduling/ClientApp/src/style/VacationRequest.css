@@ -53,11 +53,12 @@ p{
     border: 1px solid lightgray;
     background-color: whitesmoke;
     border-radius: 15px;
-    height: 260px;
+    height: 200px;
 }
 
 #comment {
     height: 100px;
+    width: 450px;
     resize: none;
 }
 
@@ -81,4 +82,39 @@ p{
     #vacation-info > div{
         margin-top: 20px;
     }
+    #comment{
+        width: 100%;
+    }
+}
+.DateRangePicker{
+    margin: 10px;
+}
+.CalendarDay__selected_span{
+    background-color: lightblue;
+    border: 1px double rgb(131, 201, 224);
+}
+.CalendarDay__selected_span:hover{
+    background-color: #97bee0;
+    border: 1px double rgb(131, 201, 224);
+}
+.CalendarDay__selected, .CalendarDay__selected:active, .CalendarDay__selected:hover{
+    background-color: #0275d8;
+}
+.CalendarDay__hovered_span{
+    background-color: #cfe3f5;
+    border: 1px double lightblue;
+}
+.CalendarDay__hovered_span:hover{
+    background-color: #98bedf;
+    border: 1px double lightblue;
+}
+.CalendarDay__hovered_span_3{
+    background-color: #ddefff;
+    border: 1px double lightblue;
+}
+.DayPickerKeyboardShortcuts_show__bottomRight::before{
+    border-right: 33px solid #0275d8;
+}
+.DateInput_input__focused{
+    border-bottom: 2px solid #0275d8;
 }
