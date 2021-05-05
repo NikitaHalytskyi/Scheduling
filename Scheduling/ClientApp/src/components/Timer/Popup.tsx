@@ -53,6 +53,16 @@ class Popup extends React.Component<IProps, IState> {
             this.setFinishTime(new Date(this.props.finishTime));
             this.setStartTime(new Date(this.props.startTime));
         }
+        if (this.props.startTime > this.props.finishTime) {
+            this.setState({
+                showWarning: true,
+            });
+        }
+        else {
+            this.setState({
+                showWarning: false,
+            });
+        }
     }
     async deleteTimerValue(id: number) {
         const token = Cookies.get('token');
@@ -129,10 +139,15 @@ class Popup extends React.Component<IProps, IState> {
     }
     async addValue(startTimeArg: Date, finishTimeArg: Date) {
         if (finishTimeArg > startTimeArg) {
-            var startTime = new Date(this.props.timerHistory[this.props.timerHistory.length - 1].startTime); // from store
+            var startTime = new Date(this.props.date); // from store
+
+            console.log(this.props.date);
+
+            console.log(this.props);
+
             startTime.setHours(startTimeArg.getHours());
             startTime.setMinutes(startTimeArg.getMinutes());
-            var finishTime = new Date(this.props.timerHistory[this.props.timerHistory.length - 1].finishTime); // from store
+            var finishTime = new Date(this.props.date); // from store
             finishTime.setHours(finishTimeArg.getHours());
             finishTime.setMinutes(finishTimeArg.getMinutes());
 
@@ -142,7 +157,7 @@ class Popup extends React.Component<IProps, IState> {
                 const data = await addTimerValue(token, startTime.toISOString(), finishTime.toISOString());
             }
 
-            this.changeDate(startTime);
+            this.changeDate(this.props.date);
         }
         else {
             console.log("loh")
@@ -163,7 +178,7 @@ class Popup extends React.Component<IProps, IState> {
                 const data = await editTimerValue(token, startTime.toISOString(), finishTime.toISOString(), id);
             }
 
-            this.changeDate(startTime);
+            this.changeDate(this.props.date);
         }
         else {
             console.log("loh")
@@ -179,10 +194,25 @@ class Popup extends React.Component<IProps, IState> {
         return (todayStr);
     }
 
-    async changeDate(date: Date) {
+    async changeDate(date: Date) { // додати два дні
         const token = Cookies.get('token');
         if (token) {
-            const data = await getUserTimerDataDate(token, this.getConvertedDate(date));
+            var dayBefore = (new Date(date.getTime()));
+            dayBefore.setDate(date.getDate() - 1);
+
+            let data = await getUserTimerDataDate(token, this.getConvertedDate(date));
+            console.log(this.getConvertedDate(date))
+            let dataDayBefore = await getUserTimerDataDate(token, this.getConvertedDate(dayBefore));
+            console.log(this.getConvertedDate(dayBefore));
+
+            data.data.getCurrentUser.computedProps.timerHistories = data.data.getCurrentUser.computedProps.timerHistories.concat(
+                dataDayBefore.data.getCurrentUser.computedProps.timerHistories)
+
+            data.data.getCurrentUser.computedProps.timerHistories =
+                data.data.getCurrentUser.computedProps.timerHistories
+                    .filter(time => ((new Date(new Date(time.startTime) + " UTC").toLocaleDateString())) == date.toLocaleDateString());
+
+            console.log(data);
 
             let currentDate = data.data.getCurrentUser.computedProps.timerHistories
                 .sort((a: { startTime: Date; }, b: { startTime: Date; }) => new Date(a.startTime).valueOf() - new Date(b.startTime).valueOf());
@@ -230,7 +260,13 @@ class Popup extends React.Component<IProps, IState> {
                     <input type="time" value={this.convertDateToHoursMinutesStart(this.state.startTime)} onChange={this.handleChangeStartTime} style={timeInput} />
                     -
                     <input type="time" value={this.convertDateToHoursMinutesStart(this.state.finishTime)} style={timeInput} onChange={this.handleChangeFinishTime} />
-                    <button onClick={(e) => { this.editValue(this.state.startTime, this.state.finishTime, this.props.editId); this.props.closePopup() }}>{this.props.buttonText}</button>
+
+                    {this.state.showWarning ?
+                        <button disabled>{this.props.buttonText}</button>
+                        :
+                        <button onClick={(e) => { this.editValue(this.state.startTime, this.state.finishTime, this.props.editId); this.props.closePopup() }}>{this.props.buttonText}</button>
+                    }
+
                     <button onClick={(e) => { this.props.closePopup() }}  style={closeButton}>Close</button>
                     <button onClick={() => {
                         this.deleteTimerValue(this.props.editId)
@@ -250,7 +286,11 @@ class Popup extends React.Component<IProps, IState> {
                     <input type="time" value={this.convertDateToHoursMinutesStart(this.state.startTime)} onChange={this.handleChangeStartTime} style={timeInput} />
                     -
                     <input type="time" min={this.convertDateToHoursMinutesStart(this.state.startTime)} value={this.convertDateToHoursMinutesStart(this.state.finishTime)} style={timeInput} onChange={this.handleChangeFinishTime} />
-                        <button onClick={(e) => { this.addValue(this.state.startTime, this.state.finishTime); this.props.closePopup() }}>{this.props.buttonText}</button>
+                        {this.state.showWarning ?
+                            <button disabled>{this.props.buttonText}</button>
+                            :
+                            <button onClick={(e) => { this.addValue(this.state.startTime, this.state.finishTime); this.props.closePopup() }}>{this.props.buttonText}</button>
+                        }
                         <button onClick={(e) => { this.props.closePopup() }} style={closeButton}>Close</button>
                         {this.state.showWarning ?
                             <h6>finish time must be greater than start time</h6>

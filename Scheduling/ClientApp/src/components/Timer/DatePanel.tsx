@@ -24,6 +24,10 @@ interface IProps {
         type: 'SET_TIMERHISTORY',
         requests: Array<TimerType>
     });
+    setDate: (time: Date) => ({
+        type: 'SET_DATE',
+        time: Date
+    });
 }
 
 interface IState {
@@ -40,12 +44,12 @@ class DatePanel extends React.Component<IProps, IState> {
     };
     async componentDidMount() {
         const token = Cookies.get('token');
+
+
+        
+
         if (token) {
-            const data = await getUserTimerDataDate(token, this.getConvertedDate(new Date()));
-
-            let currentDate = data.data.getCurrentUser.computedProps.timerHistories;
-
-            this.props.setTimerHistory(currentDate);
+            this.changeDate(new Date());
         }
     }
     async changeDate(date: Date) {
@@ -80,7 +84,11 @@ class DatePanel extends React.Component<IProps, IState> {
 
 
             let currentDate = data.data.getCurrentUser.computedProps.timerHistories
-                .sort((a: { startTime: string; }, b: { startTime: string; }) => new Date(a.startTime).valueOf()- new Date(b.startTime).valueOf());
+                .sort((a: { startTime: string; }, b: { startTime: string; }) => new Date(a.startTime).valueOf() - new Date(b.startTime).valueOf());
+
+            this.props.setDate(date);
+
+            console.log(this.props);
 
             this.props.setTimerHistory(currentDate);
         }

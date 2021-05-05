@@ -9,14 +9,20 @@ const reducer: Reducer<TimerHistoryState> = (state: TimerHistoryState | undefine
 		console.log(token);
 		if(token)
 			return {
-				logged: true, token: token, timerHistory: []
+				logged: true, token: token, timerHistory: [], date: new Date(),
 			};
 		else
-			return { logged: false, token: null, timerHistory: []};
+			return { logged: false, token: null, timerHistory: [], date: new Date(),};
 	}
 
 	const action = incomingAction as KnownAction;
 	switch (action.type) {
+		case 'SET_DATE':
+			if (action.time != undefined) {
+					console.log('set date');
+					return { ...state,  date:action.time};
+				}
+			return { ...state, date: action.time};
 		case 'SET_TIMERHISTORY':
 				if(action.requests.length > 0){
 					console.log('set');
