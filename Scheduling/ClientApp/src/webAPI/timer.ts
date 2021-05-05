@@ -97,7 +97,7 @@ export const addTimerFinish = async (token: string) => {
 		body: query
 	}).then(data => data.json());
 };
-export const addTimerValue = async (token: string, startTime: Date, finishTime: Date) => {
+export const addTimerValue = async (token: string, startTime: string, finishTime: string) => {
 	const query = JSON.stringify({
 		query: `mutation{
 		  addTimerValue(startTime: "${startTime}", finishTime: "${finishTime}"){

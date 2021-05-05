@@ -59,7 +59,25 @@ class DatePanel extends React.Component<IProps, IState> {
                     }
                 }
             };
-            const data:MyData = await getUserTimerDataDate(token, this.getConvertedDate(date));
+            //const data:MyData = await getUserTimerDataDate(token, this.getConvertedDate(date));
+
+            var dayBefore = (new Date(date.getTime()));
+            dayBefore.setDate(date.getDate() - 1);
+
+            let data: MyData = await getUserTimerDataDate(token, this.getConvertedDate(date));
+            console.log(this.getConvertedDate(date))
+            let dataDayBefore = await getUserTimerDataDate(token, this.getConvertedDate(dayBefore));
+            console.log(this.getConvertedDate(dayBefore));
+
+            data.data.getCurrentUser.computedProps.timerHistories = data.data.getCurrentUser.computedProps.timerHistories.concat(
+                dataDayBefore.data.getCurrentUser.computedProps.timerHistories)
+
+            data.data.getCurrentUser.computedProps.timerHistories =
+                data.data.getCurrentUser.computedProps.timerHistories
+                    .filter(time => ((new Date(new Date(time.startTime) + " UTC").toLocaleDateString())) == date.toLocaleDateString());
+
+            console.log(data);
+
 
             let currentDate = data.data.getCurrentUser.computedProps.timerHistories
                 .sort((a: { startTime: string; }, b: { startTime: string; }) => new Date(a.startTime).valueOf()- new Date(b.startTime).valueOf());

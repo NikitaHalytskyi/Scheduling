@@ -129,17 +129,17 @@ class Popup extends React.Component<IProps, IState> {
     }
     async addValue(startTimeArg: Date, finishTimeArg: Date) {
         if (finishTimeArg > startTimeArg) {
-            var startTime = new Date(this.props.timerHistory[0].startTime);
+            var startTime = new Date(this.props.timerHistory[this.props.timerHistory.length - 1].startTime); // from store
             startTime.setHours(startTimeArg.getHours());
             startTime.setMinutes(startTimeArg.getMinutes());
-            var finishTime = new Date(this.props.timerHistory[0].finishTime);
+            var finishTime = new Date(this.props.timerHistory[this.props.timerHistory.length - 1].finishTime); // from store
             finishTime.setHours(finishTimeArg.getHours());
             finishTime.setMinutes(finishTimeArg.getMinutes());
 
 
             const token = Cookies.get('token');
             if (token) {
-                const data = await addTimerValue(token, new Date(startTime.toISOString()), new Date(finishTime.toISOString()));
+                const data = await addTimerValue(token, startTime.toISOString(), finishTime.toISOString());
             }
 
             this.changeDate(startTime);
@@ -150,17 +150,17 @@ class Popup extends React.Component<IProps, IState> {
     }
     async editValue(startTimeArg: Date, finishTimeArg: Date, id: number) {
         if (finishTimeArg > startTimeArg) {
-            var startTime = new Date(this.props.timerHistory[0].startTime);
+            var startTime = new Date(this.props.timerHistory[this.props.timerHistory.length - 1].startTime); // from store
             startTime.setHours(startTimeArg.getHours());
             startTime.setMinutes(startTimeArg.getMinutes());
-            var finishTime = new Date(this.props.timerHistory[0].finishTime);
+            var finishTime = new Date(this.props.timerHistory[this.props.timerHistory.length - 1].finishTime); // from store
             finishTime.setHours(finishTimeArg.getHours());
             finishTime.setMinutes(finishTimeArg.getMinutes());
 
 
             const token = Cookies.get('token');
             if (token) {
-                const data = await editTimerValue(token, new Date(startTime.toISOString()), new Date(finishTime.toISOString()), id);
+                const data = await editTimerValue(token, startTime.toISOString(), finishTime.toISOString(), id);
             }
 
             this.changeDate(startTime);

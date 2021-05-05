@@ -9,10 +9,6 @@ import '../../style/RequestsTable.css';
 import { deleteTimer, getUserTimerData } from '../../webAPI/timer';
 import Popup from './Popup';
 
-type TableProps = {
-    requests: Array<TimerType>
-}
-
 interface IProps {
     timerHistory: Array<TimerType>;
     deleteTime: (time: number) =>
@@ -82,7 +78,7 @@ class TimerHistoryTable extends React.Component<IProps, IState> {
                 finishTime: new Date(new Date(finishTime) + " UTC"),
             });
         else {
-            if (typeof(idArg) == "number") {
+            if (typeof(idArg) == "string") {
                 var date = this.props.timerHistory.find(({ id }) => id == idArg);
                 if (date != undefined)
                 this.setState({
@@ -143,23 +139,23 @@ class TimerHistoryTable extends React.Component<IProps, IState> {
                                     </td>
 
                                 </tr>)}
-                                {this.state.showPopup ?
-                                    <Popup
-                                        closePopup={this.togglePopup.bind(this)}
-                                        editId={this.state.editId}
-                                        startTime={this.state.startTime}
-                                        finishTime={this.state.finishTime}
-                                        buttonText={this.state.buttonText}
-                                    />
-                                    : null
-                                }
                             </tbody>
-                            <button onClick={() => {
-                                this.togglePopup()
-                                this.changePopUpButtonText("Add")
-                            }}>Add new item</button>
-
                         </table>
+                        <button id='send-request' onClick={() => {
+                            this.togglePopup()
+                            this.changePopUpButtonText("Add")
+                        }}>Add new item</button>
+
+                        {this.state.showPopup ?
+                            <Popup
+                                closePopup={this.togglePopup.bind(this)}
+                                editId={this.state.editId}
+                                startTime={this.state.startTime}
+                                finishTime={this.state.finishTime}
+                                buttonText={this.state.buttonText}
+                            />
+                            : null
+                        }
                     </div>
                 </React.Fragment>)
         }
@@ -175,9 +171,22 @@ class TimerHistoryTable extends React.Component<IProps, IState> {
                                     <th>Time</th>
                                     <th></th>
                                 </tr>
-                                <button id='send-request'>Add new item</button>
                             </tbody>
                         </table>
+                        <button id='send-request' onClick={() => {
+                            this.togglePopup()
+                            this.changePopUpButtonText("Add")
+                        }}> Add new item</button>
+                        {this.state.showPopup ?
+                            <Popup
+                                closePopup={this.togglePopup.bind(this)}
+                                editId={this.state.editId}
+                                startTime={this.state.startTime}
+                                finishTime={this.state.finishTime}
+                                buttonText={this.state.buttonText}
+                            />
+                            : null
+                        }
                     </div>
                 </React.Fragment>)
         }
