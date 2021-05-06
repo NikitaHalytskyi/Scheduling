@@ -44,10 +44,6 @@ class DatePanel extends React.Component<IProps, IState> {
     };
     async componentDidMount() {
         const token = Cookies.get('token');
-
-
-        
-
         if (token) {
             this.changeDate(new Date());
         }

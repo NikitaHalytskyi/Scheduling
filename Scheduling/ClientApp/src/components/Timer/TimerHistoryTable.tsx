@@ -124,7 +124,11 @@ class TimerHistoryTable extends React.Component<IProps, IState> {
                                     <th></th>
                                 </tr>
                                 {this.props.timerHistory.map((r) => <tr key={this.props.timerHistory.indexOf(r)}>
-                                    <td>{((new Date((new Date(r.startTime)).toString() + " UTC")).toLocaleTimeString())}-{(r.finishTime == null ? "still in action" : ((new Date((new Date(r.finishTime)).toString() + " UTC")).toLocaleTimeString()))}</td>
+                                    <td>{
+                                        ((new Date((new Date(r.startTime)).toString() + " UTC"))
+                                            .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))}-{(r.finishTime == null ? "still in action" :
+                                        ((new Date((new Date(r.finishTime)).toString() + " UTC"))
+                                            .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })))}</td>
                                     <td>{
                                         this.convertMiliseconds(r.finishTime, new Date(r.startTime))
                                     }</td>
