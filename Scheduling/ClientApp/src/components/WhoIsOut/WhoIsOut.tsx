@@ -18,23 +18,19 @@ class WhoIsOut extends React.PureComponent<WhoIsOutProps, {usersOnVacationToday:
     }
 
     async componentDidMount() {
-        await getUsersOnVacationWithinTeamByDate(this.props.token, new Date()).then(({data}) => {
-            this.setState({usersOnVacationToday: data.getUsersOnVacation.map((user: { name: string; }) => user.name)});
-        })
-        await getUsersOnVacationWithinTeamByDate(this.props.token, new Date(new Date().setDate(new Date().getDate() + 1))).then(({data}) => {
-            this.setState({usersOnVacationTomorrow: data.getUsersOnVacation.map((user: { name: string; }) => user.name)});
-        })
+        await getUsersOnVacationWithinTeamByDate(this.props.token, new Date())
+            .then(({data}) => {
+                this.setState({usersOnVacationToday: data.getUsersOnVacation.map((user: { name: string; }) => user.name)});
+            })
+            .catch(err => console.error(err))
+
+        await getUsersOnVacationWithinTeamByDate(this.props.token, new Date(new Date().setDate(new Date().getDate() + 1)))
+            .then(({data}) => {
+                this.setState({usersOnVacationTomorrow: data.getUsersOnVacation.map((user: { name: string; }) => user.name)});
+            })
+            .catch(err => console.error(err))
     }
 
-    /*
-        getUsersOnVacationWithinTeamByDate(props.token, new Date()).then(({data}) => {
-            usersOnVacationToday = data.getUsersOnVacation.map((user: { name: string; }) => user.name);
-        })
-        getUsersOnVacationWithinTeamByDate(props.token, new Date(new Date().setDate(new Date().getDate() + 1))).then(({data}) => {
-            usersOnVacationTomorrow = data.getUsersOnVacation.map((user: { name: string; }) => user.name)
-
-        })
-    */
     render() {
         return (
                 <div className="who-is-out">

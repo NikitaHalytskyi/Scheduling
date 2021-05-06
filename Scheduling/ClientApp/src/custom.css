@@ -12,6 +12,19 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.logout-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0275d8;
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  padding: 7.5px 10px;
+  color: white;
+  font-weight: bolder;
+}
+
 /* 
 button:active, button:focus, input:active, input:focus {
   outline: none;

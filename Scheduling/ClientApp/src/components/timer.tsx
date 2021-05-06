@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react";
-import * as EasyTimer from "easytimer.js";
+import * as EasyTimer from "easytimer";
 import { ApplicationState } from "../store/configureStore";
 import { actionCreators } from "../store/Timer/actions";
 import { connect, useDispatch } from 'react-redux';
@@ -8,15 +8,14 @@ import Cookies from "js-cookie";
 
 class Timer extends Component {
     private pauseButton: HTMLInputElement;
-    constructor(props) {
+    constructor(props: Readonly<{}>) {
         super(props);
 
         console.log(props);
 
-        var timer = new EasyTimer.Timer();
+        const timer = new EasyTimer.Timer();
 
         this.state = {
-            timer_text: timer.getTimeValues().toString(),
             timer_text: timer.getTimeValues().toString(),
             timer: timer,
             timer_state: "stopped"

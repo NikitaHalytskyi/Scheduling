@@ -2,9 +2,12 @@ import * as React from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import { connect } from 'react-redux';
+import { actionCreators } from '../store/User/actions';
+import { ApplicationState } from '../store/configureStore';
 
 
-export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }> {
+class NavMenu extends React.PureComponent<{ logined: boolean, logOut: () => void }, { isOpen: boolean }> {
     public state = {
         isOpen: false
     };
@@ -19,7 +22,7 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
                         <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={this.state.isOpen} navbar>
                             <ul className="navbar-nav flex-grow">
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/MainPage">Home</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={Link} className="text-dark" to="/VacationRequest">Vacation</NavLink>
@@ -29,6 +32,9 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
                                 </NavItem>
                             </ul>
                         </Collapse>
+                        {this.props.logined ? <button className="logout-btn" onClick={() => this.props.logOut()}>
+                            Logout
+                        </button>: null}
                     </Container>
                 </Navbar>
             </header>
@@ -41,3 +47,14 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
         });
     }
 }
+
+const mapStateToProps = (store: ApplicationState) => {
+    return {
+        logined: store.loggedUser.logged
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    actionCreators
+)(NavMenu);

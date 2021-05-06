@@ -10,7 +10,7 @@ type ProfileProps = {
     user: UserData
 }
 
-const Profile: React.FunctionComponent<ProfileProps> = ({ user}) => {
+const Profile: React.FunctionComponent<ProfileProps> = ({ user }) => {
     if(user)
     return (
         <div className="profile">

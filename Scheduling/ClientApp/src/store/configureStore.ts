@@ -10,7 +10,7 @@ import { VacationRequestState } from './VacationRequest/types';
 import { TimerHistoryState } from './Timer/types';
 
 export interface ApplicationState {
-    loggedUser: UserState | undefined;
+    loggedUser: UserState;
     vacationRequest: VacationRequestState | undefined;
     timerHistory: TimerHistoryState | undefined;
 };

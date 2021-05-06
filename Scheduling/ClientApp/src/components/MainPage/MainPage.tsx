@@ -28,7 +28,7 @@ class MainPage extends React.PureComponent<MainPageProps> {
             this.props.logIn(token);
             const data = await getUserData(token);
 
-            if(data.data){
+            if(data.data && data.data.getCurrentUser){
                 this.props.setUserData(data.data.getCurrentUser);
                 return;
             }
@@ -49,7 +49,8 @@ class MainPage extends React.PureComponent<MainPageProps> {
                         <div className="top-side">
                             <div className="timer-container">
                                 <h2>Time tracker</h2>
-                                <Timer/>
+                                
+                                {"timer"}
                             </div>
                         </div>
                         <div className="bottom-side">
