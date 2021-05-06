@@ -4,7 +4,6 @@ import { LoadingAnimation } from './Loading';
 import { ApprovingLine } from './VacationApprovingTableLine';
 
 type TableProps = {
-    token: string,
     requests: Array<{
         id: number,
         startDate: Date,
@@ -13,22 +12,23 @@ type TableProps = {
         status: string,
         comment: string
     }>
-    loading: Boolean
+    loading: Boolean,
+    considerRequest: Function
 }
 
 
-export const VacationApprovingTable: React.FunctionComponent<TableProps> = ({ token, loading, requests }) => {
+export const VacationApprovingTable: React.FunctionComponent<TableProps> = ({ loading, requests, considerRequest }) => {
 
     if(requests.length > 0)
         console.log('table' + requests[0].comment);
     return (
         <React.Fragment>
             <div id='vacation-approving'>
-                <h5 className={loading? 'blured': ''}>Vacation requests</h5>
+                <h2 className={loading? 'blured': ''}>Vacation approving</h2>
                 <table id='approving' className={loading? 'blured': ''}>
                     <tbody>
                         <tr>
-                            <th>Date</th>
+                            <th>Range</th>
                             <th>Name</th>
                             <th>User comment</th>
                             <th>My comment</th>
@@ -36,7 +36,7 @@ export const VacationApprovingTable: React.FunctionComponent<TableProps> = ({ to
                         </tr>
                         {requests.filter(r => r.status === "Pending consideration...").map((r) =>
                             <tr key={requests.indexOf(r)}>
-                                <ApprovingLine token={token} request={r}/>
+                                <ApprovingLine request={r} considerRequest={(reaction: boolean, requestId: number, comment: string)=>considerRequest(reaction, requestId, comment)}/>
                             </tr>
                         )}
                     </tbody>

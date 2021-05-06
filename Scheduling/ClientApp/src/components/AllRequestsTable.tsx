@@ -21,10 +21,10 @@ export const AllRequestsTable: React.FunctionComponent<TableProps> = ({ loading,
     }
     const convertDate = (date: Date) => {
         let dateObj = new Date(date);
-        let month = dateObj.getUTCMonth() + 1;
-        let day = dateObj.getUTCDate();
-        let year = dateObj.getUTCFullYear();
-        return (year + "." + validateDate(month) + "." + validateDate(day));
+        let month = dateObj.getMonth() + 1;
+        let day = dateObj.getDate();
+        let year = dateObj.getFullYear();
+        return (validateDate(day) + "/" + validateDate(month) + "/" + year);
     }
 
     if(requests.length > 0)
@@ -36,7 +36,7 @@ export const AllRequestsTable: React.FunctionComponent<TableProps> = ({ loading,
                 <table id='history' className={loading? 'blured': ''}>
                     <tbody>
                         <tr>
-                            <th>Date</th>
+                            <th>Range</th>
                             <th>Name</th>
                             <th>Status</th>
                             <th>Comment</th>

@@ -17,14 +17,12 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, re
 
 	const convertDate = (date: Date) => {
         let dateObj = new Date(date);
-		let day = dateObj.getUTCDate();
-        let month = dateObj.getUTCMonth() + 1;
-        let year = dateObj.getUTCFullYear();
+		let day = dateObj.getDate();
+        let month = dateObj.getMonth() + 1;
+        let year = dateObj.getFullYear();
         return (validateDate(day) + "/" + validateDate(month) + "/" + year);
     }
 
-    if(requests.length > 0)
-        console.log('table' + requests[0].comment);
     return (
         <React.Fragment>
             <div id='vacation-history'>
@@ -41,7 +39,7 @@ export const RequestsTable: React.FunctionComponent<TableProps> = ({ loading, re
                             <td>{convertDate(r.startDate)}-{convertDate(r.finishDate)}</td>
                             <td>{r.status}</td>
                             <td>{r.comment}</td>
-                            <td><button onClick={() => removeRequest(r.id)}>Delete</button></td>
+                            <td className='table-button-delete'><button onClick={() => removeRequest(r.id)}>Delete</button></td>
                         </tr>)}
                     </tbody>
                 </table>
