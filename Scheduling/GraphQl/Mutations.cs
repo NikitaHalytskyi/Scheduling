@@ -37,10 +37,10 @@ namespace Scheduling.GraphQl
             Field<BooleanGraphType>(
                 "createUser",
                 arguments: new QueryArguments(
-                    /* new QueryArgument<NonNullGraphType<UserType>> { Name = "User", Description = "User instance" }*/
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name" },
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Surname", Description = "User surname" },
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Position", Description = "User position" },
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "User password" },
                     new QueryArgument<NonNullGraphType<ListGraphType<StringGraphType>>> { Name = "Permissions", Description = "User permisions" },
                     new QueryArgument<ListGraphType<IntGraphType>> { Name = "Teams", Description = "User teams id" }
@@ -50,12 +50,12 @@ namespace Scheduling.GraphQl
                     string email = context.GetArgument<string>("Email");
                     string name = context.GetArgument<string>("Name");
                     string surname = context.GetArgument<string>("Surname");
+                    string position = context.GetArgument<string>("Position");
+                    string password = context.GetArgument<string>("Password");
                     List<string> permissions = context.GetArgument<List<string>>("Permissions");
                     List<int> teamsId = context.GetArgument<List<int>>("Teams");
 
-                    string password = Guid.NewGuid().ToString();
-
-                    User user = dataBaseRepository.CreateUser(name, surname, email, password, permissions, teamsId);
+                    User user = dataBaseRepository.CreateUser(name, surname, email, position, password, permissions, teamsId);
                     
                     /*if(user.Email != null)
                     {
@@ -70,7 +70,7 @@ namespace Scheduling.GraphQl
 
                     return true;
                 }
-            )/*.AuthorizeWith("Authenticated")*/;
+            ).AuthorizeWith("Authenticated");
 
             Field<BooleanGraphType>(
                 "removeUser",

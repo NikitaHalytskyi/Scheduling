@@ -15,7 +15,7 @@ namespace Scheduling.Domain
         public User Get(string email) =>
             Context.Users.FirstOrDefault(user => user.Email == email);
 
-        public User CreateUser(string name, string surname, string email, string password, List<string> permission, List<int> teams)
+        public User CreateUser(string name, string surname, string email, string position, string password, List<string> permission, List<int> teams)
         {
             string userId = Guid.NewGuid().ToString();
             string salt = Guid.NewGuid().ToString();
@@ -24,7 +24,7 @@ namespace Scheduling.Domain
 
             if (checkUser != null)
             {
-                return new User();
+                return null;
             }
 
             User user = new User()
@@ -33,31 +33,30 @@ namespace Scheduling.Domain
                 Password = Hashing.GetHashString(password + salt),
                 Name = name,
                 Surname = surname,
-                Position = "",
+                Position = position,
                 Department = "",
                 Salt = salt
             };
 
-
             Context.Users.Add(user);
-            Context.SaveChanges();
+            Context.SaveChangesAsync();
 
-            User newUser = Context.Users.Single(user => user.Email == email);
+            /*User newUser = Context.Users.Single(user => user.Email == email);*/
 
-            foreach (string perm in permission)
-            {
-                CreateUserPermission(newUser.Id, perm);
-            }
+            //foreach (string perm in permission)
+            //{
+            //    CreateUserPermission(newUser.Id, perm);
+            //}
 
-            if (teams == null)
-                return newUser;
+            //if (teams == null)
+            //    return newUser;
 
-            foreach (int teamId in teams)
-            {
-                AddUserToTeam(user.Id, teamId);
-            }
+            //foreach (int teamId in teams)
+            //{
+            //    AddUserToTeam(user.Id, teamId);
+            //}
 
-            return newUser;
+            return user;
         }
 
 
@@ -77,7 +76,7 @@ namespace Scheduling.Domain
             }
 
             Context.Users.Remove(user);
-            Context.SaveChanges();
+            Context.SaveChangesAsync();
             return true;
         }
 

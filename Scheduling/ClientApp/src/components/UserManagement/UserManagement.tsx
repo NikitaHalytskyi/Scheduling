@@ -1,15 +1,14 @@
 import * as React from 'react';
-import Cookies from 'js-cookie';
 import { connect, useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { Redirect, RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../../store/configureStore';
 import { UserManagementState } from '../../store/UserManagement/types';
 import { actionCreators } from '../../store/UserManagement/actions';
 import { useEffect } from 'react';
 import '../../style/RequestsTableAndUsersTable.css';
 import '../../style/DeleteBoxUserManagement.css';
-import { removeUser } from '../../webAPI/removeUser';
+import { Link } from 'react-router-dom';
 
 
 type UserManagementProps =
@@ -28,7 +27,6 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
         requestUsers();
     }, []);
 
-    console.log(props.users);
     return (
         <React.Fragment>
             <DeleteBox
@@ -36,7 +34,7 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
                 setIsOpen={setIsDeleteBoxOpen}
             />
             <div id='usersTableBorder'>
-                <button className="createNewUserButton">Create new user</button>
+                <Link to="/createuser" className="createNewUserButton">Create new user</Link>
                 <h1>User managment</h1>
                 <table id='users'>
                     <tbody>
@@ -49,7 +47,7 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
                             <th></th>
                             <th></th>
                         </tr>
-                        {props.users.map((u, index) => {
+                        {props.users.map((u) => {
                             if (u != null) {
                                     
                                     return(<tr key={props.users.indexOf(u)}>

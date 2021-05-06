@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import User from './components/User';
 import UserManagement from './components/UserManagement/UserManagement';
+import CreateUserForm from './components/UserManagement/CreateUser';
 import VacationRequest from './components/VacationRequest';
 
 import './custom.css'
@@ -14,7 +15,7 @@ export default () => (
         <Switch>
         <Route exact path='/' component={User} />
         <Route exact path='/vacationrequest' component={VacationRequest} />
-        {/* <Route exact path='/usermanagement' component={UserManagement} /> */}
+        <Route exact path='/createuser' component={CreateUserForm} />
         <ProtectedRoute exact path='/usermanagement' component={UserManagement} />
         </Switch>
     </Layout>

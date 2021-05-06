@@ -13,23 +13,23 @@ const reducer: Reducer<UserManagementState> =
 
         switch (action.type) {
             case 'RECEIVED_USERS': {
-                let newState = JSON.parse(JSON.stringify(state));
-                newState.users = action.payload;
-                return newState;
+                return {
+                    ...state,
+                    users: action.payload
+                };
             }
 
             case 'CREATE_USER': {
-                let newState = JSON.parse(JSON.stringify(state));
+                if (action.payload === null || action.payload === undefined || action.payload.email === undefined) {
+                    return state;
+                }
+                return {
+                    ...state, 
+                    users: state.users.concat(action.payload as UserData)
+                };
+                /*let newState = JSON.parse(JSON.stringify(state));
                 newState.users.push(action.payload);
-                return newState;
-
-                /*return {
-                    ...state,
-                    users: [
-                        ...state.users,
-                        action.payload
-                    ]
-                };*/
+                return newState;*/
             }
                 
             case 'EDIT_USER': {
@@ -41,12 +41,10 @@ const reducer: Reducer<UserManagementState> =
             }
                 
             case 'DELETE_USER': {
-                let newState = JSON.parse(JSON.stringify(state));
-                let indexOfDeleteElement = newState.users.findIndex((u: any) => action.payload === u.email);
-                if (newState.users.find((u: any) => action.payload === u.email)) {
-                    newState.users.splice(indexOfDeleteElement, 1);
-                }
-                return newState;
+                return {
+                    ...state,
+                    users: state.users.filter(u => u!.email !== action.payload)
+                };
             }
 
             default: {
