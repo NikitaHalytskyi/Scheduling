@@ -19,18 +19,6 @@ namespace Scheduling.Migrations
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Scheduling.Models.ComputedProps", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ComputedProps");
-                });
-
             modelBuilder.Entity("Scheduling.Models.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -38,15 +26,11 @@ namespace Scheduling.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ComputedPropsId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ComputedPropsId");
 
                     b.ToTable("Permissions");
 
@@ -54,32 +38,27 @@ namespace Scheduling.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Access to vacation approvals"
-                        },
-                        new
-                        {
-                            Id = 2,
                             Name = "Accountant"
                         },
                         new
                         {
+                            Id = 2,
+                            Name = "UserManagement"
+                        },
+                        new
+                        {
                             Id = 3,
-                            Name = "Part-time"
+                            Name = "FullTime"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Full-time"
+                            Name = "PartTime"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Access to team management"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Access to global management"
+                            Name = "VacationApprovals"
                         });
                 });
 
@@ -90,26 +69,17 @@ namespace Scheduling.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ComputedPropsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ComputedPropsId");
 
                     b.ToTable("Teams");
 
                     b.HasData(
                         new
                         {
-                            Id = 6,
-                            CreatorId = 1321313,
+                            Id = 1,
                             Name = "Development"
                         });
                 });
@@ -120,9 +90,6 @@ namespace Scheduling.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ComputedPropsId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
@@ -145,9 +112,12 @@ namespace Scheduling.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ComputedPropsId");
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Users");
 
@@ -161,7 +131,8 @@ namespace Scheduling.Migrations
                             Password = "5dj3bhWCfxuHmONkBdvFrA==",
                             Position = "lol",
                             Salt = "91ed90df-3289-4fdf-a927-024b24bea8b7",
-                            Surname = "Adminov"
+                            Surname = "Adminov",
+                            TeamId = 1
                         },
                         new
                         {
@@ -172,71 +143,40 @@ namespace Scheduling.Migrations
                             Password = "u9DAYiHl+liIqRMvuuciBA==",
                             Position = "lol",
                             Salt = "f0e30e73-fac3-4182-8641-ecba862fed69",
-                            Surname = "Userov"
+                            Surname = "Userov",
+                            TeamId = 1
                         });
                 });
 
             modelBuilder.Entity("Scheduling.Models.UserPermission", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("PermisionId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
 
-                    b.ToTable("UserPermissions");
+                    b.HasKey("UserId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("UserPermission");
 
                     b.HasData(
                         new
                         {
-                            Id = 3,
-                            PermisionId = 1,
-                            UserId = 1321313
+                            UserId = 1321313,
+                            PermissionId = 2
                         },
                         new
                         {
-                            Id = 4,
-                            PermisionId = 3,
-                            UserId = 13213133
+                            UserId = 1321313,
+                            PermissionId = 5
                         },
                         new
                         {
-                            Id = 5,
-                            PermisionId = 6,
-                            UserId = 1321313
-                        });
-                });
-
-            modelBuilder.Entity("Scheduling.Models.UserTeams", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("userTeams");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            TeamId = 6,
-                            UserId = 13213133
+                            UserId = 13213133,
+                            PermissionId = 4
                         });
                 });
 
@@ -263,6 +203,8 @@ namespace Scheduling.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("VacationRequests");
 
@@ -296,34 +238,60 @@ namespace Scheduling.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Scheduling.Models.User", b =>
+                {
+                    b.HasOne("Scheduling.Models.Team", "Team")
+                        .WithMany("Users")
+                        .HasForeignKey("TeamId");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.UserPermission", b =>
+                {
+                    b.HasOne("Scheduling.Models.Permission", "Permission")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Scheduling.Models.User", "User")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.VacationRequest", b =>
+                {
+                    b.HasOne("Scheduling.Models.User", "User")
+                        .WithMany("VacationRequests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Scheduling.Models.Permission", b =>
                 {
-                    b.HasOne("Scheduling.Models.ComputedProps", null)
-                        .WithMany("Permissions")
-                        .HasForeignKey("ComputedPropsId");
+                    b.Navigation("UserPermissions");
                 });
 
             modelBuilder.Entity("Scheduling.Models.Team", b =>
                 {
-                    b.HasOne("Scheduling.Models.ComputedProps", null)
-                        .WithMany("Teams")
-                        .HasForeignKey("ComputedPropsId");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Scheduling.Models.User", b =>
                 {
-                    b.HasOne("Scheduling.Models.ComputedProps", "ComputedProps")
-                        .WithMany()
-                        .HasForeignKey("ComputedPropsId");
+                    b.Navigation("UserPermissions");
 
-                    b.Navigation("ComputedProps");
-                });
-
-            modelBuilder.Entity("Scheduling.Models.ComputedProps", b =>
-                {
-                    b.Navigation("Permissions");
-
-                    b.Navigation("Teams");
+                    b.Navigation("VacationRequests");
                 });
 #pragma warning restore 612, 618
         }

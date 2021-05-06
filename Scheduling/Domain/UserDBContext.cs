@@ -14,14 +14,93 @@ namespace Scheduling.Domain
 
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
-        public DbSet<UserPermission> UserPermissions { get; set; }
+        //public DbSet<UserPermission> UserPermissions { get; set; }
         public DbSet<Team> Teams { get; set; }
-        public DbSet<UserTeams> userTeams { get; set; }
+        //public DbSet<UserTeams> userTeams { get; set; }
         public DbSet<VacationRequest> VacationRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+               .Entity<Permission>()
+               .Property(e => e.Name)
+               .HasConversion(
+                   v => v.ToString(),
+                   v => (PermissionName)Enum.Parse(typeof(PermissionName), v));
+
+            modelBuilder.Entity<UserPermission>()
+                .HasKey(u => new { u.UserId, u.PermissionId });
+
+            modelBuilder.Entity<UserPermission>()
+                .HasOne(up => up.User)
+                .WithMany(u => u.UserPermissions)
+                .HasForeignKey(up => up.UserId);
+
+            modelBuilder.Entity<User>()
+                .Navigation(up => up.UserPermissions)
+                .UsePropertyAccessMode(PropertyAccessMode.Property);
+
+            modelBuilder.Entity<UserPermission>()
+                .HasOne(up => up.Permission)
+                .WithMany(p => p.UserPermissions)
+                .HasForeignKey(p => p.PermissionId);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Team)
+                .WithMany(t => t.Users);
+
+            modelBuilder.Entity<VacationRequest>()
+                .HasOne(vr => vr.User)
+                .WithMany(u => u.VacationRequests);
+
+
+
+            modelBuilder.Entity<UserPermission>().HasData(new List<UserPermission>
+            {
+                new UserPermission {PermissionId = 2, UserId = 1321313},
+                new UserPermission {PermissionId = 5, UserId = 1321313},
+                new UserPermission {PermissionId = 4, UserId = 13213133},
+            });
+
+
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
+                Id = 1,
+                Name = PermissionName.Accountant,
+            });
+
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
+                Id = 2,
+                Name = PermissionName.UserManagement,
+            });
+
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
+                Id = 3,
+                Name = PermissionName.FullTime,
+            });
+
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
+                Id = 4,
+                Name = PermissionName.PartTime,
+            });
+
+            modelBuilder.Entity<Permission>().HasData(new Permission
+            {
+                Id = 5,
+                Name = PermissionName.VacationApprovals,
+            });
+
+
+            modelBuilder.Entity<Team>().HasData(new Team
+            {
+                Id = 1,
+                Name = "Development",
+            });
 
             modelBuilder.Entity<User>().HasData(new User
             {
@@ -33,7 +112,9 @@ namespace Scheduling.Domain
                 Position = "lol",
                 Department = "Memes",
                 Salt = "91ed90df-3289-4fdf-a927-024b24bea8b7",
+                TeamId = 1,
             });
+
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 13213133,
@@ -44,77 +125,9 @@ namespace Scheduling.Domain
                 Position = "lol",
                 Department = "Memes",
                 Salt = "f0e30e73-fac3-4182-8641-ecba862fed69",
+                TeamId = 1,
             });
 
-            modelBuilder.Entity<Permission>().HasData(new Permission
-            {
-                Id = 1,
-                Name = "Access to vacation approvals"
-            });
-
-            modelBuilder.Entity<Permission>().HasData(new Permission
-            {
-                Id = 2,
-                Name = "Accountant"
-            });
-
-            modelBuilder.Entity<Permission>().HasData(new Permission
-            {
-                Id = 3,
-                Name = "Part-time"
-            });
-
-            modelBuilder.Entity<Permission>().HasData(new Permission
-            {
-                Id = 4,
-                Name = "Full-time"
-            });
-
-            modelBuilder.Entity<Permission>().HasData(new Permission
-            {
-                Id = 5,
-                Name = "Access to team management"
-            });
-
-            modelBuilder.Entity<Permission>().HasData(new Permission
-            {
-                Id = 6,
-                Name = "Access to global management"
-            });
-
-            modelBuilder.Entity<UserPermission>().HasData(new UserPermission
-            {
-                Id = 3,
-                PermisionId = 1,
-                UserId = 1321313
-            });
-
-            modelBuilder.Entity<UserPermission>().HasData(new UserPermission
-            {
-                Id = 4,
-                PermisionId = 3,
-                UserId = 13213133
-            });
-
-            modelBuilder.Entity<UserPermission>().HasData(new UserPermission
-            {
-                Id = 5,
-                PermisionId = 6,
-                UserId = 1321313
-            });
-
-            modelBuilder.Entity<Team>().HasData(new Team
-            {
-                Id = 6,
-                CreatorId = 1321313,
-                Name = "Development"
-            });
-            modelBuilder.Entity<UserTeams>().HasData(new UserTeams
-            {
-                Id = 1,
-                UserId = 13213133,
-                TeamId = 6
-            });
             modelBuilder.Entity<VacationRequest>().HasData(new VacationRequest
             {
                 Id = 1,

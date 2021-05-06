@@ -37,13 +37,13 @@ namespace Scheduling.Services
                 return ""; 
             }
 
-            user.ComputedProps = new ComputedProps();
-            user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
+            /*user.ComputedProps = new ComputedProps();
+            user.ComputedProps.AddPermission(dataBaseRepository.GetPermissions(user.Id));*/
 
-            return GenerateAccessToken(email, user.Id.ToString(), user.ComputedProps.Permissions.ConvertAll(input => input.Name));
+            return GenerateAccessToken(email, user.Id.ToString(), user.UserPermissions.ConvertAll(input => input.Permission));
 
         }
-        private string GenerateAccessToken(string email, string userId, List<string> permissons)
+        private string GenerateAccessToken(string email, string userId, List<Permission> permissons)
         {
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("SecretKey").Value));
@@ -55,7 +55,7 @@ namespace Scheduling.Services
                 new Claim("Email", email),
             };
 
-            claims = claims.Concat(permissons.Select(permisson => new Claim("permission", permisson))).ToList();
+            claims = claims.Concat(permissons.Select(permisson => new Claim("permission", permisson.Name.ToString()))).ToList();
 
             JwtSecurityToken token = new JwtSecurityToken(
                 "issuer",

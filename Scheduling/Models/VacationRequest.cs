@@ -8,11 +8,18 @@ namespace Scheduling.Models
     public class VacationRequest
     {
         public int Id { get; set; }
+
         public int UserId { get; set; }
+        public User User { get; set; }
+
         public DateTime StartDate { get; set; }
+
         public DateTime FinishDate { get; set; }
+
         public string Status { get; set; }
+
         public string Comment { get; set; }
+
         public VacationRequest()
         {
 

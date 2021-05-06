@@ -22,9 +22,9 @@ namespace Scheduling.GraphQl
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
 
-                    user.ComputedProps = new ComputedProps();
-                    user.ComputedProps.AddPermission(dataBaseRepository.GetPermission(user.Id));
-                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);
+                    /*user.ComputedProps = new ComputedProps();
+                    user.ComputedProps.AddPermission(dataBaseRepository.GetPermissions(user.Id));
+                    user.ComputedProps.Teams = dataBaseRepository.GetUserTeams(user.Id);*/
 
                     return user;
                 }
@@ -38,13 +38,13 @@ namespace Scheduling.GraphQl
                 {
                     string email = httpContext.HttpContext.User.Claims.First(claim => claim.Type == "Email").Value.ToString();
                     User user = dataBaseRepository.Get(email);
-                    return dataBaseRepository.GetListOfAvailableTeams(user.Id);
+                    return dataBaseRepository.GetListOfAvailableTeams();
                 },
                 description: "Get list of available teams."
             ).AuthorizeWith("Manager");
 
 
-            Field<ListGraphType<TeamType>>(
+            /*Field<ListGraphType<TeamType>>(
                 "GetUserTeams",
                 arguments: null,
                 resolve: context =>
@@ -53,7 +53,7 @@ namespace Scheduling.GraphQl
                     User user = dataBaseRepository.Get(email);
                     return dataBaseRepository.GetUserTeams(user.Id);
                 }
-            ).AuthorizeWith("Authenticated");
+            ).AuthorizeWith("Authenticated");*/
 
             Field<ListGraphType<UserType>>(
                 "GetTeamUsers",
@@ -101,7 +101,7 @@ namespace Scheduling.GraphQl
                     return dataBaseRepository.Get();
                 }
 
-            ).AuthorizeWith("Access to global management");
+            );
         }
     }
 }

@@ -4,16 +4,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 namespace Scheduling.Domain
 {
     public partial class DataBaseRepository
     {
         public IEnumerable<User> Get() =>
-          Context.Users;
-        public User Get(string email) =>
-            Context.Users.FirstOrDefault(user => user.Email == email);
+            Context.Users.Include(u => u.UserPermissions)
+                .ThenInclude(up => up.Permission).Include(u => u.Team).ToList();
 
-        public User CreateUser(string name, string surname, string email, string password, List<string> permission, List<int> teams)
+        public User Get(string email)
+        {
+            return Context.Users
+                .Include(u => u.UserPermissions)
+                .ThenInclude(up => up.Permission).Include(u => u.Team)
+                .FirstOrDefault(us => us.Email == email);
+        }
+            
+
+        public User CreateUser(string name, string surname, string email, string password, List<Permission> permissions, int teamId)
         {
             string userId = Guid.NewGuid().ToString();
             string salt = Guid.NewGuid().ToString();
@@ -24,6 +34,13 @@ namespace Scheduling.Domain
                 return new User();
             }
 
+            List<UserPermission> userPermissions = new List<UserPermission>();
+
+            foreach (var permission in permissions)
+            {
+                userPermissions.Add(new UserPermission {Permission = permission});
+            }
+
             User user = new User()
             {
                 Email = email,
@@ -32,14 +49,16 @@ namespace Scheduling.Domain
                 Surname = surname,
                 Position = "",
                 Department = "",
-                Salt = salt
+                Salt = salt,
+                Team = GetTeam(teamId),
+                UserPermissions = userPermissions
             };
 
 
             Context.Users.Add(user);
             Context.SaveChanges();
 
-            User newUser = Context.Users.Single(user => user.Email == email);
+           /* User newUser = Context.Users.Single(user => user.Email == email);
 
             foreach (string perm in permission)
             {
@@ -52,9 +71,9 @@ namespace Scheduling.Domain
             foreach (int teamId in teams)
             {
                 AddUserToTeam(user.Id, teamId);
-            }
+            }*/
 
-            return newUser;
+            return user;
         }
 
 
@@ -63,34 +82,39 @@ namespace Scheduling.Domain
             User user = Context.Users.FirstOrDefault(user => user.Email == email);
             if (user == null)
                 return false;
-            RemoveUserPermissions(user.Id);
-            List<UserTeams> teams = Context.userTeams.Where(team => team.UserId == user.Id).ToList();
+            //RemoveUserPermissions(user.Id);
+            /*List<UserTeams> teams = Context.userTeams.Where(team => team.UserId == user.Id).ToList();
             foreach (UserTeams team in teams)
             {
                 RemoveUserFromTeam(team.UserId, team.TeamId);
-            }
+            }*/
             Context.Users.Remove(user);
             Context.SaveChanges();
             return true;
         }
         public bool EditUser(User user)
         {
-            if (!RemoveUser(user.Email))
+            if (Context.Users.Find(user.Id) == null)
                 return false;
-            List<Team> teams = GetUserTeams(user.Id);
 
-            RemoveUserPermissions(user.Id);
 
-            foreach (Permission permmision in user.ComputedProps.Permissions)
-            {
-                CreateUserPermission(user.Id, permmision.Name);
-            }
+            /*if (!RemoveUser(user.Email))
+                return false;*/
+            /* List<Team> teams = GetUserTeams(user.Id);
 
-            foreach (Team team in teams)
-            {
-                AddUserToTeam(user.Id, team.Id);
-            }
-            Context.Users.Add(user);
+             //RemoveUserPermissions(user.Id);
+
+             foreach (Permission permmision in user.ComputedProps.Permissions)
+             {
+                 CreateUserPermission(user.Id, permmision.Name);
+             }
+
+             foreach (Team team in teams)
+             {
+                 AddUserToTeam(user.Id, team.Id);
+             }*/
+            Context.Users.Update(user);
+            //Context.Users.Add(user);
             Context.SaveChanges();
             return true;
         }

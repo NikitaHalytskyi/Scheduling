@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GraphQL.Language.AST;
 using GraphQL.Types;
 using Scheduling.Models;
 
@@ -13,11 +14,11 @@ namespace Scheduling.GraphQl.Types
         {
             Name = "PermissionName";
             Description = "One of the possible permissions";
-            AddValue("UserManagement", "Access to user management.", 0);
-            AddValue("Accountant", "Access to reports", 1);
-            AddValue("PartTime", "Access to timer", 2);
-            AddValue("FullTime", "", 3);
-            AddValue("VacationApprovals", "Access to vacation approvals.", 4);
+            /*AddValue(PermissionName.UserManagement.ToString(), "Access to user management.", 0);
+            AddValue(PermissionName.Accountant.ToString(), "Access to reports", 1);
+            AddValue(PermissionName.PartTime.ToString(), "Access to timer", 2);
+            AddValue(PermissionName.FullTime.ToString(), "", 3);
+            AddValue(PermissionName.VacationApprovals.ToString(), "Access to vacation approvals.", 4);*/
         }
     }
 }

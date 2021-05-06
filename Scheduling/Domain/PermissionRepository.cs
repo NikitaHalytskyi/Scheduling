@@ -3,15 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Scheduling.Domain
 {
     public partial class DataBaseRepository
     {
 
-        public List<Permission> GetPermission(int id)
+        public List<Permission> GetPermissions(int id)
         {
-            User user = Context.Users.FirstOrDefault(user => user.Id == id);
+            var user = Context.Users
+                .Include(u => u.UserPermissions)
+                .ThenInclude(up => up.Permission).FirstOrDefault(us => us.Id == id);
+            if (user != null)
+                return user.UserPermissions.ConvertAll(up => up.Permission);
+
+            return null;
+            /*User user = Context.Users.FirstOrDefault(user => user.Id == id);
             if (user == null)
                 return new List<Permission>();
 
@@ -22,48 +30,57 @@ namespace Scheduling.Domain
             {
                 permissions.Add(Context.Permissions.Single(permission => permission.Id == userPermission.PermisionId));
             }
-            return permissions;
+            return permissions;*/
         }
 
-        public void CreateUserPermission(int userId, string permissisonName)
+        public void CreateUserPermission(int userId, PermissionName permissionName)
         {
-            Permission permission = Context.Permissions.FirstOrDefault(permission => permission.Name == permissisonName);
+            Permission permission = Context.Permissions.FirstOrDefault(permission => permission.Name == permissionName);
             if (permission == null)
                 return;
 
-            UserPermission userPermission = new UserPermission() { UserId = userId, PermisionId = permission.Id };
-            Context.UserPermissions.Add(userPermission);
+            UserPermission userPermission = new UserPermission() { UserId = userId, PermissionId = permission.Id };
+            permission.UserPermissions.Add(userPermission);
             Context.SaveChanges();
         }
 
-        public List<string> GetAllPermissions()
+        public List<Permission> GetAllPermissions()
         {
-            List<Permission> allPermissions = Context.Permissions.ToList();
+            /*List<Permission> allPermissions = Context.Permissions.ToList();
             List<string> permissions = new List<string>();
 
             foreach (Permission permission in allPermissions)
             {
                 permissions.Add(permission.Name);
-            }
+            }*/
 
-            return permissions;
+            return Context.Permissions.ToList();
         }
 
-        public bool RemoveUserPermission(int userId, string permissionName)
+        public bool RemoveUserPermission(int userId, PermissionName permissionName)
         {
-            Permission permission = Context.Permissions.FirstOrDefault(permission => permission.Name == permissionName);
+            /*Permission permission = Context.Permissions.FirstOrDefault(permission => permission.Name == permissionName);
             if (permission == null)
-                return false;
+                return false;*/
+            var user = Context.Users
+                .Include(u => u.UserPermissions)
+                .ThenInclude(up => up.Permission).FirstOrDefault(us => us.Id == userId);
 
-            UserPermission userPermission = Context.UserPermissions.FirstOrDefault(perm => perm.PermisionId == permission.Id && perm.UserId == userId);
+            UserPermission userPermission = user.UserPermissions.Find(up => up.Permission.Name == permissionName);
             if (userPermission == null)
                 return false;
 
-            Context.UserPermissions.Remove(userPermission);
+            user.UserPermissions.Remove(userPermission);
+
+            /*UserPermission userPermission = Context.UserPermissions.FirstOrDefault(perm => perm.PermisionId == permission.Id && perm.UserId == userId);
+            if (userPermission == null)
+                return false;
+
+            Context.UserPermissions.Remove(userPermission);*/
             Context.SaveChanges();
             return true;
         }
-        public bool RemoveUserPermissions(int userId)
+        /*public bool RemoveUserPermissions(int userId)
         {
             List<UserPermission> userPermissions = Context.UserPermissions.Where(permission => permission.UserId == userId).ToList();
 
@@ -77,7 +94,7 @@ namespace Scheduling.Domain
 
             Context.SaveChanges();
             return true;
-        }
+        }*/
 
 
     }

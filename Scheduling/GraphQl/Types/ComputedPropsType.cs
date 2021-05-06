@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scheduling.GraphQl.Types
 {
-    public class ComputedPropsType : ObjectGraphType<ComputedProps>
+    /*public class ComputedPropsType : ObjectGraphType<ComputedProps>
     {
         public ComputedPropsType()
         {
@@ -16,5 +16,5 @@ namespace Scheduling.GraphQl.Types
             Field<ListGraphType<PermissionType>>(nameof(ComputedProps.Permissions));
             Field<ListGraphType<TeamType>>(nameof(ComputedProps.Teams));
         }
-    }
+    }*/
 }

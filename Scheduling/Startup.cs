@@ -87,10 +87,10 @@ namespace Scheduling
             services.AddScoped<UserType>();
             services.AddScoped<PermissionType>();
             services.AddScoped<TeamType>();
-            services.AddScoped<ComputedPropsType>();
+            //services.AddScoped<ComputedPropsType>();
             services.AddScoped<VacationRequestType>();
             services.AddScoped<PermissionNameEnum>();
-            //services.AddScoped<UserPermissionType>();
+            services.AddScoped<UserPermissionType>();
 
             services.AddScoped<ISchema, GraphSchema>();
 

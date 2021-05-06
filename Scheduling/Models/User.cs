@@ -10,15 +10,28 @@ namespace Scheduling.Models
     public class User
     {
         public int Id { get; set; }
+
         public string Email { get; set; }
+
         public string Password { get; set; }
+
         public string Name { get; set; }
+
         public string Surname { get; set; }
+
         public string Position { get; set; }
+
         public string Department { get; set; }
+
         public string Salt { get; set; }
 
-        public ComputedProps ComputedProps { get; set; }
+        public List<UserPermission> UserPermissions { get; set; }
+
+        public List<VacationRequest> VacationRequests { get; set; }
+
+        public int? TeamId { get; set; }
+        public Team Team { get; set; }
+
         public User()
         {
             

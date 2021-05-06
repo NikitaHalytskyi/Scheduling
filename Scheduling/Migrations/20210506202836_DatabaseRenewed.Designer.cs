@@ -10,8 +10,8 @@ using Scheduling.Domain;
 namespace Scheduling.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    [Migration("20210415013911_UpdatePermissions")]
-    partial class UpdatePermissions
+    [Migration("20210506202836_DatabaseRenewed")]
+    partial class DatabaseRenewed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,7 @@ namespace Scheduling.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -39,32 +40,27 @@ namespace Scheduling.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Manager"
-                        },
-                        new
-                        {
-                            Id = 2,
                             Name = "Accountant"
                         },
                         new
                         {
+                            Id = 2,
+                            Name = "UserManagement"
+                        },
+                        new
+                        {
                             Id = 3,
-                            Name = "Part-time"
+                            Name = "FullTime"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Full-time"
+                            Name = "PartTime"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Access to reports"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Access to calendar"
+                            Name = "VacationApprovals"
                         });
                 });
 
@@ -74,9 +70,6 @@ namespace Scheduling.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CreatorId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -88,8 +81,7 @@ namespace Scheduling.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 6,
-                            CreatorId = 1321313,
+                            Id = 1,
                             Name = "Development"
                         });
                 });
@@ -127,6 +119,8 @@ namespace Scheduling.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TeamId");
+
                     b.ToTable("Users");
 
                     b.HasData(
@@ -139,7 +133,8 @@ namespace Scheduling.Migrations
                             Password = "5dj3bhWCfxuHmONkBdvFrA==",
                             Position = "lol",
                             Salt = "91ed90df-3289-4fdf-a927-024b24bea8b7",
-                            Surname = "Adminov"
+                            Surname = "Adminov",
+                            TeamId = 1
                         },
                         new
                         {
@@ -151,46 +146,154 @@ namespace Scheduling.Migrations
                             Position = "lol",
                             Salt = "f0e30e73-fac3-4182-8641-ecba862fed69",
                             Surname = "Userov",
-                            TeamId = 6
+                            TeamId = 1
                         });
                 });
 
             modelBuilder.Entity("Scheduling.Models.UserPermission", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("UserPermission");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1321313,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            UserId = 1321313,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            UserId = 13213133,
+                            PermissionId = 4
+                        });
+                });
+
+            modelBuilder.Entity("Scheduling.Models.VacationRequest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("PermisionId")
-                        .HasColumnType("int");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FinishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserPermissions");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("VacationRequests");
 
                     b.HasData(
                         new
                         {
-                            Id = 3,
-                            PermisionId = 1,
-                            UserId = 1321313
-                        },
-                        new
-                        {
-                            Id = 4,
-                            PermisionId = 3,
+                            Id = 1,
+                            Comment = "I want to see a bober.",
+                            FinishDate = new DateTime(2021, 5, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2021, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Declined. Declined by PM. Declined by TL.",
                             UserId = 13213133
                         },
                         new
                         {
-                            Id = 5,
-                            PermisionId = 2,
-                            UserId = 1321313
+                            Id = 2,
+                            Comment = "I really want to see a bober.",
+                            FinishDate = new DateTime(2021, 4, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2021, 4, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Declined. Declined by PM. Declined by TL.",
+                            UserId = 13213133
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comment = "Please, it`s my dream to see a bober.",
+                            FinishDate = new DateTime(2021, 4, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            StartDate = new DateTime(2021, 4, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = "Pending consideration...",
+                            UserId = 13213133
                         });
+                });
+
+            modelBuilder.Entity("Scheduling.Models.User", b =>
+                {
+                    b.HasOne("Scheduling.Models.Team", "Team")
+                        .WithMany("Users")
+                        .HasForeignKey("TeamId");
+
+                    b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.UserPermission", b =>
+                {
+                    b.HasOne("Scheduling.Models.Permission", "Permission")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Scheduling.Models.User", "User")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.VacationRequest", b =>
+                {
+                    b.HasOne("Scheduling.Models.User", "User")
+                        .WithMany("VacationRequests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.Permission", b =>
+                {
+                    b.Navigation("UserPermissions");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.Team", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Scheduling.Models.User", b =>
+                {
+                    b.Navigation("UserPermissions");
+
+                    b.Navigation("VacationRequests");
                 });
 #pragma warning restore 612, 618
         }

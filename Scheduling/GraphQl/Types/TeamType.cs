@@ -15,7 +15,8 @@ namespace Scheduling.GraphQl.Types
 
             Field(t => t.Id).Description("Team id");
             Field(team => team.Name).Description("Team name");
-            Field(team => team.CreatorId).Description("Team creator id");
+            //Field(team => team.CreatorId).Description("Team creator id");
+            Field(team => team.Users, type: typeof(UserType)).Description("Users in the team");
         }
     }
 }

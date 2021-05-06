@@ -13,8 +13,8 @@ namespace Scheduling.GraphQl.Types
         {
             Name = "Permission";
 
-            Field(permision => permision.Id).Description("Permision id.");
-            Field(permision => permision.Name).Description("Permision name.");
+            Field(permission => permission.Id).Description("Permission id.");
+            Field<PermissionNameEnum>("PermissionName", resolve: p => p.Source.Name);
         }
 
     }
