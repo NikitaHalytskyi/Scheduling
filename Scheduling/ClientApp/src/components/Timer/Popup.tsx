@@ -18,6 +18,7 @@ interface IProps {
     finishTime: Date;
     startTime: Date;
     editId: number;
+    date: Date;
     deleteTime: (time: number) =>
         ({
             type: "DELETE_TIME",
@@ -210,7 +211,7 @@ class Popup extends React.Component<IProps, IState> {
 
             data.data.getCurrentUser.computedProps.timerHistories =
                 data.data.getCurrentUser.computedProps.timerHistories
-                    .filter(time => ((new Date(new Date(time.startTime) + " UTC").toLocaleDateString())) == date.toLocaleDateString());
+                    .filter((time: { startTime: string }) => ((new Date(new Date(time.startTime) + " UTC").toLocaleDateString())) == date.toLocaleDateString());
 
             console.log(data);
 

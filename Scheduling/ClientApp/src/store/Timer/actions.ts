@@ -4,7 +4,7 @@ export interface SetTimerHistoryAction { type: 'SET_TIMERHISTORY', requests: Arr
 export interface CheckUserAction { type: 'CHECK_USER' }
 export interface AddTimeAction { type: 'ADD_TIME', time: TimerType }
 export interface DeleteTimeAction { type: 'DELETE_TIME', time: number }
-export interface SetDateAction { type: 'SET_DATE', time: number }
+export interface SetDateAction { type: 'SET_DATE', time: Date }
 
 const setTimerHistory = (requests: Array<TimerType>) => ({
 	type: 'SET_TIMERHISTORY',
@@ -25,7 +25,7 @@ const deleteTime = (time: number) => ({
 	
 }) as DeleteTimeAction;
 
-const setDate = (time: number) => ({
+const setDate = (time: Date) => ({
 	type: "SET_DATE",
 	time
 }) as SetDateAction;
