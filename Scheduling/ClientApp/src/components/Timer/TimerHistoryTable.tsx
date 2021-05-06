@@ -79,12 +79,12 @@ class TimerHistoryTable extends React.Component<IProps, IState> {
             });
         else {
             if (typeof(idArg) == "string") {
-                var date = this.props.timerHistory.find(({ id }) => id == idArg);
+                var date = this.props.timerHistory.find(({ id }) => id == Number(idArg));
                 if (date != undefined)
                 this.setState({
                     showPopup: !this.state.showPopup,
                     startTime: new Date(new Date(date.startTime) + " UTC"),
-                    editId: idArg,
+                    editId: Number(idArg),
                     finishTime: new Date(new Date(date.finishTime) + " UTC"),
                 });
             }
