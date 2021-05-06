@@ -4,7 +4,7 @@ import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
 import { actionCreators } from '../store/VacationRequest/actions';
 import { UserState } from '../store/User/types';
-import { getAllRequests } from '../webAPI/vacationApproving';
+import { considerVacationRequest, getAllRequests } from '../webAPI/vacationApproving';
 import { VacationRequest } from '../store/VacationRequest/types';
 import { AllRequestsTable } from './AllRequestsTable';
 import { VacationApprovingTable } from './VacationApprovingTable';
@@ -25,15 +25,34 @@ type VacationApprovingProps =
 
 class VacationApproving extends React.PureComponent<VacationApprovingProps, { requests: Array<ApprovingRequest>, loading: boolean, comment: string}> {
     public state = {
-        requests: [],
+        requests: Array<{
+            id: number,
+            startDate: Date,
+            finishDate: Date,
+            name: string,
+            status: string,
+            comment: string,
+        }>(),
         loading: false,
         comment: ''
     }
 
+    async considerRequest(reaction: boolean, requestId: number, comment: string) {
+        if(this.props.token) {
+            let res = await considerVacationRequest(this.props.token, requestId, reaction, comment);
+            let index = null;
+            let requests = this.state.requests.slice();
+            let rec = requests.find(r => r.id === requestId);
+            if(rec){
+                index = requests.indexOf(rec);
+                requests[index].status = res.data.considerVacationRequest.status;
+                this.setState({requests: requests});
+            }
+        }
+    }
 
     getUserName(users: Array<{id: number, name: string, surname: string}>, id: number){
         let user = users.find(u => u.id === id);
-        console.log(users, id)
         if(user)
             return user.name + ' ' + user.surname;
         return '';
@@ -57,7 +76,6 @@ class VacationApproving extends React.PureComponent<VacationApprovingProps, { re
                     });
                 });
                 this.setState({requests: requests});
-                console.log(this.state);
             }
         }
         this.setState({loading: false});
@@ -82,8 +100,8 @@ class VacationApproving extends React.PureComponent<VacationApprovingProps, { re
                 <React.Fragment>
                     <main>
                         <div id='approving-container'>
-                            <h2>Vacation approving</h2>
-                            <VacationApprovingTable token={this.props.token} loading={this.state.loading} requests={this.state.requests} />
+                            <VacationApprovingTable loading={this.state.loading} requests={this.state.requests}
+                                considerRequest={(reaction: boolean, requestId: number, comment: string)=>this.considerRequest(reaction, requestId, comment)}/>
                             <AllRequestsTable loading={this.state.loading} requests={this.state.requests}/>
                         </div>
                     </main>

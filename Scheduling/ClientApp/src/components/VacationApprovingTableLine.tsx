@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { considerVacationRequest } from '../webAPI/vacationApproving';
 
 type LineProps = {
-    token: string,
     request: {
         id: number,
         startDate: Date,
@@ -12,10 +10,11 @@ type LineProps = {
         status: string,
         comment: string
     },
+    considerRequest: Function
 }
 
 
-export const ApprovingLine: React.FunctionComponent<LineProps> = ({ token, request }) => {
+export const ApprovingLine: React.FunctionComponent<LineProps> = ({ request, considerRequest }) => {
     
   const [comment, setComment] = useState("");
 
@@ -25,16 +24,15 @@ export const ApprovingLine: React.FunctionComponent<LineProps> = ({ token, reque
 
   const convertDate = (date: Date) => {
     let dateObj = new Date(date);
-    let month = dateObj.getUTCMonth() + 1;
-    let day = dateObj.getUTCDate();
-    let year = dateObj.getUTCFullYear();
-      return (year + "." + validateDate(month) + "." + validateDate(day));
+    let month = dateObj.getMonth() + 1;
+    let day = dateObj.getDate();
+    let year = dateObj.getFullYear();
+      return (validateDate(day) + "/" + validateDate(month) + "/" + year);
 }
 
   const handleSubmit = async (reaction: string) => {
       let reac = reaction === 'true'? true : false;
-      let res = await considerVacationRequest(token, request.id, reac, comment);
-      request = res;
+      considerRequest(reac, request.id, comment);
     }
 
     return (

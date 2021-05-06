@@ -31,9 +31,9 @@ export const addUserRequest = async (token: string, request: {startDate: Date, f
 
 	const convertDate = (date: Date) => {
         let dateObj = new Date(date);
-		let day = dateObj.getUTCDate();
-        let month = dateObj.getUTCMonth() + 1;
-        let year = dateObj.getUTCFullYear();
+		let day = dateObj.getDate();
+        let month = dateObj.getMonth() + 1;
+        let year = dateObj.getFullYear();
         return (year + "-" + validateDate(month) + "-" + validateDate(day));
     }
 

@@ -1,8 +1,4 @@
 import * as React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
-import {DateRangePicker, SingleDatePicker, DayPickerRangeController} from 'react-dates'
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router';
 import { ApplicationState } from '../store/configureStore';
@@ -12,6 +8,7 @@ import { actionCreators } from '../store/VacationRequest/actions';
 import { RequestsTable } from './RequestsTable';
 import { addUserRequest, getUserRequests, removeUserRequest } from '../webAPI/vacationRequest';
 import { UserState } from '../store/User/types';
+import { DataRangePicker } from './DataRangePicker';
 
 
 type VacationPageProps =
@@ -105,22 +102,16 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
 
     public render(){
         if(this.props.logged){
-            console.log(this.props);
             return (
                 <React.Fragment>
                     <main>
                         <div id='vacation-container'>
                             <form id='vacation-request'>
                                 <h2>Vacation</h2>
-                                    <DateRangePicker
-                                    startDate={this.state.startDate}
-                                    startDateId='start-date'
-                                    endDate={this.state.finishDate}
-                                    endDateId='finish-date'
-                                    onDatesChange={({startDate, endDate}) => this.setState({startDate: startDate, finishDate: endDate})}
-                                    focusedInput={this.state.focusedInput}
-                                    onFocusChange={focusedInput => this.setState({ focusedInput: focusedInput })}
-                                />                            
+                                <div className='data-container'>
+                                    <label>Data range</label>
+                                    <DataRangePicker availableDays={7} setRange={(startDate: Date, finishDate: Date) => this.setState({startDate, finishDate})}/>
+                                </div>
                                 <div className='data-container'>
                                     <label htmlFor='comment'>Comment</label>
                                     <textarea id='comment' onInput={(event) => this.setState({comment: event.currentTarget.value})}></textarea>
@@ -128,10 +119,6 @@ class VacationRequest extends React.PureComponent<VacationPageProps, {}> {
                                 <button id='send-request' type='button' disabled={this.state.loading} onClick={()=> this.handleSubmit()}>Request vacation</button>
                             </form>
                             <div id='vacation-info'>
-                                <div className='avaible-time'>
-                                    <h5>Available vacation time</h5>
-                                    <p id='avaible-time'>0 days</p>
-                                </div>
                                 <div className='time-tracker'>
                                     <h5>Time tracker</h5>
                                 </div>

@@ -40,23 +40,21 @@ class User extends React.PureComponent<UserProps, { isLoading: boolean, showErro
       }
 
     public render(){
-        
-        if(!this.props.logged){
-            if(!this.state.isLoading){
-                return (
-                    <LoginForm 
-                        logIn = {(token: string) => this.props.logIn(token)}
-                        toggleLoading = {this.toggleLoading}
-                        setError = {(error: boolean) => this.setError(error)}
-                        showError = {this.state.showError}
-                        token = {this.props.token}
-                        setUserData = {(userData: UserData) => this.props.setUserData(userData)}/>
-                );
+        if(!this.state.isLoading) {
+            if(!this.props.logged) {
+                    return (
+                        <LoginForm 
+                            logIn = {(token: string) => this.props.logIn(token)}
+                            toggleLoading = {this.toggleLoading}
+                            setError = {(error: boolean) => this.setError(error)}
+                            showError = {this.state.showError}
+                            token = {this.props.token}
+                            setUserData = {(userData: UserData) => this.props.setUserData(userData)}/>
+                    );
             }
-            return (<LoadingAnimation/>);
+            return (<ProfileForm logOut = {() => this.props.logOut()} user = {this.props.user}/>);
         }
-        return (<ProfileForm logOut = {() => this.props.logOut()} user = {this.props.user}/>);
-        
+        return (<LoadingAnimation/>);
     }
 
     private toggleLoading = () => {
