@@ -1,6 +1,8 @@
 import React from 'react'
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
+import { useState } from 'react';
 import events from "./events";
+import CalendarPopUp from '../popup/CalendarPopUp';
 //import Layout from 'react-tackle-box/Layout'
 import moment from "moment";
 import "./react-big-calendar.css";
@@ -22,12 +24,22 @@ moment.locale('en-gb', {
 
 const localizer = momentLocalizer(moment)
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      events: events
+    constructor(props) {
+        super(props);
+        this.state = {
+            events: events,
+            active: false
+        };
+
+        this.handleClick = this.handleClick.bind(this);
     };
-  }
+
+    handleClick() {
+        this.setState(state => ({
+            active: !state.active
+        }));
+    }
+    
   resizeEvent = (resizeType, { event, start, end }) => {
     const { events } = this.state;
 
@@ -36,13 +48,17 @@ class App extends React.Component {
         ? { ...existingEvent, start, end }
         : existingEvent;
     });
-
+       
     this.setState({
       events: nextEvents
     });
   };
+    
+    
   render() {
-    return (
+      return (
+          <>
+              <CalendarPopUp  />
       <Calendar
         /*  events={this.state.events}
             views={Views.WEEK}
@@ -67,10 +83,10 @@ class App extends React.Component {
         //defaultDate = {new Date(new Date().setHours(new Date().getHours()))}
         //Date = {new Date(2021,5,20,0,0,0)}
         localizer={localizer}
-        culture={'en-GB'}
-      />
-
-      
+                  culture={'en-GB'} />
+              
+         </>
+        
     )
   }
 }

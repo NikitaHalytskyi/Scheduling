@@ -12,9 +12,8 @@ export default function AppCalendar() {
     const [value, setValue] = useState(moment());
     const [eventActive, setEventActive] = useState(false)
     return <div>
-        <CalendarPopUp active={eventActive} setActive={setEventActive}/>
-        <Calendar value={value} onChange={setValue} />
         
+        <Calendar value={value} onChange={setValue} />
         <App2 />
     </div>;
 }
