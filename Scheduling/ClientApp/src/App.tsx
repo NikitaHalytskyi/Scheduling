@@ -12,6 +12,8 @@ import Login from './components/LoginPage/Login';
 
 import Error from './components/ErrorPage/ErrorPage';
 
+import AppCalendar from './components/calendarComponent/app/index';
+
 import './custom.css'
 
 
@@ -28,7 +30,7 @@ export default () => (
             <PrivateRoute exact path='/VacationRequest' component={VacationRequest} />
             <PrivateRoute exact path='/Timer' component={TimerPage} />
             <PrivateRoute exact path='/' component={MainPage} />
-
+            <Route exact path='/calendar' component={AppCalendar} />
             <Route>
                 <Error message='Error 404. Page not found.' />
             </Route>
