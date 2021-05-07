@@ -9,7 +9,7 @@ export interface AccessDenied { type: 'ACCESS_DENIED' };
 
 export interface CreateUserAction { type: 'CREATE_USER', payload: UserData };
 export interface DeleteUserAction { type: 'DELETE_USER', payload: string };
-export interface EditUserAction { type: 'EDIT_USER', payload: UserData };
+export interface EditUserAction { type: 'EDIT_USER', payload: { email: string, user: UserData }};
 
 
 const receivedUsersData = (users: Array<UserData>) => ({ type: 'RECEIVED_USERS', payload: users } as ReceivedUsersDataAction);
@@ -20,7 +20,7 @@ const accessDenied = () => ({ type: 'ACCESS_DENIED' } as AccessDenied);
 
 const createUser = (user: UserData) => ({ type: 'CREATE_USER', payload: user } as CreateUserAction);
 const deleteUser = (email: string) => ({ type: 'DELETE_USER' } as DeleteUserAction);
-const editUser = (user: UserData) => ({ type: 'EDIT_USER', payload: user } as EditUserAction);
+const editUser = (email: string, user: UserData) => ({ type: 'EDIT_USER', payload: { email: email, user: user }} as EditUserAction);
 
 export const actionCreators = {
     receivedUsersData,

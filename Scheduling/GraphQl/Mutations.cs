@@ -35,6 +35,44 @@ namespace Scheduling.GraphQl
             );
 
             Field<BooleanGraphType>(
+                "editUser",
+                arguments: new QueryArguments(
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Surname", Description = "User surname" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Email", Description = "User email" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Position", Description = "User position" },
+                    new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Password", Description = "User password" },
+                    new QueryArgument<NonNullGraphType<ListGraphType<StringGraphType>>> { Name = "Permissions", Description = "User permisions" },
+                    new QueryArgument<ListGraphType<IntGraphType>> { Name = "Teams", Description = "User teams id" }
+                ),
+                resolve: context =>
+                {
+                    string email = context.GetArgument<string>("Email");
+                    string name = context.GetArgument<string>("Name");
+                    string surname = context.GetArgument<string>("Surname");
+                    string position = context.GetArgument<string>("Position");
+                    string password = context.GetArgument<string>("Password");
+                    List<string> permissions = context.GetArgument<List<string>>("Permissions");
+                    List<int> teamsId = context.GetArgument<List<int>>("Teams");
+
+                    User user = dataBaseRepository.CreateUser(name, surname, email, position, password, permissions, teamsId);
+
+                    /*if(user.Email != null)
+                    {
+                        try
+                        {
+                            emailService.SendEmail(email, password);
+                        }catch 
+                        {
+                            return false;
+                        }
+                    }*/
+
+                    return true;
+                }
+            ).AuthorizeWith("Authenticated");
+
+            Field<BooleanGraphType>(
                 "createUser",
                 arguments: new QueryArguments(
                     new QueryArgument<NonNullGraphType<StringGraphType>> { Name = "Name", Description = "User name" },

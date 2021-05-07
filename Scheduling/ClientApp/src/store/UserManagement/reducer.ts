@@ -27,17 +27,19 @@ const reducer: Reducer<UserManagementState> =
                     ...state, 
                     users: state.users.concat(action.payload as UserData)
                 };
-                /*let newState = JSON.parse(JSON.stringify(state));
-                newState.users.push(action.payload);
-                return newState;*/
             }
                 
             case 'EDIT_USER': {
-                let newState = JSON.parse(JSON.stringify(state));
-                let indexOfEditElement =
-                    newState.users.findIndex((u: any) => action.payload!.email === u!.email);
-                newState.users.splice(indexOfEditElement, 1, action.payload);
-                return newState;
+                return{
+                    ...state,
+                    users: state.users.map(user => {
+                        if (user!.email !== action.payload!.email) {
+                            return user;
+                        } else {
+                            return action.payload.user;
+                        }
+                    }),
+                };
             }
                 
             case 'DELETE_USER': {

@@ -57,7 +57,7 @@ export const UserManagement: React.FC<UserManagementProps> = (props) => {
                                         <td>{u.position}</td>
                                         <td>{}</td>
                                         <td>
-                                            <button>Edit</button>
+                                            <Link to="/edituser" className="editUserButton">Edit</Link>
                                         </td>
                                         <td>
                                             <button
